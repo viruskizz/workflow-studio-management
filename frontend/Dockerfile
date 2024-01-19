@@ -15,9 +15,6 @@ RUN npm install
 # Copy the rest of the application to the working directory
 COPY . .
 
-# Creates a ".next" folder with the production build
-RUN npm run build
-
 EXPOSE 4200
 
 CMD ["ng", "serve", "--host", "0.0.0.0"]
