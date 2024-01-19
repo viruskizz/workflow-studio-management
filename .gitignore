@@ -1,4 +1,6 @@
+.vscode
 frontend/.env
+frontend/.angular
 
 backend/.env
 
