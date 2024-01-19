@@ -1,0 +1,8 @@
+.vscode
+frontend/.env
+frontend/.angular
+
+backend/.env
+
+database/data
+database/.env

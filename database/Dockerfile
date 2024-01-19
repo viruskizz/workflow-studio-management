@@ -1,0 +1,15 @@
+FROM postgres:15
+
+ARG DB_NAME
+ARG DB_USERNAME
+ARG DB_PASSWORD
+
+ENV DB_NAME=${DB_NAME}
+ENV DB_USERNAME=${DB_USERNAME}
+ENV DB_PASSWORD=${DB_PASSWORD}
+
+COPY tools/initdb.sh /docker-entrypoint-initdb.d/
+
+EXPOSE 5432
+
+CMD ["postgres"]
