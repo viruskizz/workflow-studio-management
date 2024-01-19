@@ -1,1 +1,6 @@
+frontend/.env
+
+backend/.env
+
 database/data
+database/.env
