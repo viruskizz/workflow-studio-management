@@ -14,6 +14,20 @@ dev:
 	npm install --prefix backend
 	docker compose --file ${DEV_FILE} up --build --detach
 
+dev-backend:
+	npm install --prefix backend
+	docker compose \
+		--file ${DEV_FILE} \
+		run \
+		--build \
+		--rm \
+		--detach \
+		-v .env:/usr/src/app/.env \
+        -v ./backend:/usr/src/app \
+		-p 3000:3000 \
+		-p 9229:9229 \
+		backend
+
 seed-database:
 	cd database && npm install && npm run start
 
