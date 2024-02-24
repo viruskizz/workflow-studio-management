@@ -1,4 +1,4 @@
-FROM postgres:15
+FROM postgres:16-alpine
 
 ARG DB_NAME
 ARG DB_USERNAME
@@ -7,6 +7,11 @@ ARG DB_PASSWORD
 ENV DB_NAME=${DB_NAME}
 ENV DB_USERNAME=${DB_USERNAME}
 ENV DB_PASSWORD=${DB_PASSWORD}
+
+RUN apk update  &&  \
+    apk add --no-cache \
+    postgresql \
+    postgresql-client
 
 COPY tools/initdb.sh /docker-entrypoint-initdb.d/
 
