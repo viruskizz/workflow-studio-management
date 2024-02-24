@@ -4,11 +4,11 @@ services:
   frontend:
     container_name: angular
     build:
-      context: frontend
+      context: frontend-old
       dockerfile: Dockerfile
     command: ng serve --host 0.0.0.0
     volumes:
-      - ./frontend:/usr/src/app  # for dev
+      - ./frontend-old:/usr/src/app  # for dev
       - .env:/usr/src/app/.env
     restart: unless-stopped
     ports:
