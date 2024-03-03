@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
@@ -6,11 +7,18 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { ConstructableBaseEntity } from '@entities/index';
 
-@Entity({ name: 'users ' })
-export class UsersEntity {
+@Entity({ name: 'users' })
+export class UsersEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ unique: true })
+  username: string;
+
+  @Column()
+  password: string;
 
   @Column({ name: 'first_name' })
   firstName: string;
