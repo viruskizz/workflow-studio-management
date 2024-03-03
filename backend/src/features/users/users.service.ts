@@ -8,17 +8,21 @@ import { InjectRepository } from '@nestjs/typeorm';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(UsersEntity) private usersRepository: Repository<UsersEntity>,
+    @InjectRepository(UsersEntity)
+    private usersRepository: Repository<UsersEntity>,
   ) {}
   create(createUserDto: CreateUserDto) {
-    const user = new UsersEntity();
-    user.firstName = createUserDto.firstName;
-    user.lastName = createUserDto.lastName;
-    return this.usersRepository.save(user);
+    // const user = new UsersEntity();
+    const user = UsersEntity.create(createUserDto);
+    return this.usersRepository.save(user).catch((e) => console.log(e));
   }
 
   findAll() {
     return this.usersRepository.find();
+  }
+
+  findByUsername(username: string) {
+    return this.usersRepository.findOneBy({ username });
   }
 
   findOne(id: number) {

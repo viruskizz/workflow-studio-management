@@ -1,6 +1,11 @@
 # Base image
 FROM node:20-alpine
 
+RUN apk add --no-cache \
+    make \
+    gcc \
+    g++
+
 # Create app directory
 WORKDIR /usr/src/app
 
@@ -8,7 +13,7 @@ WORKDIR /usr/src/app
 COPY ./package*.json ./
 
 # install nest/cli as global
-RUN npm i -g @nestjs/cli
+RUN npm i -g @nestjs/cli node-gyp
 
 # Install app dependencies
 RUN npm install
