@@ -18,5 +18,6 @@ import { jwtConstants } from '@backend/features/auth/strategies/jwt/constants';
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}
