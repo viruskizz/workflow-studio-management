@@ -7,7 +7,6 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
-import { ConstructableBaseEntity } from '@entities/index';
 
 @Entity({ name: 'users' })
 export class UsersEntity extends BaseEntity {

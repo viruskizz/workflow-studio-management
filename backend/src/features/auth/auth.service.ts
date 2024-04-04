@@ -22,7 +22,7 @@ export class AuthService {
       throw new UnauthorizedException('User not found');
     }
     const isMatch: boolean = await argon2.verify(user.password, pass);
-    console.log('isMatch', isMatch);
+    // console.log('isMatch', isMatch);
     if (!isMatch) {
       throw new UnauthorizedException('Password does not match');
     }
@@ -37,16 +37,8 @@ export class AuthService {
   }
 
   async signup(user: any): Promise<any> {
-    const existingUser = await this.userService.findByUsername(user.username);
-    if (existingUser) {
-      throw new BadRequestException('user already exists');
-    }
-    console.log(user);
     try {
-      const hashedPassword = await argon2.hash(user.password);
-      console.log(hashedPassword);
-      const newUser: UsersEntity = { ...user, password: hashedPassword };
-      const result = await this.userService.create(newUser);
+      const newUser = await this.userService.create(user);
       return this.signin(newUser);
     } catch (e) {
       console.log(e);
