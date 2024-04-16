@@ -14,10 +14,10 @@
             <span class="text-base label-text">Password</span>
           </label>
           <input type="password" placeholder="Enter Password" formControlName="password" autocomplete="on" class="w-full input input-bordered" />
-          <label class="label">
-            <span class="text-base label-text">Password</span>
-          </label>
         </div>
+        <label class="label">
+          <span class="text-base text-secondary" *ngIf="errorMessage" >{{errorMessage}}</span>
+        </label>
         <a href="#" class="text-xs text-gray-600 hover:underline hover:text-blue-600">Forget Password?</a>
         <div>
           <button class="btn btn-block" type="submit" [disabled]="!loginForm.valid">Login</button>
