@@ -22,6 +22,7 @@ export class AuthService {
     const token = AuthService.tokenGetter();
     // Check whether the token is expired and return
     // true or false
+    console.log('isTokenExpired:', this.jwtHelper.isTokenExpired(token));
     return !this.jwtHelper.isTokenExpired(token);
   }
 
@@ -39,5 +40,9 @@ export class AuthService {
   // for JwtModule
   static tokenGetter() {
     return LocalStorageService.get('accessToken');
+  }
+
+  static getProfile() {
+    return LocalStorageService.get('profile');
   }
 }
