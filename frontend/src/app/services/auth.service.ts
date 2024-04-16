@@ -18,12 +18,20 @@ export class AuthService {
     })
   }
 
+  public isAuthenticated(): boolean {
+    const token = AuthService.tokenGetter();
+    // Check whether the token is expired and return
+    // true or false
+    return !this.jwtHelper.isTokenExpired(token);
+  }
+
   saveLogin(jwt: string) {
     const data = this.jwtHelper.decodeToken(jwt);
     console.log(data);
     LocalStorageService.save('accessToken', jwt);
     LocalStorageService.save('profile', data);
   }
+
   saveToken(jwt: any) {
     LocalStorageService.save('accessToken', jwt);
   }
