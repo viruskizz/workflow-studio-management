@@ -1,8 +1,8 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
-import { UsersEntity } from '@backend/typeorm';
+import { User } from '@backend/typeorm';
 
-export class CreateUserDto extends PartialType(UsersEntity) {
+export class CreateUserDto extends PartialType(User) {
   @IsString()
   @IsNotEmpty()
   username: string;
