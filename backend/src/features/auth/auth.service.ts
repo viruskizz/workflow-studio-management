@@ -7,7 +7,7 @@ import {
 import { UsersService } from '@backend/features/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
-import { UsersEntity } from '@backend/typeorm';
+import { User } from '@backend/typeorm';
 
 @Injectable()
 export class AuthService {
@@ -46,7 +46,7 @@ export class AuthService {
     }
   }
 
-  private userPayload(user: UsersEntity): any {
+  private userPayload(user: User): any {
     return {
       username: user.username,
       sub: user.id,

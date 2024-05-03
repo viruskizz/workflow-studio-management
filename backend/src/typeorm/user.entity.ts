@@ -3,13 +3,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { Project } from './project.entity';
 
 @Entity({ name: 'users' })
-export class UsersEntity extends BaseEntity {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -27,6 +29,15 @@ export class UsersEntity extends BaseEntity {
 
   @Column({ unique: true })
   email: string;
+
+  @Column({ name: 'image_url', nullable: true })
+  imageUrl?: string;
+
+  /*
+  Relational column
+  */
+  @OneToMany(() => Project, (project) => project.id)
+  projects?: Project[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

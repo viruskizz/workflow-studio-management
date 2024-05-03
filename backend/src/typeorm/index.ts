@@ -1,9 +1,10 @@
-import { UsersEntity } from './users.entity';
+import { Project } from './project.entity';
+import { User } from './user.entity';
 import { BaseEntity } from 'typeorm';
 
-const entities = [UsersEntity];
+const entities = [User, Project];
 
-export { UsersEntity };
+export { User, Project };
 export default entities;
 
 export class ConstructableBaseEntity extends BaseEntity {
