@@ -2,6 +2,8 @@ import { User } from '@entities/user.entity';
 import { faker } from '@faker-js/faker';
 import * as argon2 from 'argon2'
 
+export const userSize = 25;
+
 const assignedUsers: Partial<User>[] = [
   {
     username: 'araiva',
@@ -45,7 +47,7 @@ const assignedUsers: Partial<User>[] = [
   }
 ];
 
-function createRandomUser(): Partial<User> {
+const randomUsers = faker.helpers.multiple((): Partial<User> => {
   const firstName = faker.person.firstName();
   const lastName = faker.person.lastName();
   return {
@@ -56,8 +58,7 @@ function createRandomUser(): Partial<User> {
     email: faker.internet.email({ firstName, lastName }),
     imageUrl: faker.image.avatar()
   }
-}
-const randomUsers = faker.helpers.multiple(createRandomUser, { count: 20 });
+}, { count: userSize - assignedUsers.length });
 
 const getUserSeeds = async (): Promise<Partial<User>[]> => {
   const users = assignedUsers.concat(randomUsers);
@@ -71,5 +72,6 @@ const getUserSeeds = async (): Promise<Partial<User>[]> => {
     });
   }
   return userSeeds;
-} 
+}
+
 export default getUserSeeds;
