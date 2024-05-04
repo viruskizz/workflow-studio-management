@@ -1,7 +1,7 @@
 import 'module-alias/register';
 import { AppDataSource } from "./data-source"
 import { User } from '@entities/user.entity'
-import getUserSeed from "./seeds/users";
+import getUserSeeds from "./seeds/users";
 
 AppDataSource.initialize().then(async () => {
 	console.log("Inserting a new user into the database...")
@@ -11,7 +11,8 @@ AppDataSource.initialize().then(async () => {
 
 export async function setupUser() {
   const userRepo = AppDataSource.manager.getRepository(User);
-  for (const user of await getUserSeed()) {
+  for (const user of await getUserSeeds()) {
+    console.log(user);
     await userRepo.save(user);
   }
 }
