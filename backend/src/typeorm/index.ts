@@ -1,10 +1,11 @@
+import { FileEntity } from './file.entity';
 import { Project } from './project.entity';
 import { User } from './user.entity';
 import { BaseEntity } from 'typeorm';
 
-const entities = [User, Project];
+const entities = [User, Project, FileEntity];
 
-export { User, Project };
+export { User, Project, FileEntity };
 
 export default entities;
 export class ConstructableBaseEntity extends BaseEntity {
