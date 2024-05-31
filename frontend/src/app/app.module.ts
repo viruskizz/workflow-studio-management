@@ -8,17 +8,21 @@ import {SharedModule} from './shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { RootModule } from './modules/root/root.module';
-import { ProfileModule } from './modules/main/profile/profile.module'
+import { SidebarRoutingModule } from './modules/sidebar/sidebar.module';
+import { HeaderComponent } from './modules/header/header.component';
+import { SidebarComponent } from './modules/sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HeaderComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     RootModule,
-    ProfileModule,
+    SidebarRoutingModule,
     SharedModule,
     HttpClientModule,
     JwtModule.forRoot({
