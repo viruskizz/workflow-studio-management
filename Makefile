@@ -9,6 +9,9 @@ all: prod
 prod:
 	docker compose up --build --detach
 
+up-dev:
+	docker compose --file ${DEV_FILE} up --build --detach
+
 dev:
 	npm install --prefix frontend
 	npm install --prefix backend

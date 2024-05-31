@@ -8,6 +8,7 @@ import {SharedModule} from './shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { RootModule } from './modules/root/root.module';
+import { ProfileModule } from './modules/main/profile/profile.module'
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { RootModule } from './modules/root/root.module';
     BrowserModule,
     AppRoutingModule,
     RootModule,
+    ProfileModule,
     SharedModule,
     HttpClientModule,
     JwtModule.forRoot({
