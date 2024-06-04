@@ -1,21 +1,21 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {PageNotFoundComponent} from './modules/root/page-not-found/page-not-found.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { PageNotFoundComponent } from './modules/root/page-not-found/page-not-found.component';
 import { rootRoutes } from './modules/root/root.module';
-import { profileRoutes } from './modules/main/profile/profile.module';
-import { sidebarRoutes } from './modules/sidebar/sidebar.module';
 import { authGuard } from './shared/auth.guard';
 
 const routes: Routes = [
   {
-    path: 'main',
+    path: 'dashboard',
     // canActivateChild: [authGuard],
-    loadChildren: () => import('./modules/main/main.module').then(m => m.MainModule)
+    loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
-  ...profileRoutes,
-  ...sidebarRoutes,
+  { path: 'projects', loadChildren: () => import('./modules/projects/projects.module').then(m => m.ProjectsModule) },
+  { path: 'team', loadChildren: () => import('./modules/team/team.module').then(m => m.TeamModule) },
+  { path: 'members', loadChildren: () => import('./modules/members/members.module').then(m => m.MembersModule) },
+  { path: 'settings', loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule) },
   ...rootRoutes,
-  {path: '', redirectTo: 'main', pathMatch: 'full'},
+  {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
   {path: '**', component: PageNotFoundComponent}
 ]
 @NgModule({

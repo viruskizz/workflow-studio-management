@@ -1,19 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HeaderComponent } from './component/header/header.component';
+import { SidebarComponent } from './component/sidebar/sidebar.component';
+import { RouterModule } from '@angular/router';
 
-const components: any[] = [
-  
+const sharedComponent: any[] = [
+  HeaderComponent,
+  SidebarComponent
 ];
 
 @NgModule({
   declarations: [
-    ...components
+    ...sharedComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   exports: [
-    ...components
+    ...sharedComponent
   ]
 })
 export class SharedModule { }
