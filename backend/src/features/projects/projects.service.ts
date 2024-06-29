@@ -15,6 +15,10 @@ export class ProjectsService {
     private usersService: UsersService,
   ) {}
 
+  repo() {
+    return this.repository;
+  }
+
   findAll() {
     return this.repository.find();
   }

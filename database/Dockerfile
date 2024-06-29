@@ -10,6 +10,7 @@ ENV DB_PASSWORD=${DB_PASSWORD}
 
 RUN apk update  &&  \
     apk add --no-cache \
+    bash \
     postgresql \
     postgresql-client
 

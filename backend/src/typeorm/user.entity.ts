@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Project } from './project.entity';
+import { Task } from './task.entity';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
@@ -38,6 +39,9 @@ export class User extends BaseEntity {
   */
   @OneToMany(() => Project, (project) => project.id)
   projects?: Project[];
+
+  @OneToMany(() => Task, (task) => task.id)
+  tasks?: Task[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
