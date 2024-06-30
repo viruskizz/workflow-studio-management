@@ -31,7 +31,10 @@ export class TeamsService {
   }
 
   findOne(id: number) {
-    return this.repo.findOneBy({ id });
+    return this.repo.findOne({
+      where: { id },
+      relations: { leader: true },
+    });
   }
 
   async update(id: number, updateTeamDto: UpdateTeamDto) {
