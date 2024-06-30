@@ -18,15 +18,11 @@ const routes: Routes = [
   { path: 'team', loadChildren: () => import('./modules/team/team.module').then(m => m.TeamModule) },
   { path: 'members', loadChildren: () => import('./modules/members/members.module').then(m => m.MembersModule) },
   { path: 'settings', loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule) },
-  // ...rootRoutes,
   // {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
   {
     path: '',
     component: MainLayoutComponent,
-    children: [
-      { path: '', redirectTo: 'login', pathMatch: 'full' },
-      { path: 'login', component: LoginComponent },
-    ]
+    children: rootRoutes
   },
   {path: '**', component: PageNotFoundComponent}
 ]

@@ -8,7 +8,6 @@ import {SharedModule} from './shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { RootModule } from './modules/root/root.module';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [

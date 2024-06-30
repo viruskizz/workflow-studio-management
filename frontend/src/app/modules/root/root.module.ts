@@ -4,17 +4,15 @@ import { Routes} from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { ProfileComponent } from './profile/profile.component';
 
 export const rootRoutes: Routes = [
-  { path: 'login', component: LoginComponent},
-  { path: 'profile', component: ProfileComponent}
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
 ]
 
 @NgModule({
   declarations: [
     LoginComponent,
-    ProfileComponent,
     PageNotFoundComponent,
   ],
   imports: [
