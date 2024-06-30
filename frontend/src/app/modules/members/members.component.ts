@@ -5,10 +5,8 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './members.component.html'
 })
 export class MembersComponent implements OnInit {
-  
 
   ngOnInit(): void {
       
   }
 }
-

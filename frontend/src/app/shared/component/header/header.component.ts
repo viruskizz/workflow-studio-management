@@ -15,8 +15,6 @@ export class HeaderComponent implements OnInit {
   constructor(private userService: UserService) {}
 
   ngOnInit() {
-    // this.userService.getUser()
-    // AuthService.getProfile();
     const profile = AuthService.getProfile();
     console.log(profile);
     this.userService.getUser(profile.sub).subscribe(res => {
