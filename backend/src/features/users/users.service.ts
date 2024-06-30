@@ -4,7 +4,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from '@backend/typeorm';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthService } from '../auth/auth.service';
 import * as argon2 from 'argon2';
 
 @Injectable()
