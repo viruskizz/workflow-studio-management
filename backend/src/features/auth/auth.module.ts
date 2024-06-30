@@ -13,7 +13,7 @@ import { jwtConstants } from '@backend/features/auth/strategies/jwt/constants';
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '24h' },
     }),
   ],
   controllers: [AuthController],
