@@ -1,25 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'app-sidebar',
-    templateUrl: './sidebar.component.html',
+  selector: 'app-sidebar',
+  templateUrl: './sidebar.component.html',
 })
 
 export class SidebarComponent implements OnInit {
-    title = "Animation";
-    pages: string[] = [
-        'dashboard',
-        'projects',
-        'team',
-        'members',
-        'settings'
-    ];
+  title = "Animation";
+  pages = [
+    { title: 'Dashboard', url: '/dashboard' },
+    { title: 'Project', url: '/projects' },
+    { title: 'Team', url: '/team' },
+    { title: 'Member', url: '/members' },
+    { title: 'Setting', url: '/settings' },
+  ]
 
-    constructor() {
+  constructor() {
 
-    }
+  }
 
-    ngOnInit(): void {
-        
-    }
+  ngOnInit(): void {
+
+  }
 }

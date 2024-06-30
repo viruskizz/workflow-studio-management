@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     command: ng serve --host 0.0.0.0
     volumes:
-      - ./frontend-old:/usr/src/app  # for dev
+      - ./frontend:/usr/src/app  # for dev
       - .env:/usr/src/app/.env
     restart: unless-stopped
     ports:

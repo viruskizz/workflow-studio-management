@@ -23,7 +23,7 @@ export class LoginComponent {
         console.log('data', data);
         this.errorMessage = undefined;
         this.authService.saveLogin(data.access_token)
-        this.router.navigate(['/main']);
+        this.router.navigate(['/dashboard']);
       }, err => {
         console.log(err.error.message)
         this.errorMessage = `${err.error.error}: ${err.error.message}`
