@@ -10,7 +10,7 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { TeamsStageService } from './teams-stage.service';
+import { TeamsStageService } from './team-stage.service';
 import { CreateTeamStageDto } from './dto/create-team-stage.dto';
 import { TeamValidateInterceptor } from '../team-validate.interceptor';
 import { UpdateTeamStageDto } from './dto/update-team-stage.dto';

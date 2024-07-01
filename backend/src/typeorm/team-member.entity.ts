@@ -6,25 +6,23 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { User } from './user.entity';
 import { Team } from './team.entity';
-import { TaskStatus } from './task.entity';
 
-@Entity({ name: 'team_stages' })
-export class TeamStage extends BaseEntity {
+@Entity({ name: 'team_members' })
+export class TeamMember extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  name: string;
-
-  @Column()
-  taskStatus: TaskStatus;
-
-  @Column()
-  order: number;
-
   @Column({ nullable: true })
   teamId?: number;
+
+  @Column({ nullable: true })
+  userId?: number;
+
+  @ManyToOne(() => User, (u) => u.id)
+  @JoinColumn()
+  user: User;
 
   @ManyToOne(() => Team, (u) => u.id)
   @JoinColumn()
