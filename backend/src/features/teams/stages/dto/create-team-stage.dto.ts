@@ -6,10 +6,6 @@ import { IsEnum, IsNumber, IsString } from 'class-validator';
 
 export class CreateTeamStageDto extends PartialType(TeamStage) {
   @ApiProperty()
-  @IsNumber()
-  order?: number;
-
-  @ApiProperty()
   @IsString()
   name: string;
 

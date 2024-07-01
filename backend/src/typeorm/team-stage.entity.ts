@@ -19,7 +19,7 @@ export class TeamStage extends BaseEntity {
   name: string;
 
   @Column()
-  status: TaskStatus;
+  taskStatus: TaskStatus;
 
   @Column()
   order: number;

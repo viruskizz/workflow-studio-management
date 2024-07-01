@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  NotFoundException,
   UseInterceptors,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
