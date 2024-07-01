@@ -7,11 +7,14 @@ import {
   Param,
   Delete,
   NotFoundException,
+  UseInterceptors,
 } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
+import { TeamValidateInterceptor } from './team-validate.interceptor';
 
+@UseInterceptors(TeamValidateInterceptor)
 @Controller('teams')
 export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
@@ -28,26 +31,16 @@ export class TeamsController {
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.validateTeamId(+id);
+    return this.teamsService.findOne(+id);
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto) {
-    await this.validateTeamId(+id);
     return this.teamsService.update(+id, updateTeamDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    await this.validateTeamId(+id);
     return this.teamsService.remove(+id);
-  }
-
-  private async validateTeamId(id: number) {
-    const team = await this.teamsService.findOne(+id);
-    if (!team) {
-      throw new NotFoundException('Team does not existed');
-    }
-    return team;
   }
 }
