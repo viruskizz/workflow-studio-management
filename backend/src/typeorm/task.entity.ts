@@ -7,7 +7,6 @@ import {
   JoinTable,
   ManyToOne,
   OneToMany,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';

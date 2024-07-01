@@ -33,7 +33,7 @@ export class TeamsService {
   findOne(id: number) {
     return this.repo.findOne({
       where: { id },
-      relations: { leader: true },
+      relations: { leader: true, stages: true },
     });
   }
 
