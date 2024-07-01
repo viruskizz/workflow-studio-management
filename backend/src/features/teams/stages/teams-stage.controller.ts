@@ -13,7 +13,6 @@ import {
 import { TeamsStageService } from './teams-stage.service';
 import { CreateTeamStageDto } from './dto/create-team-stage.dto';
 import { TeamValidateInterceptor } from '../team-validate.interceptor';
-import { BulkTeamStagesDto } from './dto/bulk-team-stages.dto';
 import { UpdateTeamStageDto } from './dto/update-team-stage.dto';
 
 @UseInterceptors(TeamValidateInterceptor)
@@ -37,7 +36,6 @@ export class TeamsStageController {
     @Body(new ParseArrayPipe({ items: UpdateTeamStageDto, whitelist: true }))
     body: UpdateTeamStageDto[],
   ) {
-    console.log(body);
     return this.stageService.update(+id, body);
   }
 
