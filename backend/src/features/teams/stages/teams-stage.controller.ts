@@ -41,6 +41,11 @@ export class TeamsStageController {
     return this.stageService.update(+id, body);
   }
 
+  @Patch('reorder')
+  reorder(@Param('id') id) {
+    return this.stageService.reorder(+id);
+  }
+
   @Patch(':stageId')
   edit(
     @Param('id') id,

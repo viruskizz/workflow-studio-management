@@ -25,7 +25,7 @@ export class TeamsStageService {
     const stages = await this.findAll(teamId);
     const stage = new TeamStage();
     stage.name = body.name;
-    stage.order = stages.length + 1;
+    stage.order = stages.length;
     stage.teamId = teamId;
     stage.taskStatus = body.taskStatus;
     return stage.save();
