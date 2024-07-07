@@ -1,16 +1,25 @@
 import 'module-alias/register';
 import { AppDataSource } from "./data-source"
+<<<<<<< HEAD
 import { Project, Team, TeamStage, User } from '@backend/typeorm';
 import getUserSeeds from "./seeds/users";
 import getProjectSeeds from './seeds/project';
 import getTeamSeeds from './seeds/team';
 import getTeamStagesSeeds from './seeds/team-stages';
+=======
+import { Project, User } from '@backend/typeorm';
+import getUserSeeds from "./seeds/users";
+import getProjectSeeds from './seeds/project';
+>>>>>>> c24f244 (display users from database)
 
 AppDataSource.initialize().then(async () => {
 	console.log("Inserting a new user into the database...")
   await setupUsers();
+<<<<<<< HEAD
   await setupTeams();
   await setupTeamStages();
+=======
+>>>>>>> c24f244 (display users from database)
   await setupProjects();
 }).catch(e => console.log(e));
 
@@ -31,6 +40,7 @@ export async function setupProjects() {
   }
 }
 
+<<<<<<< HEAD
 export async function setupTeams() {
   const teamRepo = AppDataSource.manager.getRepository(Team);
   for (const team of getTeamSeeds()) {
@@ -47,3 +57,5 @@ export async function setupTeamStages() {
   }
 }
 
+=======
+>>>>>>> c24f244 (display users from database)

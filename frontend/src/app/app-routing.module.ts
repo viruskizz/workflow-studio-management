@@ -4,19 +4,19 @@ import { PageNotFoundComponent } from './modules/root/page-not-found/page-not-fo
 import { rootRoutes } from './modules/root/root.module';
 import { authGuard } from './shared/auth.guard';
 import { LoginComponent } from './modules/root/login/login.component';
-import { MemberLayoutComponent } from './shared/layout/member/member-layout.component';
+import { UserLayoutComponent } from './shared/layout/user/user-layout.component';
 import { MainLayoutComponent } from './shared/layout/main/main-layout.component';
 
 const routes: Routes = [
   {
     path: 'dashboard',
     // canActivateChild: [authGuard],
-    component: MemberLayoutComponent,
+    component: UserLayoutComponent,
     loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
   { path: 'projects', loadChildren: () => import('./modules/projects/projects.module').then(m => m.ProjectsModule) },
   { path: 'team', loadChildren: () => import('./modules/team/team.module').then(m => m.TeamModule) },
-  { path: 'members', loadChildren: () => import('./modules/members/members.module').then(m => m.MembersModule) },
+  { path: 'users', loadChildren: () => import('./modules/users/users.module').then(m => m.UsersModule) },
   { path: 'settings', loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule) },
   // {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
   {

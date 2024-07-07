@@ -11,7 +11,7 @@ export class SidebarComponent implements OnInit {
     { title: 'Dashboard', url: '/dashboard' },
     { title: 'Project', url: '/projects' },
     { title: 'Team', url: '/team' },
-    { title: 'Member', url: '/members' },
+    { title: 'Users', url: '/users' },
     { title: 'Setting', url: '/settings' },
   ]
 
