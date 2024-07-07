@@ -7,10 +7,6 @@ import {
   JoinTable,
   ManyToOne,
   OneToMany,
-<<<<<<< HEAD
-=======
-  PrimaryColumn,
->>>>>>> c24f244 (display users from database)
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';

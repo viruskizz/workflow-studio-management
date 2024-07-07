@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Module } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
@@ -12,18 +11,3 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   exports: [UsersService],
 })
 export class UsersModule {}
-=======
-import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
-import { User } from '@backend/typeorm';
-import { TypeOrmModule } from '@nestjs/typeorm';
-
-@Module({
-  imports: [TypeOrmModule.forFeature([User])],
-  controllers: [UsersController],
-  providers: [UsersService],
-  exports: [UsersService],
-})
-export class UsersModule {}
->>>>>>> c24f244 (display users from database)
