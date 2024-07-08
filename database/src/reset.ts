@@ -3,7 +3,7 @@ import { AppDataSource } from "./data-source";
 
 AppDataSource.initialize().then(async () => {
 	console.log("Reset the database, remove all data in every table...");
-	const tables = ['tasks', 'projects', 'teams', 'users']
+	const tables = ['team_stages', 'team_members', 'tasks', 'projects', 'teams', 'users']
 	for (const table of tables) {
 		console.log(`Droping table ${table}`)
 		await AppDataSource.query(`DROP TABLE ${table};`);
