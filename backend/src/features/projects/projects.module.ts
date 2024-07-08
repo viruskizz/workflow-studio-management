@@ -1,5 +1,5 @@
 import { Project } from '@backend/typeorm/';
-import { ProjectsController } from './projectscontroller';
+import { ProjectsController } from './projects.controller';
 import { ProjectsService } from './projects.service';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';

@@ -10,7 +10,7 @@ import {
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UsersService } from '../users/users.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UpdateProjectDto } from './dto/update-project.dto';
 
 @ApiBearerAuth()
@@ -23,6 +23,7 @@ export class ProjectsController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create new project' })
   async create(@Body() body: CreateProjectDto) {
     const user = this.usersService.findOne(body.ownerId);
     if (!user) {
@@ -31,11 +32,13 @@ export class ProjectsController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'List all projects' })
   findAll() {
     return this.service.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Retrieve project information' })
   async findOne(@Param('id') id) {
     const project = await this.service.findOne(+id);
     if (!project) {
@@ -45,12 +48,14 @@ export class ProjectsController {
   }
 
   @Post(':id')
+  @ApiOperation({ summary: 'Update project information' })
   update(@Param('id') id, @Body() body: UpdateProjectDto) {
     this.findOne(id);
     return this.service.update(+id, body);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete project' })
   remove(@Param('id') id) {
     this.findOne(id);
     return this.service.remove(+id);
