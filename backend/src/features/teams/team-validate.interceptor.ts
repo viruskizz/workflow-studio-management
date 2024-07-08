@@ -15,6 +15,8 @@ export class TeamValidateInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const pathPattern = /^\/teams\/\d+/;
     const { url } = context.switchToHttp().getRequest<Request>();
+    const splited = url.split('/').filter((t) => t);
+    console.log('id:', splited);
     if (url.match(pathPattern)) {
       const pathParams = url.substring('/teams/'.length).split('/');
       const id = pathParams[0];
