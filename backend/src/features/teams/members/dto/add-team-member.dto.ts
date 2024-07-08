@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
 
 export class AddTeamMemberDto extends PartialType(TeamMember) {
-  @ApiProperty()
   @IsNumber()
+  @ApiProperty({ example: 2 })
   userId: number;
 }
