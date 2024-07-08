@@ -12,7 +12,9 @@ import { TeamsService } from './teams.service';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { TeamValidateInterceptor } from './team-validate.interceptor';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Teams')
 @UseInterceptors(TeamValidateInterceptor)
 @Controller('teams')
 export class TeamsController {

@@ -14,7 +14,9 @@ import { TeamsStageService } from './team-stage.service';
 import { CreateTeamStageDto } from './dto/create-team-stage.dto';
 import { TeamValidateInterceptor } from '../team-validate.interceptor';
 import { UpdateTeamStageDto } from './dto/update-team-stage.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Teams')
 @UseInterceptors(TeamValidateInterceptor)
 @Controller('teams/:id/stages')
 export class TeamsStageController {
