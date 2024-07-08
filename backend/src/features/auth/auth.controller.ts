@@ -13,7 +13,7 @@ import { SignUpDto } from './dto/sign-up.dto';
 import { LocalAuthGuard } from './strategies/local/local-auth.guard';
 import { JwtAuthGuard } from './strategies/jwt/jwt-auth.guard';
 import { Public } from './decorators/public.decorator';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -29,6 +29,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @Post('signin')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Singin user to backend' })
   async signIn(@Request() req) {
     return this.authService.signin(req.user);
@@ -36,6 +37,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Retrieve user profile by token' })
   getProfile(@Request() req) {
     return req.user;
