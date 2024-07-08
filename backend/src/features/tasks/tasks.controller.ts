@@ -9,7 +9,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { ProjectsService } from '../projects/projects.service';
@@ -25,16 +25,19 @@ export class TasksController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: 'List all tasks' })
   list() {
     return this.tasksservice.findAll();
   }
 
   @Get(':id')
-  get() {
-    return [];
+  @ApiOperation({ summary: 'Get task information' })
+  get(@Param('id') id) {
+    return this.tasksservice.findOne(+id);
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update task information' })
   async update(@Param('id') id, @Body() body: UpdateTaskDto) {
     await this.validateProjectId(body);
     const task = await this.tasksservice.findOne(+id);
@@ -45,6 +48,7 @@ export class TasksController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Create new task' })
   async create(@Body() body: CreateTaskDto) {
     await this.validateProjectId(body);
     return this.tasksservice.create(body);

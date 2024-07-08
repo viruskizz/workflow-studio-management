@@ -12,25 +12,25 @@ import {
 } from 'class-validator';
 
 export class CreateTaskDto extends PartialType(Task) {
-  @ApiProperty()
   @IsNumber()
+  @ApiProperty({ example: 1 })
   projectId: number;
 
-  @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  @ApiProperty({ example: 'summary of this task' })
   summary: string;
 
-  @ApiProperty()
   @IsEnum(TaskType)
+  @ApiProperty({ enum: TaskType, example: 'TASK' })
   type: TaskType;
 
-  @ApiProperty()
   @IsEnum(TaskStatus)
+  @ApiProperty({ enum: TaskStatus, example: 'TODO' })
   status: TaskStatus;
 
-  @ApiProperty()
   @IsNumber()
   @IsOptional()
+  @ApiProperty({ example: 2 })
   assigneeId: number;
 }

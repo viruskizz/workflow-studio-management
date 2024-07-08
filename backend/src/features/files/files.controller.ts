@@ -14,18 +14,22 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateFileDto } from './dto/upload-file.dto';
 import { RemoveFileDto } from './dto/remove-file.dto';
 import * as path from 'path';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Files')
 @Controller('files')
 export class FilesController {
   constructor(private filesService: FilesService) {}
 
   @Get('search')
+  @ApiOperation({ summary: 'List all uploaded public file from server' })
   list() {
     return [];
   }
 
   @UseInterceptors(FileInterceptor('file'))
   @Post()
+  @ApiOperation({ summary: 'Upload file to server' })
   upload(
     @Body() body: CreateFileDto,
     @UploadedFile() file: Express.Multer.File,
@@ -37,6 +41,7 @@ export class FilesController {
   }
 
   @Delete()
+  @ApiOperation({ summary: 'Remove file from server' })
   remove(@Body() body: RemoveFileDto) {
     if (body && !body.filename && !body.url) {
       throw new BadRequestException('Need filename or url');
@@ -51,11 +56,11 @@ export class FilesController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Retrieve file metadata' })
   get(@Query('filename') filename: string) {
     if (!filename.startsWith(this.filesService.rootPath)) {
       filename = path.join(this.filesService.rootPath, filename);
     }
-    console.log(filename);
     return this.filesService.getRecord(filename);
   }
 }

@@ -10,28 +10,14 @@ import {
 import { CreateTaskDto } from './create-task.dto';
 
 export class UpdateTaskDto extends CreateTaskDto {
-  @ApiProperty({ description: 'forbidden to update project id' })
+  @ApiProperty({
+    required: false,
+    description: 'forbidden to update project id',
+  })
   @IsEmpty()
   projectId: number;
 
-  @ApiProperty({ description: 'forbidden to update code' })
+  @ApiProperty({ required: false, description: 'forbidden to update code' })
   @IsEmpty()
   code: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  summary: string;
-
-  @ApiProperty()
-  @IsEnum(TaskType)
-  type: TaskType;
-
-  @ApiProperty()
-  @IsEnum(TaskStatus)
-  status: TaskStatus;
-
-  @ApiProperty()
-  @IsNumber()
-  assigneeId: number;
 }

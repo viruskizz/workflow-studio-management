@@ -5,15 +5,15 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNumber, IsString } from 'class-validator';
 
 export class CreateTeamStageDto extends PartialType(TeamStage) {
-  @ApiProperty()
   @IsString()
+  @ApiProperty({ example: 'Waiting' })
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 1 })
   @IsNumber()
   teamId: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'TODO' })
   @IsEnum(TaskStatus)
   taskStatus: TaskStatus;
 }
