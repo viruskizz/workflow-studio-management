@@ -5,7 +5,7 @@ import { IsNumber, IsString } from 'class-validator';
 
 export class CreateTeamDto extends PartialType(Team) {
   @IsString()
-  @ApiProperty({ name: 'GoodGeek' })
+  @ApiProperty({ example: 'GoodGeek' })
   name: string;
 
   @IsNumber()
