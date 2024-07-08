@@ -4,7 +4,7 @@ import { HeaderComponent } from './component/header/header.component';
 import { SidebarComponent } from './component/sidebar/sidebar.component';
 import { RouterModule } from '@angular/router';
 import { MainLayoutComponent } from './layout/main/main-layout.component';
-import { MemberLayoutComponent } from './layout/member/member-layout.component';
+import { UserLayoutComponent } from './layout/user/user-layout.component';
 
 const sharedComponent: any[] = [
   HeaderComponent,
@@ -13,7 +13,7 @@ const sharedComponent: any[] = [
 
 const layoutComponent: any[] = [
   MainLayoutComponent,
-  MemberLayoutComponent,
+  UserLayoutComponent,
 ];
 
 @NgModule({
