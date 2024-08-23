@@ -8,3 +8,6 @@ backend/.env
 database/data
 database/.env
 database/node_modules
+
+journal.md
+/journal-asset
