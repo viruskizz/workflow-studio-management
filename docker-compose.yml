@@ -4,7 +4,7 @@ services:
   frontend:
     container_name: angular
     build:
-      context: frontend-old
+      context: frontend
       dockerfile: Dockerfile
     command: ng serve --host 0.0.0.0
     volumes:
