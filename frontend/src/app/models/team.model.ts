@@ -1,4 +1,4 @@
-export interface TeamMember {
+export interface TeamRow {
   teamLogo : string;
   teamName : string;
   key : string;
