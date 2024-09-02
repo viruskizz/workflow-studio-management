@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { MainLayoutComponent } from './layout/main/main-layout.component';
 import { UserLayoutComponent } from './layout/user/user-layout.component';
 import { TableComponent } from './components/table/table.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const sharedComponent: any[] = [
   HeaderComponent,
@@ -28,11 +29,13 @@ const layoutComponent: any[] = [
   ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    FontAwesomeModule,
   ],
   exports: [
     ...sharedComponent,
     ...layoutComponent,
+    FontAwesomeModule,
   ]
 })
 export class SharedModule { }

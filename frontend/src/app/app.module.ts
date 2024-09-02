@@ -8,6 +8,7 @@ import {SharedModule} from './shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { RootModule } from './modules/root/root.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { RootModule } from './modules/root/root.module';
         disallowedRoutes: ["http://example.com/examplebadroute/"],
       },
     }),
+    FontAwesomeModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
