@@ -10,24 +10,22 @@ import { MainLayoutComponent } from './shared/layout/main/main-layout.component'
 const routes: Routes = [
   {
     path: 'dashboard',
-    // canActivateChild: [authGuard],
     component: UserLayoutComponent,
     loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
-  { path: 'projects', loadChildren: () => import('./modules/projects/projects.module').then(m => m.ProjectsModule) },
-  { path: 'team', loadChildren: () => import('./modules/team/team.module').then(m => m.TeamModule) },
-  { path: 'users', loadChildren: () => import('./modules/users/users.module').then(m => m.UsersModule) },
-  { path: 'settings', loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule) },
-  // {path: '', redirectTo: 'dashboard', pathMatch: 'full'},
+  { path: 'projects', component: UserLayoutComponent, loadChildren: () => import('./modules/projects/projects.module').then(m => m.ProjectsModule) },
+  { path: 'team', component: UserLayoutComponent, loadChildren: () => import('./modules/team/team.module').then(m => m.TeamModule) },
+  { path: 'users', component: UserLayoutComponent, loadChildren: () => import('./modules/users/users.module').then(m => m.UsersModule) },
+  { path: 'settings', component: UserLayoutComponent, loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule) },
   {
     path: '',
     component: MainLayoutComponent,
     children: rootRoutes
   },
-  {path: '**', component: PageNotFoundComponent}
+  { path: '**', component: PageNotFoundComponent }
 ]
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
