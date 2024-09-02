@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TasksComponent } from "./tasks.component";
+import { SharedModule } from "../../shared/shared.module";
 
 const routes: Routes = [
   { path: '', component: TasksComponent }
@@ -14,6 +15,7 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
+    SharedModule,
     RouterModule.forChild(routes),
     ReactiveFormsModule,
   ]
