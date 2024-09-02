@@ -8,7 +8,7 @@ import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 
 const routes: Routes = [
   { path: '', component: UsersComponent },
-  { path: 'view', component: UserViewComponent }
+  { path: 'views/:userId', component: UserViewComponent }
 ]
 
 @NgModule({

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
-import { faChevronLeft, faChevronRight, faCoffee, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faCoffee, faPenToSquare, faTrash, faEye, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 
 @Component({
@@ -12,6 +12,10 @@ export class UsersComponent implements OnInit {
   faCoffee = faCoffee;
   faPenToSquare = faPenToSquare;
   faTrash = faTrash;
+  faChevronLeft = faChevronLeft;
+  faChevronRight = faChevronRight;
+  faEye = faEye;
+  faMagnifyingGlass = faMagnifyingGlass;
 
   isShowModal = false;
 
@@ -37,9 +41,9 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  paginatedUsers() {}
+  paginatedUsers() { }
 
-  pageChange() {}
+  pageChange() { }
 
   filteredUser(searchInput: Event) {
     const inputElement = searchInput.target as HTMLInputElement;
@@ -86,7 +90,7 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  addUser() {}
+  addUser() { }
 
   editUser(userId: number | string): void {
     console.log('Edit user with ID:', userId);
