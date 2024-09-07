@@ -1,0 +1,41 @@
+<table class="table rounded-lg text-xl">
+    <thead class="bg-thead border-gray-200 border-2 rounded-t-3xl text-xl text-gray-500">
+        <tr>
+            <th *ngFor="let header of tableData.headers">{{ header.key }}</th>
+        </tr>
+    </thead>
+
+    <tbody class="bg-white text-gray-400 border-gray-200">
+        <tr *ngFor="let row of tableData.data">
+            <td>{{ row.name }}</td>
+            <td>{{ row.key }}</td>
+            <td>{{ row.description }}</td>
+            <td>
+                {{ row.status || 'Pending' }}
+            </td>
+            <td>
+                <div class="avatar">
+                    <div class="mask mask-circle h-12 w-12">
+                        <img [src]="row.imageUrl" alt="Avatar" />
+                    </div>
+                </div>
+            </td>
+            <td>
+                {{ row.category || 'General' }}
+            </td>
+            <td>
+                <div class="relative">
+                    <div class="dropdown z-40">
+                        <div tabindex="0" role="button" class="btn m-1 bg-white border-0 z-30">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="5" viewBox="0 0 19 5">
+                                <path
+                                    d="M2.55212 0.202148C1.45212 0.202148 0.552124 1.10215 0.552124 2.20215C0.552124 3.30215 1.45212 4.20215 2.55212 4.20215C3.65212 4.20215 4.55212 3.30215 4.55212 2.20215C4.55212 1.10215 3.65212 0.202148 2.55212 0.202148ZM16.5521 0.202148C15.4521 0.202148 14.5521 1.10215 14.5521 2.20215C14.5521 3.30215 15.4521 4.20215 16.5521 4.20215C17.6521 4.20215 18.5521 3.30215 18.5521 2.20215C18.5521 1.10215 17.6521 0.202148 16.5521 0.202148ZM9.55212 0.202148C8.45212 0.202148 7.55212 1.10215 7.55212 2.20215C7.55212 3.30215 8.45212 4.20215 9.55212 4.20215C10.6521 4.20215 11.5521 3.30215 11.5521 2.20215C11.5521 1.10215 10.6521 0.202148 9.55212 0.202148Z" />
+                            </svg>
+                        </div>
+
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
