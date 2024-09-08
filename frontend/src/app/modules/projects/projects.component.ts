@@ -4,7 +4,7 @@ import { Project } from '../../models/project.model';
 import {
   TableHeader,
   DynamicTableComponent,
-} from './dynamic-table/dynamic-table.component';
+} from '../../shared/components/dynamic-table/dynamic-table.component';
 
 @Component({
   selector: 'app-projects',
