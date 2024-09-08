@@ -59,50 +59,9 @@
             <th>MORE ACTIONS</th>
           </thead>
 
-          <tbody class="bg-white text-gray-400 border-gray-200">
-
-            <td [ngClass]="tableDataPadding">
-              <app-td-team-name [teamIcon]="teemoIcon" [teamName]="teamName" />
-            </td>
-
-            <td [ngClass]="tableDataPadding">
-              {{ key }}
-            </td>
-
-            <td [ngClass]="tableDataPadding">
-              {{ description }}
-            </td>
-
-            <td [ngClass]="tableDataPadding">
-              <app-td-leader-icon [leaderIcon]="leaderIcon"></app-td-leader-icon>
-            </td>
-
-            <td [ngClass]="tableDataPadding">
-              <app-td-members></app-td-members>
-            </td>
-
-            <td [ngClass]="tableDataPadding">
-              {{ currentProject }}
-            </td>
-
-            <td [ngClass]="tableDataPadding">
-              <div class="dropdown z-40">
-                <div tabindex="0" role="button" class="btn m-1 bg-white border-0 z-30" (mouseenter)="isHover = true"
-                  (mouseout)="isHover =  false">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="19" height="5" viewBox="0 0 19 5" class="z-0">
-                    <path
-                      d="M2.55212 0.202148C1.45212 0.202148 0.552124 1.10215 0.552124 2.20215C0.552124 3.30215 1.45212 4.20215 2.55212 4.20215C3.65212 4.20215 4.55212 3.30215 4.55212 2.20215C4.55212 1.10215 3.65212 0.202148 2.55212 0.202148ZM16.5521 0.202148C15.4521 0.202148 14.5521 1.10215 14.5521 2.20215C14.5521 3.30215 15.4521 4.20215 16.5521 4.20215C17.6521 4.20215 18.5521 3.30215 18.5521 2.20215C18.5521 1.10215 17.6521 0.202148 16.5521 0.202148ZM9.55212 0.202148C8.45212 0.202148 7.55212 1.10215 7.55212 2.20215C7.55212 3.30215 8.45212 4.20215 9.55212 4.20215C10.6521 4.20215 11.5521 3.30215 11.5521 2.20215C11.5521 1.10215 10.6521 0.202148 9.55212 0.202148Z"
-                      fill="black" [ngClass]="isHover ? 'fill-white' : 'fill-black'" />
-                  </svg>
-                </div>
-                <ul tabindex="0" class="dropdown-content menu bg-white rounded-box z-[1] w-52 p-2 shadow">
-                  <li><a>Item 1</a></li>
-                  <li><a>Item 2</a></li>
-                </ul>
-              </div>
-            </td>
-
-          </tbody>
+          <div class="overflow-hidden overflow-x-auto">
+            <app-dynamic-table #dyntable></app-dynamic-table>
+          </div>
         </table>
       </div>
     </div>
