@@ -1,14 +1,17 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './component/header/header.component';
-import { SidebarComponent } from './component/sidebar/sidebar.component';
+import { HeaderComponent } from './components/header/header.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { RouterModule } from '@angular/router';
 import { MainLayoutComponent } from './layout/main/main-layout.component';
 import { UserLayoutComponent } from './layout/user/user-layout.component';
+import { TableComponent } from './components/table/table.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const sharedComponent: any[] = [
   HeaderComponent,
-  SidebarComponent
+  SidebarComponent,
+  TableComponent,
 ];
 
 const layoutComponent: any[] = [
@@ -26,11 +29,13 @@ const layoutComponent: any[] = [
   ],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    FontAwesomeModule,
   ],
   exports: [
     ...sharedComponent,
     ...layoutComponent,
+    FontAwesomeModule,
   ]
 })
 export class SharedModule { }

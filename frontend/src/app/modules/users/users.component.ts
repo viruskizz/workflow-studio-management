@@ -1,12 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
+import { faChevronLeft, faChevronRight, faCoffee, faPenToSquare, faTrash, faEye, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
 })
 export class UsersComponent implements OnInit {
+  faCoffee = faCoffee;
+  faPenToSquare = faPenToSquare;
+  faTrash = faTrash;
+  faChevronLeft = faChevronLeft;
+  faChevronRight = faChevronRight;
+  faEye = faEye;
+  faMagnifyingGlass = faMagnifyingGlass;
+
+  isShowModal = false;
+
   users: User[] = [];
   filteredUsers: User[] = [];
   sortColumns: keyof User = 'username';
@@ -14,7 +26,13 @@ export class UsersComponent implements OnInit {
   currentPage = 1;
   userPerPage = 10;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, libray: FaIconLibrary) {
+    libray.addIcons(faCoffee);
+    libray.addIcons(faPenToSquare);
+    libray.addIcons(faTrash);
+    libray.addIcons(faChevronLeft);
+    libray.addIcons(faChevronRight);
+  }
 
   ngOnInit(): void {
     this.userService.listUser().subscribe((users) => {
@@ -23,9 +41,9 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  paginatedUsers() {}
+  paginatedUsers() { }
 
-  pageChange() {}
+  pageChange() { }
 
   filteredUser(searchInput: Event) {
     const inputElement = searchInput.target as HTMLInputElement;
@@ -72,7 +90,7 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  addUser() {}
+  addUser() { }
 
   editUser(userId: number | string): void {
     console.log('Edit user with ID:', userId);
