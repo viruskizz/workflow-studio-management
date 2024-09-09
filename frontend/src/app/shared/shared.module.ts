@@ -15,7 +15,8 @@ const sharedComponent: any[] = [
   HeaderComponent,
   SidebarComponent,
   DynamicTableComponent,
-  TableHeaderComponent
+  TableHeaderComponent,
+  TablePanelComponent,
 ];
 
 const layoutComponent: any[] = [
@@ -30,7 +31,6 @@ const layoutComponent: any[] = [
   declarations: [
     ...sharedComponent,
     ...layoutComponent,
-    TablePanelComponent,
   ],
   imports: [
     CommonModule,
