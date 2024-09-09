@@ -12,6 +12,9 @@ import {
 })
 export class ProjectsComponent implements AfterViewInit {
   data: Project[] = [];
+  tableHeader = "Project";
+  projectsCount = 0;
+
   @ViewChild('dyntable') table!: DynamicTableComponent;
 
   constructor(private projectService: ProjectService) {}
@@ -19,6 +22,7 @@ export class ProjectsComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.projectService.listProject().subscribe((projects) => {
       this.data = projects;
+      this.projectsCount = this.data.length;
 
       const headers: TableHeader[] = [
         { key: 'NAME', index: 0, isSelected: true },
@@ -30,7 +34,7 @@ export class ProjectsComponent implements AfterViewInit {
         { key: 'MORE ACTIONS', index: 6, isSelected: true },
       ];
 
-      this.table.render(headers, this.data);
+      this.table.render(headers);
     });
   }
 
