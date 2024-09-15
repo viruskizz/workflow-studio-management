@@ -13,45 +13,17 @@
           placeholder="Search Team"
           class="pl-4 py-3 w-full bg-white border-search-box border-2 rounded-lg text-2xl"
         />
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="absolute right-6 top-1/2 -translate-y-1/2 w-5 h-5"
-          width="20"
-          height="20"
-          viewBox="0 0 16 16"
-          fill="none"
-        >
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M6 2C3.79086 2 2 3.79086 2 6C2 8.20914 3.79086 10 6 10C8.20914 10 10 8.20914 10 6C10 3.79086 8.20914 2 6 2ZM0 6C0 2.68629 2.68629 0 6 0C9.31371 0 12 2.68629 12 6C12 7.29583 11.5892 8.49572 10.8907 9.47653L15.7071 14.2929C16.0976 14.6834 16.0976 15.3166 15.7071 15.7071C15.3166 16.0976 14.6834 16.0976 14.2929 15.7071L9.47653 10.8907C8.49572 11.5892 7.29583 12 6 12C2.68629 12 0 9.31371 0 6Z"
-            fill="#9CA3AF"
-          />
-        </svg>
+        <app-magneifying-glass-svg/>
       </div>
     </div>
 
     <div class="table-panel">
       <div id="all-team" class="mb-8 flex justify-between items-center">
-        <app-table-header [count]="10" [tableHeader]="tableHeader" />
+        <app-table-header [count]="datas.length" [tableHeader]="tableHeader" />
 
         <button class="btn-add">
           <div class="flex items-center justify-around w-36 gap-2.5">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 11 11"
-              fill="none"
-              class=""
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M5.55203 0.904297C5.93978 0.904297 6.25412 1.21863 6.25412 1.60638V5.1168H9.76453C10.1523 5.1168 10.4666 5.43113 10.4666 5.81888C10.4666 6.20663 10.1523 6.52096 9.76453 6.52096H6.25412V10.0314C6.25412 10.4191 5.93978 10.7335 5.55203 10.7335C5.16428 10.7335 4.84995 10.4191 4.84995 10.0314V6.52096H1.33953C0.951785 6.52096 0.637451 6.20663 0.637451 5.81888C0.637451 5.43113 0.951785 5.1168 1.33953 5.1168H4.84995V1.60638C4.84995 1.21863 5.16428 0.904297 5.55203 0.904297Z"
-                fill="white"
-              />
-            </svg>
+            <app-plus-svg/>
             Add User
           </div>
         </button>
@@ -62,14 +34,7 @@
           <app-dynamic-table #dyntable>
             <tr *ngFor="let row of datas">
               <td class="data-padding">
-                <div class="flex items-center gap-4 h-32">
-                  <div class="avatar w-12">
-                    <div class="w-24 rounded">
-                      <img [src]="row.teamIcon" alt="team-icon" />
-                    </div>
-                  </div>
-                  <p>{{ row.teamName }}</p>
-                </div>
+                <app-team-td [teamIcon]="row.teamIcon" [teamName]="row.teamName"/>
               </td>
 
               <td class="data-padding">
@@ -81,34 +46,19 @@
               </td>
 
               <td class="data-padding">
-                <div class="avatar z-50">
-                  <div class="w-16 rounded-full">
-                    <img [src]="row.leaderIcon" alt="leader-icon" />
-                  </div>
-                </div>
+                <app-icon [imgSrc]="leaderIcon"/>
               </td>
 
               <td class="data-padding">
                 <div class="flex">
-                  <div class="avatar z-50 w-10">
-                    <div class="icon-outline">
-                      <img [src]="row.membersIcon[0]" alt="team-member" />
-                    </div>
-                  </div>
 
-                  <div
-                    class="avatar z-50 w-10 -ml-4"
-                    *ngFor="let memberIcon of row.membersIcon.slice(1, 3)"
-                  >
-                    <div class="icon-outline">
-                      <img
-                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                        alt="team-member"
-                      />
-                    </div>
-                  </div>
+                  <app-member-icon [imgSrc]="row.membersIcon[0]" class="z-50"/>
 
-                  <div class="avatar z-50 w-10 -ml-4"
+                  <app-member-icon [imgSrc]="row.membersIcon[1]" class="z-40"/>
+
+                  <app-member-icon [imgSrc]="row.membersIcon[2]" class="z-30"/>
+
+                  <div class="avatar w-10 h-10 -ml-1"
                        *ngIf="row.membersIcon.length > 3">
                     <div
                       class="icon-outline bg-gray-300 text-black relative"
@@ -132,16 +82,7 @@
                     role="button"
                     class="btn m-1 border-transparent bg-transparent hover:fill-white"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="19"
-                      height="5"
-                      viewBox="0 0 19 5"
-                    >
-                      <path
-                        d="M2.55212 0.202148C1.45212 0.202148 0.552124 1.10215 0.552124 2.20215C0.552124 3.30215 1.45212 4.20215 2.55212 4.20215C3.65212 4.20215 4.55212 3.30215 4.55212 2.20215C4.55212 1.10215 3.65212 0.202148 2.55212 0.202148ZM16.5521 0.202148C15.4521 0.202148 14.5521 1.10215 14.5521 2.20215C14.5521 3.30215 15.4521 4.20215 16.5521 4.20215C17.6521 4.20215 18.5521 3.30215 18.5521 2.20215C18.5521 1.10215 17.6521 0.202148 16.5521 0.202148ZM9.55212 0.202148C8.45212 0.202148 7.55212 1.10215 7.55212 2.20215C7.55212 3.30215 8.45212 4.20215 9.55212 4.20215C10.6521 4.20215 11.5521 3.30215 11.5521 2.20215C11.5521 1.10215 10.6521 0.202148 9.55212 0.202148Z"
-                      />
-                    </svg>
+                  <app-three-dot-svg/>
                   </div>
                   <ul
                     tabindex="0"
