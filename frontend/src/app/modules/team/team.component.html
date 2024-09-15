@@ -53,12 +53,12 @@
         <div class="overflow-hidden overflow-x-auto">
           <app-dynamic-table #dyntable>
             <tr *ngFor="let row of datas">
-              
+
                 <td [ngClass]="tableDataPadding">
                   <div class="flex items-center gap-4 h-32">
                     <div class="avatar w-12">
                       <div class="w-24 rounded">
-                        <img [src]="teemoIcon" />
+                        <img [src]="teemoIcon" alt="team-icon"/>
                       </div>
                     </div>
                     <p>{{ teamName }}</p>
@@ -76,7 +76,7 @@
                 <td [ngClass]="tableDataPadding">
                   <div class="avatar z-50">
                     <div class="w-16 rounded-full">
-                      <img [src]="leaderIcon" />
+                      <img [src]="leaderIcon" alt="leader-icon"/>
                     </div>
                   </div>
                 </td>
@@ -87,6 +87,7 @@
                       <div [ngClass]="[iconOutline]">
                         <img
                           src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                          alt="team-member"
                         />
                       </div>
                     </div>
@@ -95,6 +96,7 @@
                       <div [ngClass]="[iconOutline]">
                         <img
                           src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                           alt="team-member"
                         />
                       </div>
                     </div>
@@ -103,6 +105,7 @@
                       <div [ngClass]="[iconOutline]">
                         <img
                           src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                           alt="team-member"
                         />
                       </div>
                     </div>
