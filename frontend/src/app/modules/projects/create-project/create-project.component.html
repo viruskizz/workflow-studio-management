@@ -1,0 +1,75 @@
+<dialog #myModal id="my_modal_1" class="modal">
+    <div class="modal-box max-w-[676px] bg-white text-[#0D062D] flex flex-col items-center justify-center">
+        <div class="w-full flex justify-between items-center mb-4">
+            <h1>Details</h1>
+            <form method="dialog">
+                <!-- Close button to close the modal -->
+                <button class="btn btn-outline btn-sm" (click)="myModal.close()">Close</button>
+            </form>
+        </div>
+        <div class="w-full flex flex-col items-center">
+            <div class="flex flex-col items-center mb-4">
+                <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M0 2C0 0.895429 0.89543 0 2 0H98C99.1046 0 100 0.895431 100 2V98C100 99.1046 99.1046 100 98 100H2C0.895429 100 0 99.1046 0 98V2Z"
+                        fill="#D9D9D9" />
+                    <path
+                        d="M56.3074 57.4H44.1199C43.3432 57.4 42.7136 56.5606 42.7136 55.525V44.275C42.7136 43.2395 43.3432 42.4 44.1199 42.4H56.3074C57.084 42.4 57.7136 43.2395 57.7136 44.275V55.525C57.7136 56.5606 57.084 57.4 56.3074 57.4ZM45.9949 44.5875C45.0888 44.5875 44.3542 45.5669 44.3542 46.775C44.3542 47.9831 45.0888 48.9625 45.9949 48.9625C46.901 48.9625 47.6355 47.9831 47.6355 46.775C47.6355 45.5669 46.901 44.5875 45.9949 44.5875ZM44.5886 54.9H55.8386V50.525L53.2747 47.1065C53.1374 46.9234 52.9148 46.9234 52.7775 47.1065L48.8074 52.4L47.181 50.2315C47.0437 50.0484 46.8211 50.0484 46.6838 50.2315L44.5886 53.025V54.9Z"
+                        fill="#787486" />
+                </svg>
+                <button class="btn btn-secondary mt-2">Add Icon</button>
+            </div>
+            <p class="text-center mb-4">Required fields are marked with an asterisk *</p>
+            <div class="w-full max-w-sm">
+                <!-- Form fields -->
+                <form [formGroup]="createProjectForm" (ngSubmit)="onSubmit(myModal)">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Name *</span>
+                        </label>
+                        <input type="text" formControlName="name" placeholder="Type here"
+                            class="input input-bordered w-full" />
+
+                        <label class="label">
+                            <span class="label-text">Key *</span>
+                        </label>
+                        <input type="text" formControlName="key" placeholder="Type here"
+                            class="input input-bordered w-full" />
+
+                        <label class="label">
+                            <span class="label-text">Description</span>
+                        </label>
+                        <textarea formControlName="description" placeholder="Type here"
+                            class="textarea textarea-bordered w-full"></textarea>
+
+                        <label class="label">
+                            <span class="label-text">Category *</span>
+                        </label>
+                        <select formControlName="category" class="select select-bordered w-full">
+                            <option disabled selected>Select a category</option>
+                            <option>Han Solo</option>
+                            <option>Greedo</option>
+                        </select>
+
+                        <label class="label">
+                            <span class="label-text">Project Lead *</span>
+                        </label>
+                        <input type="text" formControlName="projectLead" placeholder="Type here"
+                            class="input input-bordered w-full" />
+
+                        <label class="label">
+                            <span class="label-text">Assignee Team *</span>
+                        </label>
+                        <select formControlName="assigneeTeam" class="select select-bordered w-full">
+                            <option disabled selected>Select a team</option>
+                            <option>Team A</option>
+                            <option>Team B</option>
+                        </select>
+                    </div>
+                    <!-- Submit button -->
+                    <button type="submit" class="btn btn-primary mt-4">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</dialog>
