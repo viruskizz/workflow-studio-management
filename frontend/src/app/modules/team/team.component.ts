@@ -8,8 +8,8 @@ import { DynamicTableComponent, TableHeader } from '../../shared/components/dyna
   templateUrl: './team.component.html',
 })
 export class TeamComponent implements AfterViewInit {
-  teamsCount = 10;
   tableHeader = 'Teams';
+  rowCount = 0;
 
   teamRows: TeamRow[] = [];
 
@@ -35,7 +35,7 @@ export class TeamComponent implements AfterViewInit {
       key: this.key,
       description: this.description,
       leaderIcon: this.leaderIcon,
-      membersIcon: Array.from({ length: 20 }, () => this.memberIcon),
+      membersIcon: Array.from({ length: 14 }, () => this.memberIcon),
       currentProject: this.currentProject,
     };
   });
@@ -54,6 +54,8 @@ export class TeamComponent implements AfterViewInit {
     ];
 
     this.table.render(headers);
+
+    this.rowCount = this.datas.length;
   }
 
   // ngOnInit(): void {

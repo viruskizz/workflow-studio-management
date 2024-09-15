@@ -13,6 +13,7 @@ import {
 export class ProjectsComponent implements AfterViewInit {
   data: Project[] = [];
   tableHeader = "Project";
+  rowCount = 0;
   projectsCount = 0;
 
   @ViewChild('dyntable') table!: DynamicTableComponent;
@@ -35,6 +36,8 @@ export class ProjectsComponent implements AfterViewInit {
       ];
 
       this.table.render(headers);
+
+      this.rowCount = this.data.length;
     });
   }
 
