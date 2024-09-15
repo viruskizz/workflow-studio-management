@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from "../../shared/shared.module";
 import { CommonModule } from "@angular/common";
+import { TeamTdComponent } from './components/team-td/team-td.component';
+import { MemberIconComponent } from './components/member-icon/member-icon.component';
 
 const routes: Routes = [
   { path: '', component: TeamComponent }
@@ -12,6 +14,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     TeamComponent,
+    TeamTdComponent,
+    MemberIconComponent,
   ],
   imports: [
     CommonModule,
