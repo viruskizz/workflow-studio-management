@@ -4,11 +4,10 @@ import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { RouterModule } from '@angular/router';
 import { MainLayoutComponent } from './layout/main/main-layout.component';
-import { UserLayoutComponent } from './layout/user/user-layout.component';  
+import { UserLayoutComponent } from './layout/user/user-layout.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DynamicTableComponent } from './components/dynamic-table/dynamic-table.component';
 import { TableHeaderComponent } from './components/table-header/table-header.component';
-import { TablePanelComponent } from './components/table-panel/table-panel.component';
 
 
 const sharedComponent: any[] = [
@@ -16,7 +15,6 @@ const sharedComponent: any[] = [
   SidebarComponent,
   DynamicTableComponent,
   TableHeaderComponent,
-  TablePanelComponent,
 ];
 
 const layoutComponent: any[] = [
