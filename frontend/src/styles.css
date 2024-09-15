@@ -11,4 +11,12 @@
   .table-panel {
     @apply bg-table-bg rounded-3xl p-6;
   }
+
+  .data-padding {
+    @apply px-4 py-4;
+  }
+
+  .icon-outline {
+    @apply outline outline-4 outline-white rounded-full;
+  }
 }
