@@ -15,6 +15,7 @@ export class ProjectsComponent implements AfterViewInit {
   tableHeader = "Project";
   rowCount = 0;
   projectsCount = 0;
+  leaderIcon = "https://media-rockstargames-com.akamaized.net/rockstargames-newsite/img/global/downloads/buddyiconsconavatars/rdr2_tshirt_linocut_textured_256x256.jpg";
 
   @ViewChild('dyntable') table!: DynamicTableComponent;
 
