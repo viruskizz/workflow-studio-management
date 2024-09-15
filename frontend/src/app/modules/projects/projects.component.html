@@ -52,13 +52,13 @@
       <div class="overflow-hidden overflow-x-auto">
         <app-dynamic-table #dyntable>
           <tr *ngFor="let row of data">
-            <td>{{ row.name }}</td>
-            <td>{{ row.key }}</td>
-            <td>{{ row.description }}</td>
-            <td>
+            <td class="data-padding">{{ row.name }}</td>
+            <td class="data-padding">{{ row.key }}</td>
+            <td class="data-padding">{{ row.description }}</td>
+            <td class="data-padding">
               {{ row.status || "Pending" }}
             </td>
-            <td>
+            <td class="data-padding">
               <div class="avatar">
                 <div class="h-12 w-12 rounded-full">
                   <img
@@ -68,10 +68,10 @@
                 </div>
               </div>
             </td>
-            <td>
+            <td class="data-padding">
               {{ row.category || "General" }}
             </td>
-            <td>
+            <td class="data-padding">
               <div class="dropdown">
                 <div
                   tabindex="0"
