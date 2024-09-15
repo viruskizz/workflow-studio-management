@@ -14,7 +14,6 @@ const routes: Routes = [
     ProjectsComponent,
   ],
   imports: [
-    CommonModule,
     RouterModule.forChild(routes),
     SharedModule
   ]
