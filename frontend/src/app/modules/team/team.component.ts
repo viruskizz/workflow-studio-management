@@ -14,7 +14,7 @@ export class TeamComponent implements AfterViewInit {
   tableHeader = "Teams";
 
   teamRows : TeamRow[] = [];
-  
+
   @ViewChild('dyntable') table! : DynamicTableComponent;
 
   key = "KEY";
@@ -29,7 +29,7 @@ export class TeamComponent implements AfterViewInit {
   tableDataPadding = "px-4 py-4"
 
   //icons
-  teemoIcon = "https://masteringruneterra.com/wp-content/plugins/deck-viewer/assets/images/champions/01PZ008.webp";
+  teamIcon = "https://masteringruneterra.com/wp-content/plugins/deck-viewer/assets/images/champions/01PZ008.webp";
   leaderIcon = "https://64.media.tumblr.com/4af2b4026f724a749b27e4cbae3f914a/d2464c1d38422cb8-d8/s1280x1920/1873c68cbe57ab93ef97412adb1d715082e73bc6.jpg";
 
   teamName = "Delta Force 510"
@@ -56,5 +56,5 @@ export class TeamComponent implements AfterViewInit {
   //     console.log( this.teamRows );
   //   });
   // }
-    
+
 }
