@@ -16,6 +16,7 @@ const routes: Routes = [
   { path: 'users', component: UserLayoutComponent, loadChildren: () => import('./modules/users/users.module').then(m => m.UsersModule) },
   { path: 'team', component: UserLayoutComponent, loadChildren: () => import('./modules/team/team.module').then(m => m.TeamModule) },
   { path: 'settings', component: UserLayoutComponent, loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule) },
+  { path: 'user-detail', component: UserLayoutComponent, loadChildren: () => import('./modules/user-detail/user-detail.module').then(m => m.UserDetailModule) },
   {
     path: '',
     component: MainLayoutComponent,
