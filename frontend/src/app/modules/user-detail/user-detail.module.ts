@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { UserDetailComponent } from './user-detail.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserInformationComponent } from './user-information/user-information.component';
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
-export const userDetailRoutes : Routes = [];
-
+export const userDetailRoutes: Routes = [
+  { path: '', component: UserDetailComponent },
+];
 
 @NgModule({
   declarations: [
@@ -14,6 +15,6 @@ export const userDetailRoutes : Routes = [];
     UserProfileComponent,
     UserInformationComponent,
   ],
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule.forChild(userDetailRoutes)],
 })
 export class UserDetailModule {}
