@@ -9,10 +9,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { RootModule } from './modules/root/root.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { UserDetailComponent } from './modules/user-detail/user-detail.component';
+import { UserProfileComponent } from './modules/user-detail/user-profile/user-profile.component';
+import { UserInformationComponent } from './modules/user-detail/user-information/user-information.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    UserDetailComponent,
+    UserProfileComponent,
+    UserInformationComponent,
   ],
   imports: [
     BrowserModule,
