@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CreateProjectComponent } from "./create-project/create-project.component";
 import { SharedModule } from "../../shared/shared.module";
+import { CommonModule } from "@angular/common";
 
 const routes: Routes = [
   { path: '', component: ProjectsComponent }

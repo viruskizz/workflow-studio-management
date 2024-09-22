@@ -6,29 +6,19 @@ export interface TableHeader {
   isSelected: boolean;
 }
 
-export interface DynamicTable {
-  headers: TableHeader[];
-  data: any[];
-}
-
 @Component({
   selector: 'app-dynamic-table',
   templateUrl: './dynamic-table.component.html',
   styleUrls: ['./dynamic-table.component.css'],
 })
 export class DynamicTableComponent implements OnInit {
-  @Input() tableData: DynamicTable = { headers: [], data: [] };
-  allHeader: TableHeader[] = [];
+  @Input() headers: TableHeader[] = [];
 
   ngOnInit() {
-    this.tableData = { headers: [], data: [] };
+    this.headers = [];
   }
 
-  render(headers: TableHeader[], data: any[]) {
-    this.tableData = {
-      headers: headers.filter((x) => x.isSelected),
-      data: data,
-    };
-    this.allHeader = headers;
+  render(headers: TableHeader[]) {
+    this.headers = headers;
   }
 }
