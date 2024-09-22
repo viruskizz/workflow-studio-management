@@ -12,6 +12,11 @@ import {
 })
 export class ProjectsComponent implements AfterViewInit {
   data: Project[] = [];
+  tableHeader = "Project";
+  rowCount = 0;
+  projectsCount = 0;
+  leaderIcon = "https://media-rockstargames-com.akamaized.net/rockstargames-newsite/img/global/downloads/buddyiconsconavatars/rdr2_tshirt_linocut_textured_256x256.jpg";
+
   @ViewChild('dyntable') table!: DynamicTableComponent;
 
   constructor(private projectService: ProjectService) {}
@@ -19,6 +24,7 @@ export class ProjectsComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.projectService.listProject().subscribe((projects) => {
       this.data = projects;
+      this.projectsCount = this.data.length;
 
       const headers: TableHeader[] = [
         { key: 'NAME', index: 0, isSelected: true },
@@ -30,7 +36,9 @@ export class ProjectsComponent implements AfterViewInit {
         { key: 'MORE ACTIONS', index: 6, isSelected: true },
       ];
 
-      this.table.render(headers, this.data);
+      this.table.render(headers);
+
+      this.rowCount = this.data.length;
     });
   }
 
