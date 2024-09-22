@@ -5,14 +5,12 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { RouterModule } from '@angular/router';
 import { MainLayoutComponent } from './layout/main/main-layout.component';
 import { UserLayoutComponent } from './layout/user/user-layout.component';
-import { TableComponent } from './components/table/table.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DynamicTableComponent } from './components/dynamic-table/dynamic-table.component';
 
 const sharedComponent: any[] = [
   HeaderComponent,
   SidebarComponent,
-  TableComponent,
   DynamicTableComponent
 ];
 
