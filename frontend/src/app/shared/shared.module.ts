@@ -14,6 +14,14 @@ import { MagneifyingGlassSvgComponent } from './svgs/magneifying-glass-svg/magne
 import { ThreeDotSvgComponent } from './svgs/three-dot-svg/three-dot-svg.component';
 import { FilterSvgComponent } from './svgs/filter-svg/filter-svg.component';
 import { ArrowDownSvgComponent } from './svgs/arrow-down-svg/arrow-down-svg.component';
+import { DashboardLayoutComponent } from './layouts/dashboard/dashboard-layout.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { DashboardNavbarComponent } from './layouts/dashboard/dashboard-navbar/dashboard-navbar.component';
+import { DashboardSidebarComponent } from './layouts/dashboard/dashboard-sidebar/dashboard-sidebar.component';
+
 
 const svgs: any[] = [
   PlusSvgComponent,
@@ -36,6 +44,12 @@ const layoutComponent: any[] = [
   UserLayoutComponent,
 ];
 
+const layoutsComponents: any[] = [
+  DashboardLayoutComponent,
+  DashboardNavbarComponent,
+  DashboardSidebarComponent,
+]
+
 @NgModule({
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA,
@@ -44,6 +58,7 @@ const layoutComponent: any[] = [
     ...sharedComponent,
     ...layoutComponent,
     ...svgs,
+    ...layoutsComponents,
     PlusSvgComponent,
     MagneifyingGlassSvgComponent,
     ThreeDotSvgComponent,
@@ -54,11 +69,16 @@ const layoutComponent: any[] = [
     CommonModule,
     RouterModule,
     FontAwesomeModule,
+    MatSidenavModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatIconModule,
   ],
   exports: [
     ...sharedComponent,
     ...layoutComponent,
     ...svgs,
+    ...layoutsComponents,
     FontAwesomeModule,
   ]
 })

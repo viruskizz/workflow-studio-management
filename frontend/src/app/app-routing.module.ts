@@ -4,11 +4,13 @@ import { PageNotFoundComponent } from './modules/root/page-not-found/page-not-fo
 import { rootRoutes } from './modules/root/root.module';
 import { UserLayoutComponent } from './shared/layout/user/user-layout.component';
 import { MainLayoutComponent } from './shared/layout/main/main-layout.component';
+import { DashboardLayoutComponent } from './shared/layouts/dashboard/dashboard-layout.component';
 
 const routes: Routes = [
   {
     path: 'dashboard',
-    component: UserLayoutComponent,
+    // component: UserLayoutComponent,
+    component: DashboardLayoutComponent,
     loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
   { path: 'projects', component: UserLayoutComponent, loadChildren: () => import('./modules/projects/projects.module').then(m => m.ProjectsModule) },
