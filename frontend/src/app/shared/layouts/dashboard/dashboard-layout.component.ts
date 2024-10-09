@@ -6,5 +6,4 @@ import { Component } from '@angular/core';
   styleUrl: './dashboard-layout.component.css'
 })
 export class DashboardLayoutComponent {
-  showFiller = false;
 }

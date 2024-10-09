@@ -8,4 +8,6 @@ import { MatDrawer } from '@angular/material/sidenav';
 export class DashboardNavbarComponent {
   // showFiller = false;
   @Input({ required: true }) drawer: MatDrawer | undefined
+
+  appName = 'Workflow'
 }

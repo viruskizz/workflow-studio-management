@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { RouterModule } from '@angular/router';
-import { MainLayoutComponent } from './layout/main/main-layout.component';
-import { UserLayoutComponent } from './layout/user/user-layout.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DynamicTableComponent } from './components/dynamic-table/dynamic-table.component';
 import { TableHeaderComponent } from './components/table-header/table-header.component';
@@ -19,8 +17,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 import { DashboardNavbarComponent } from './layouts/dashboard/dashboard-navbar/dashboard-navbar.component';
 import { DashboardSidebarComponent } from './layouts/dashboard/dashboard-sidebar/dashboard-sidebar.component';
+import { MainLayoutComponent } from './layouts/main/main-layout.component';
 
 
 const svgs: any[] = [
@@ -39,12 +39,8 @@ const sharedComponent: any[] = [
   IconComponent
 ];
 
-const layoutComponent: any[] = [
-  MainLayoutComponent,
-  UserLayoutComponent,
-];
-
 const layoutsComponents: any[] = [
+  MainLayoutComponent,
   DashboardLayoutComponent,
   DashboardNavbarComponent,
   DashboardSidebarComponent,
@@ -56,7 +52,6 @@ const layoutsComponents: any[] = [
   ],
   declarations: [
     ...sharedComponent,
-    ...layoutComponent,
     ...svgs,
     ...layoutsComponents,
     PlusSvgComponent,
@@ -73,10 +68,10 @@ const layoutsComponents: any[] = [
     MatButtonModule,
     MatToolbarModule,
     MatIconModule,
+    MatListModule,
   ],
   exports: [
     ...sharedComponent,
-    ...layoutComponent,
     ...svgs,
     ...layoutsComponents,
     FontAwesomeModule,

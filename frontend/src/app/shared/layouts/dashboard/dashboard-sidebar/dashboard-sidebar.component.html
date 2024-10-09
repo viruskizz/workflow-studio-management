@@ -1,7 +1,23 @@
-<p>Auto-resizing sidenav</p>
+<!-- <p>Auto-resizing sidenav</p>
 @if (showFiller) {
 <p>Lorem, ipsum dolor sit amet consectetur.</p>
 }
 <button (click)="showFiller = !showFiller" mat-raised-button>
     Toggle extra text
-</button>
+</button> -->
+
+<mat-nav-list>
+    @for (page of pages; track page.title) {
+        <!-- <mat-list-item>{{ page.title }}</mat-list-item> -->
+        <mat-list-item>
+            <a [routerLink]="page.url" aria-label="home" class="flex items-center" >
+                <mat-icon matListItemIcon aria-hidden="false" [aria-label]="page.icon" [fontIcon]="page.icon" class="mx-2"></mat-icon>
+                <span>
+                    {{ page.title }}
+                </span>
+            </a>
+        </mat-list-item>
+    } @empty {
+
+    }
+</mat-nav-list>
