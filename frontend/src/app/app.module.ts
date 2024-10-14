@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { RootModule } from './modules/root/root.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     }),
     FontAwesomeModule,
   ],
-  providers: [],
+  providers: [
+    provideAnimationsAsync()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
