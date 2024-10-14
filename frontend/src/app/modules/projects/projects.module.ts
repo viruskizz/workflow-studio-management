@@ -3,7 +3,9 @@ import { ProjectsComponent } from './projects.component';
 import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from "../../shared/shared.module";
-import { CommonModule } from "@angular/common";
+import { MatTableModule } from "@angular/material/table";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
 
 const routes: Routes = [
   { path: '', component: ProjectsComponent }
@@ -15,7 +17,12 @@ const routes: Routes = [
   ],
   imports: [
     RouterModule.forChild(routes),
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule,
+
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
   ]
 })
 export class ProjectsModule { }

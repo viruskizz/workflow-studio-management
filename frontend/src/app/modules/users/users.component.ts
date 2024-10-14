@@ -1,9 +1,8 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
 import { MatSort } from '@angular/material/sort';
 import { FormControl } from '@angular/forms';
-import { debounceTime } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 
