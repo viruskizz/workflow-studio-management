@@ -5,10 +5,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { UserViewComponent } from './user-view/user-view.component';
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from '@angular/material/input';
 
 const routes: Routes = [
   { path: '', component: UsersComponent },
-  { path: 'views/:userId', component: UserViewComponent }
+  { path: ':userId', component: UserViewComponent }
 ]
 
 @NgModule({
@@ -21,7 +25,11 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ReactiveFormsModule,
     DatePipe,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MatTableModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
   ]
 })
 export class UsersModule { }
