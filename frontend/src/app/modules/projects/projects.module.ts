@@ -7,16 +7,22 @@ import { MatTableModule } from "@angular/material/table";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { ProjectViewComponent } from "./project-view/project-view.component";
+import { ProjectCreateDialogComponent } from './project-create-dialog/project-create-dialog.component';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatCardModule } from '@angular/material/card'
 
 const routes: Routes = [
   { path: '', component: ProjectsComponent },
+  { path: 'create', component: ProjectCreateDialogComponent },
   { path: ':id', component: ProjectViewComponent},
 ]
 
 @NgModule({
   declarations: [
     ProjectsComponent,
-    ProjectViewComponent
+    ProjectViewComponent,
+    ProjectCreateDialogComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -26,6 +32,9 @@ const routes: Routes = [
     MatTableModule,
     MatButtonModule,
     MatIconModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatCardModule,
   ]
 })
 export class ProjectsModule { }
