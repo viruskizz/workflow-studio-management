@@ -67,6 +67,7 @@
         <tr
             mat-row
             *matRowDef="let row; columns: displayedColumns;"
+            (click)="toView(row)"
         ></tr>
       </table>
     </div>

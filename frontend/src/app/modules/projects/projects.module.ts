@@ -6,14 +6,17 @@ import { SharedModule } from "../../shared/shared.module";
 import { MatTableModule } from "@angular/material/table";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
+import { ProjectViewComponent } from "./project-view/project-view.component";
 
 const routes: Routes = [
-  { path: '', component: ProjectsComponent }
+  { path: '', component: ProjectsComponent },
+  { path: ':id', component: ProjectViewComponent},
 ]
 
 @NgModule({
   declarations: [
     ProjectsComponent,
+    ProjectViewComponent
   ],
   imports: [
     RouterModule.forChild(routes),
