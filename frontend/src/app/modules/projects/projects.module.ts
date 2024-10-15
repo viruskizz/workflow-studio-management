@@ -11,7 +11,8 @@ import { ProjectCreateDialogComponent } from './project-create-dialog/project-cr
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatCardModule } from '@angular/material/card'
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete'; 
+import { CommonModule } from "@angular/common";
 const routes: Routes = [
   { path: '', component: ProjectsComponent },
   { path: 'create', component: ProjectCreateDialogComponent },
@@ -27,6 +28,7 @@ const routes: Routes = [
   imports: [
     RouterModule.forChild(routes),
     SharedModule,
+    CommonModule,
     ReactiveFormsModule,
 
     MatTableModule,
@@ -35,6 +37,7 @@ const routes: Routes = [
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
+    MatAutocompleteModule
   ]
 })
 export class ProjectsModule { }
