@@ -1,4 +1,4 @@
-import { TeamMember } from '@backend/typeorm';
+import { TeamMember } from '../../../../typeorm';
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';

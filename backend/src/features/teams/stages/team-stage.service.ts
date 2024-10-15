@@ -1,4 +1,4 @@
-import { TeamStage } from '@backend/typeorm';
+import { TeamStage } from '../../../typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

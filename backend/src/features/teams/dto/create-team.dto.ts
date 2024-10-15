@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { Team } from '@backend/typeorm/team.entity';
+import { Team } from '../../../typeorm/team.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
 
