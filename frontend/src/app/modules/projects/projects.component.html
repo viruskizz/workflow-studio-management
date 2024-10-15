@@ -1,93 +1,75 @@
 <div class="bg-white h-full p-14">
   <h1 class="text-6xl text-black font-semibold">Projects</h1>
   <div class="mt-32">
-    <div id="search-bar" class="mb-4 gap-2.5 flex items-center text-md">
-      <label class="relative block w-1/5">
-        <app-filter-svg/>
-        <select
-          class="pl-12 py-3 w-full bg-white border-search-box border-2 rounded-lg text-2xl appearance-none"
-        >
-          <option value="">Status</option>
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
-        </select>
-        <app-arrow-down-svg/>
-      </label>
-
-      <label class="relative block w-1/5">
-        <app-filter-svg/>
-        <select
-          class="pl-12 py-3 w-full bg-white border-search-box border-2 rounded-lg text-2xl appearance-none"
-        >
-          <option value="">Category</option>
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
-        </select>
-        <app-arrow-down-svg/>
-      </label>
-      <div class="relative w-1/4">
-        <input
-          type="text"
-          placeholder="Search Projects"
-          class="pl-4 py-3 w-full bg-white border-search-box border-2 rounded-lg text-2xl"
-        />
-        <app-magneifying-glass-svg/>
+    <div class="table-panel w-100">
+      <div class="mb-8 flex justify-between items-center">
+        <app-table-header [count]="5" [tableHeader]="tableHeader" />
+        <div class="flex justify-center px-4">
+          <button mat-fab extended class="bg-primary" routerLink="create">
+            <mat-icon>add</mat-icon>
+            Create
+          </button>
+        </div>
       </div>
-    </div>
+        
+      <table mat-table [dataSource]="dataSource" matSort>
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let element">{{element.id}}</td>
+        </ng-container>
+      
+        <!-- Avatar Column -->
+        <ng-container matColumnDef="key">
+          <th mat-header-cell *matHeaderCellDef>Key</th>
+          <td mat-cell *matCellDef="let element">{{element.key}}</td>
+        </ng-container>
+      
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let element">{{element.name}}</td>
+        </ng-container>
+      
+        <!-- Description Column -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let element">{{element.description}}</td>
+        </ng-container>
 
-    <div class="table-panel">
-      <div id="all-team" class="mb-8 flex justify-between items-center">
-        <app-table-header [count]="rowCount" [tableHeader]="tableHeader" />
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let element">{{element.status}}</td>
+        </ng-container>
+    
+        <!-- Leader Column -->
+        <ng-container matColumnDef="leader">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Leader</th>
+          <td mat-cell *matCellDef="let element">{{element.leader}}</td>
+        </ng-container>
 
-        <button class="btn-add" onclick="my_modal_1.showModal()">
-          <div class="flex items-center justify-around w-36 gap-2.5">
-            <app-plus-svg />
-            Add Project
-          </div>
-        </button>
-      </div>
-
-      <div class="overflow-hidden overflow-x-auto">
-        <app-dynamic-table #dyntable>
-          <tr *ngFor="let row of data">
-            <td class="data-padding">{{ row.name }}</td>
-            <td class="data-padding">{{ row.key }}</td>
-            <td class="data-padding">{{ row.description }}</td>
-            <td class="data-padding">
-              {{ row.status || "Pending" }}
-            </td>
-            <td class="data-padding">
-              <app-icon [imgSrc]="leaderIcon"/>
-              <div class="avatar">
-              </div>
-            </td>
-            <td class="data-padding">
-              {{ row.category || "General" }}
-            </td>
-            <td class="data-padding">
-              <div class="dropdown">
-                <div
-                  tabindex="0"
-                  role="button"
-                  class="btn m-1 border-transparent bg-transparent hover:fill-white"
-                >
-                  <app-three-dot-svg/>
-                </div>
-                <ul
-                  tabindex="0"
-                  class="dropdown-content menu bg-white rounded-box w-52 p-2 z-50 shadow text-lg font-medium"
-                >
-                  <li><a>Show details</a></li>
-                  <li><a>Edit</a></li>
-                </ul>
-              </div>
-            </td>
-          </tr>
-        </app-dynamic-table>
-      </div>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element">
+            <!-- <button class="p-2 rounded-lg hover:bg-zinc-600" (click)="viewUser(element)">
+              <mat-icon>visibility</mat-icon>
+          </button>
+          <button class="p-2 rounded-lg hover:bg-zinc-600" (click)="editUser(element)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button class="p-2 rounded-lg hover:bg-zinc-600" (click)="deleteUser(element)">
+            <mat-icon>delete</mat-icon>
+          </button> -->
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns;"
+            (click)="toView(row)"
+        ></tr>
+      </table>
     </div>
   </div>
 </div>
-`

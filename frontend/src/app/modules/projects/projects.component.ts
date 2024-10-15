@@ -1,48 +1,32 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProjectService } from '../../services/project.service';
 import { Project } from '../../models/project.model';
-import {
-  TableHeader,
-  DynamicTableComponent,
-} from '../../shared/components/dynamic-table/dynamic-table.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-projects',
+  styleUrl: './projects.component.css',
   templateUrl: './projects.component.html',
 })
-export class ProjectsComponent implements AfterViewInit {
-  data: Project[] = [];
+export class ProjectsComponent implements OnInit {
   tableHeader = "Project";
-  rowCount = 0;
-  projectsCount = 0;
-  leaderIcon = "https://media-rockstargames-com.akamaized.net/rockstargames-newsite/img/global/downloads/buddyiconsconavatars/rdr2_tshirt_linocut_textured_256x256.jpg";
+  displayedColumns: string[] = ['id', 'key', 'name', 'description', 'status', 'leader', 'actions'];
+  dataSource = new MatTableDataSource<Project>([]);
+  @ViewChild(MatSort) sort!: MatSort;
 
-  @ViewChild('dyntable') table!: DynamicTableComponent;
 
-  constructor(private projectService: ProjectService) {}
+  constructor(private projectService: ProjectService, private router: Router) {}
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
+    this.dataSource.sort = this.sort;
     this.projectService.listProject().subscribe((projects) => {
-      this.data = projects;
-      this.projectsCount = this.data.length;
-
-      const headers: TableHeader[] = [
-        { key: 'NAME', index: 0, isSelected: true },
-        { key: 'KEY', index: 1, isSelected: true },
-        { key: 'DESCRIPTION', index: 2, isSelected: true },
-        { key: 'STATUS', index: 3, isSelected: true },
-        { key: 'LEAD', index: 4, isSelected: true },
-        { key: 'CATEGORY', index: 5, isSelected: true },
-        { key: 'MORE ACTIONS', index: 6, isSelected: true },
-      ];
-
-      this.table.render(headers);
-
-      this.rowCount = this.data.length;
-    });
+      this.dataSource.data = projects;
+    })
   }
 
-  get projectCount(): number {
-    return this.data.length;
+  toView(project: Project) {
+    this.router.navigate(['projects', project.id,])
   }
 }
