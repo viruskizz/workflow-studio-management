@@ -4,10 +4,10 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UsersService } from '@backend/features/users/users.service';
+import { UsersService } from '../../features/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
-import { User } from '@backend/typeorm';
+import { User } from '../../typeorm';
 
 @Injectable()
 export class AuthService {
