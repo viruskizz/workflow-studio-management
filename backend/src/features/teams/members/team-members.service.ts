@@ -1,4 +1,4 @@
-import { TeamMember } from '@backend/typeorm';
+import { TeamMember } from '../../../typeorm';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

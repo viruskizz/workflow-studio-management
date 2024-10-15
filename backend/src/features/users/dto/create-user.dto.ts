@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
-import { User } from '@backend/typeorm';
+import { User } from '../../../typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto extends PartialType(User) {
