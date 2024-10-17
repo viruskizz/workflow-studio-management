@@ -7,6 +7,14 @@
   />
   <div>
     <h4>{{workDescription}}</h4>
-    <p>{{document.name}}, You updated this on {{ document.lastModified }}</p>
+    <p class="text-gray-400">
+      <span class="italic text-black">
+        {{document.name}}
+      </span>
+      , Last modified
+      <span class="italic text-black">
+        {{ document.lastModified }}
+      </span>
+    </p>
   </div>
 </div>

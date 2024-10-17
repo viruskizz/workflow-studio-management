@@ -12,6 +12,8 @@ import { WorkStatComponent } from './user-profile/work-stat/work-stat.component'
 import { StatBoxComponent } from './components/stat-box/stat-box.component';
 import { WorkItemComponent } from './components/work-item/work-item.component';
 import { WorkOnComponent } from './user-profile/work-on/work-on.component';
+import { WorkWithComponent } from './user-profile/work-with/work-with.component';
+import { WorkMembmerComponent } from './components/member/member.component';
 
 export const userDetailRoutes: Routes = [
   { path: '', component: UserDetailComponent },
@@ -28,6 +30,8 @@ export const userDetailRoutes: Routes = [
     StatBoxComponent,
     WorkItemComponent,
     WorkOnComponent,
+    WorkWithComponent,
+    WorkMembmerComponent
   ],
   imports: [
     CommonModule,

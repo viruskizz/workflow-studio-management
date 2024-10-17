@@ -1,0 +1,12 @@
+<div>
+  <h3>Works with</h3>
+
+  <div class="w-full border-2 rounded-md h-40 overflow-auto p-8 my-4
+              grid grid-cols-3 gap-4"
+    >
+    <div *ngFor="let member of members">
+    <app-member [imageIconPath]="member.imageIconPath"
+                [name]="member.name"></app-member>
+    </div>
+  </div>
+</div>
