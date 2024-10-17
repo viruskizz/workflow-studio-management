@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   styleUrl: './work-with.component.css'
 })
 export class WorkWithComponent {
-  members = Array.from({ length: 6 }, () => {
+  members = Array.from({ length: 10 }, () => {
     return {
       imageIconPath: '../assets/images/avatar-default.jpg',
       name: 'Mok Maard',
