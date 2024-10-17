@@ -2,8 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserDetailComponent } from './user-detail.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
-import { UserInformationComponent } from './user-information/user-information.component';
 import { RouterModule, Routes } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { UserInformationComponent } from './user-profile/user-information/user-information.component';
+import { UserInputComponent } from './components/input/input.component';
+import { UserTeamComponent } from './components/team/team.component';
+import { WorkStatComponent } from './user-profile/work-stat/work-stat.component';
+import { StatBoxComponent } from './components/stat-box/stat-box.component';
 
 export const userDetailRoutes: Routes = [
   { path: '', component: UserDetailComponent },
@@ -14,7 +20,16 @@ export const userDetailRoutes: Routes = [
     UserDetailComponent,
     UserProfileComponent,
     UserInformationComponent,
+    UserInputComponent,
+    UserTeamComponent,
+    WorkStatComponent,
+    StatBoxComponent
   ],
-  imports: [CommonModule, RouterModule.forChild(userDetailRoutes)],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(userDetailRoutes),
+    MatButtonModule,
+    MatIconModule,
+  ],
 })
 export class UserDetailModule {}
