@@ -10,6 +10,8 @@ import { UserInputComponent } from './components/input/input.component';
 import { UserTeamComponent } from './components/team/team.component';
 import { WorkStatComponent } from './user-profile/work-stat/work-stat.component';
 import { StatBoxComponent } from './components/stat-box/stat-box.component';
+import { WorkItemComponent } from './components/work-item/work-item.component';
+import { WorkOnComponent } from './user-profile/work-on/work-on.component';
 
 export const userDetailRoutes: Routes = [
   { path: '', component: UserDetailComponent },
@@ -23,7 +25,9 @@ export const userDetailRoutes: Routes = [
     UserInputComponent,
     UserTeamComponent,
     WorkStatComponent,
-    StatBoxComponent
+    StatBoxComponent,
+    WorkItemComponent,
+    WorkOnComponent,
   ],
   imports: [
     CommonModule,

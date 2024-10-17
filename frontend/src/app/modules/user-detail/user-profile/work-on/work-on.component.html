@@ -1,0 +1,34 @@
+<div class="my-4 h-fit">
+  <div class="flex justify-between">
+    <div>
+      <h3>Worked on</h3>
+      <p class="text-gray-400">Lorem ipsum</p>
+    </div>
+
+    <button
+      type="button"
+      class="btn bg-transparent border-none text-purple-button font-bold hover:bg-gray-100"
+    >
+      View all
+    </button>
+  </div>
+
+  <div
+    class="w-full border-2 rounded-md h-96 overflow-auto p-8 my-4 flex flex-col gap-4"
+  >
+    <app-work-item
+      workDescription="Issue #8"
+      [document]="{
+                    name: 'Add Label',
+                    lastModified: '2024-12-10',
+                   }"
+    ></app-work-item>
+    <app-work-item
+      workDescription="Issue #8"
+      [document]="{
+                    name: 'Add Label',
+                    lastModified: '2024-12-10',
+                   }"
+    ></app-work-item>
+  </div>
+</div>
