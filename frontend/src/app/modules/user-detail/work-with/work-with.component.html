@@ -5,8 +5,8 @@
               grid grid-cols-3 gap-4"
     >
     <div *ngFor="let member of members">
-    <app-member [imageIconPath]="member.imageIconPath"
-                [name]="member.name"></app-member>
+    <app-user-member [imageIconPath]="member.imageIconPath"
+                [name]="member.name"/>
     </div>
   </div>
 </div>
