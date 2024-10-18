@@ -6,7 +6,7 @@ type Document = {
 }
 
 @Component({
-  selector: 'app-work-item',
+  selector: 'app-user-work-item',
   templateUrl: './work-item.component.html',
   styleUrl: './work-item.component.css',
 })
