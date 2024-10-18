@@ -9,12 +9,12 @@
 
     <div class="flex flex-col gap-4">
       <h2>ABOUT</h2>
-      <app-input fontIcon="apartment" labelId="job-title" placeholder="Job Title" (isDisabled)="setDisabledState($event)"/>
-      <app-input fontIcon="account_tree" labelId="department" placeholder="Your Department" (isDisabled)="setDisabledState($event)"/>
+      <app-user-input fontIcon="apartment" labelId="job-title" placeholder="Job Title" (isDisabled)="setDisabledState($event)"/>
+      <app-user-input fontIcon="account_tree" labelId="department" placeholder="Your Department" (isDisabled)="setDisabledState($event)"/>
 
       <h2>CONTACT</h2>
-      <app-input fontIcon="email" labelId="email" placeholder="Your email" (isDisabled)="setDisabledState($event)"/>
-      <app-input fontIcon="phone" labelId="phone" placeholder="Your phone number" (isDisabled)="setDisabledState($event)"/>
+      <app-user-input fontIcon="email" labelId="email" placeholder="Your email" (isDisabled)="setDisabledState($event)"/>
+      <app-user-input fontIcon="phone" labelId="phone" placeholder="Your phone number" (isDisabled)="setDisabledState($event)"/>
 
       <h2>TEAM</h2>
       <app-team teamIcon="../assets/images/avatar-default.jpg"
