@@ -8,11 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { UserInformationComponent } from './user-profile/user-information/user-information.component';
 import { UserInputComponent } from './components/input/input.component';
 import { UserTeamComponent } from './components/team/team.component';
-import { WorkStatComponent } from './user-profile/work-stat/work-stat.component';
+import { WorkStatComponent } from './work-stat/work-stat.component';
 import { StatBoxComponent } from './components/stat-box/stat-box.component';
 import { WorkItemComponent } from './components/work-item/work-item.component';
-import { WorkOnComponent } from './user-profile/work-on/work-on.component';
-import { WorkWithComponent } from './user-profile/work-with/work-with.component';
+import { WorkOnComponent } from './work-on/work-on.component';
+import { WorkWithComponent } from './work-with/work-with.component';
 import { WorkMembmerComponent } from './components/member/member.component';
 
 export const userDetailRoutes: Routes = [
