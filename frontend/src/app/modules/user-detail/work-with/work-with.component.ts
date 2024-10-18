@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-work-with',
+  selector: 'app-user-work-with',
   templateUrl: './work-with.component.html',
   styleUrl: './work-with.component.css'
 })
