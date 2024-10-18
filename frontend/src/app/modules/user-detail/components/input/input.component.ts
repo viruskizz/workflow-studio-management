@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-input',
@@ -9,4 +9,10 @@ export class UserInputComponent {
   @Input() fontIcon = 'home';
   @Input() labelId = 'none';
   @Input() placeholder = 'none';
+
+  @Output() isDisabled = new EventEmitter<boolean>();
+
+  changeDisabledState() {
+    this.isDisabled.emit(false);
+  }
 }

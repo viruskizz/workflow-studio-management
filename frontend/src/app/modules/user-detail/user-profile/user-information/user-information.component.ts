@@ -12,4 +12,10 @@ export class UserInformationComponent {
   user = {
     name: 'John Doe',
   };
+
+  isDisabled = true;
+
+  setDisabledState(value: boolean) {
+    this.isDisabled = value;
+  }
 }

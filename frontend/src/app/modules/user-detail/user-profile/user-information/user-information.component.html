@@ -1,23 +1,29 @@
-
+<form action="">
   <div class="flex flex-col gap-4 border-2 rounded-md p-8">
 
-    <form action="" class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4">
       <h2>ABOUT</h2>
-      <app-input fontIcon="apartment" labelId="job-title" placeholder="Job Title"/>
+      <app-input fontIcon="apartment" labelId="job-title" placeholder="Job Title" (isDisabled)="setDisabledState($event)"/>
       <app-input fontIcon="account_tree" labelId="department" placeholder="Your Department"/>
-    </form>
 
-    <form action="" class="flex flex-col gap-4">
       <h2>CONTACT</h2>
       <app-input fontIcon="email" labelId="email" placeholder="Your email"/>
       <app-input fontIcon="phone" labelId="phone" placeholder="Your phone number"/>
-    </form>
 
-    <form action="" class="flex flex-col gap-4">
       <h2>TEAM</h2>
       <app-team teamIcon="../assets/images/avatar-default.jpg"
                 teamName="GoodGeek"
                 memberAmount="15"></app-team>
-    </form>
+
+    </div>
   </div>
 
+  <button type="submit"
+          class="btn text-black
+                bg-gray-button hover:bg-gray-300
+                  w-full my-4 p-2 rounded-md border-none
+                  disabled:bg-gray-200"
+         [disabled]="isDisabled">
+      Save
+  </button>
+</form>
