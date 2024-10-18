@@ -1,19 +1,25 @@
 <form action="">
+  <input type="file"
+         class="file-input w-full
+                max-w-xs my-4 h-8
+                bg-gray-button"
+         (change)="setDisabledState(false)"/>
+
   <div class="flex flex-col gap-4 border-2 rounded-md p-8">
 
     <div class="flex flex-col gap-4">
       <h2>ABOUT</h2>
       <app-input fontIcon="apartment" labelId="job-title" placeholder="Job Title" (isDisabled)="setDisabledState($event)"/>
-      <app-input fontIcon="account_tree" labelId="department" placeholder="Your Department"/>
+      <app-input fontIcon="account_tree" labelId="department" placeholder="Your Department" (isDisabled)="setDisabledState($event)"/>
 
       <h2>CONTACT</h2>
-      <app-input fontIcon="email" labelId="email" placeholder="Your email"/>
-      <app-input fontIcon="phone" labelId="phone" placeholder="Your phone number"/>
+      <app-input fontIcon="email" labelId="email" placeholder="Your email" (isDisabled)="setDisabledState($event)"/>
+      <app-input fontIcon="phone" labelId="phone" placeholder="Your phone number" (isDisabled)="setDisabledState($event)"/>
 
       <h2>TEAM</h2>
       <app-team teamIcon="../assets/images/avatar-default.jpg"
                 teamName="GoodGeek"
-                memberAmount="15"></app-team>
+                memberAmount="15" />
 
     </div>
   </div>
