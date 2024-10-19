@@ -1,4 +1,4 @@
-name: Serverless Framework on PR
+name: NestJS Framework on PR
 
 on:
   pull_request:
