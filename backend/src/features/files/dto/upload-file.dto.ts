@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { FileEntity } from '@backend/typeorm/file.entity';
+import { FileEntity } from '../../../typeorm/file.entity';
 import { IsJSON, IsOptional, IsString } from 'class-validator';
 
 export class CreateFileDto extends PartialType(FileEntity) {

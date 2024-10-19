@@ -1,11 +1,6 @@
-import { TaskStatus, TaskType } from '@backend/typeorm/task.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsEmpty,
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
+  IsEmpty
 } from 'class-validator';
 import { CreateTaskDto } from './create-task.dto';
 

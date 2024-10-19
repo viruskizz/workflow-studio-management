@@ -1,4 +1,4 @@
-import entities from '@backend/typeorm';
+import entities from '../typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { env } from './envconfig';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';

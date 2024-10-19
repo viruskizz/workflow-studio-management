@@ -7,7 +7,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { CreateFileDto } from './dto/upload-file.dto';
 import { Repository } from 'typeorm';
-import { FileEntity } from '@backend/typeorm/file.entity';
+import { FileEntity } from '../../typeorm/file.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 

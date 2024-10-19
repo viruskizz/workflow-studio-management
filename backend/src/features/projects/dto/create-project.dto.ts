@@ -1,4 +1,4 @@
-import { Project } from '@backend/typeorm';
+import { Project } from '../../../typeorm';
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import {

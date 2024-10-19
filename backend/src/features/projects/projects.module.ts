@@ -1,4 +1,4 @@
-import { Project } from '@backend/typeorm/';
+import { Project } from '../../typeorm/';
 import { ProjectsController } from './projects.controller';
 import { ProjectsService } from './projects.service';
 import { Module } from '@nestjs/common';
