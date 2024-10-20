@@ -15,6 +15,7 @@ jobs:
     secrets: inherit
   deploy:
       name: NestJS Framework Deploy on Dev
+      needs: ["build"]
       uses: ./.github/workflows/tpl-nest-deploy.yml
       with:
         environment: dev
