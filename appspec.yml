@@ -1,0 +1,24 @@
+version: 0.0
+os: linux
+
+files:
+  - source: backend
+    destination: /home/admin/workflow-backend
+
+hooks:
+  ApplicationStop:
+    - location: scripts/codedeploy/application_stop.sh
+      timeout: 300
+      runas: admin
+  BeforeInstall:
+    - location: scripts/codedeploy/before_install.sh
+      timeout: 300
+      runas: admin
+  AfterInstall:
+    - location: scripts/codedeploy/after_install.sh
+      timeout: 300
+      runas: admin
+  ApplicationStart:
+    - location: scripts/codedeploy/application_start.sh
+      timeout: 300
+      runas: admin
