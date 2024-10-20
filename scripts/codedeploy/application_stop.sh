@@ -1,2 +1,2 @@
 #!/bin/bash
-pm2 stop workflow
+pm2 delete workflow
