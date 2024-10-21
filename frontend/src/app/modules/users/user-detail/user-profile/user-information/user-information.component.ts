@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { User } from '../../../../../models/user.model';
 
 @Component({
   selector: 'app-user-information',
@@ -6,12 +7,10 @@ import { Component } from '@angular/core';
   styleUrl: './user-information.component.css',
 })
 export class UserInformationComponent {
+  @Input() userInformation: User = {} as User;
+
   avatar =
     '../assets/images/avatar-default.jpg';
-
-  user = {
-    name: 'John Doe',
-  };
 
   isDisabled = true;
 

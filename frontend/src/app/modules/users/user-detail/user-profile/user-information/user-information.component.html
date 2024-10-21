@@ -13,7 +13,8 @@
       <app-user-input fontIcon="account_tree" labelId="department" placeholder="Your Department" (isDisabled)="setDisabledState($event)"/>
 
       <h2>CONTACT</h2>
-      <app-user-input fontIcon="email" labelId="email" placeholder="Your email" (isDisabled)="setDisabledState($event)"/>
+      <app-user-input fontIcon="email" labelId="email" placeholder="Your email" (isDisabled)="setDisabledState($event)"
+                      [defaultValue]="userInformation.email"/>
       <app-user-input fontIcon="phone" labelId="phone" placeholder="Your phone number" (isDisabled)="setDisabledState($event)"/>
 
       <h2>TEAM</h2>

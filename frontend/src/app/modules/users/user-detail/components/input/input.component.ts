@@ -9,6 +9,7 @@ export class UserInputComponent {
   @Input() fontIcon = 'home';
   @Input() labelId = 'none';
   @Input() placeholder = 'none';
+  @Input() defaultValue = '';
 
   @Output() isDisabled = new EventEmitter<boolean>();
 
