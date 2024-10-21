@@ -53,7 +53,7 @@ const routes: Routes = [
     path: 'user-detail',
     component: DashboardLayoutComponent,
     loadChildren: () =>
-      import('./modules/user-detail/user-detail.module').then(
+      import('./modules/users/user-detail/user-detail.module').then(
         (m) => m.UserDetailModule
       ),
   },
