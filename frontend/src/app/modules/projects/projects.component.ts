@@ -1,24 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProjectService } from '../../services/project.service';
 import { Project } from '../../models/project.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-projects',
+  styleUrl: './projects.component.css',
   templateUrl: './projects.component.html',
 })
 export class ProjectsComponent implements OnInit {
-  projects: Project[] = [];
-  tableDataPadding = 'px-4 py-4';
+  tableHeader = "Project";
+  displayedColumns: string[] = ['id', 'key', 'name', 'description', 'status', 'leader', 'actions'];
+  dataSource = new MatTableDataSource<Project>([]);
+  @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private userService: ProjectService) {}
+
+  constructor(private projectService: ProjectService, private router: Router) {}
 
   ngOnInit(): void {
-    this.userService.listProject().subscribe((projects) => {
-      this.projects = projects;
-    });
+    this.dataSource.sort = this.sort;
+    this.projectService.listProject().subscribe((projects) => {
+      this.dataSource.data = projects;
+    })
   }
 
-  get projectCount(): number {
-    return this.projects.length;
+  toView(project: Project) {
+    this.router.navigate(['projects', project.id,])
   }
 }

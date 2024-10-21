@@ -1,155 +1,75 @@
-<div class="bg-white h-dvh p-14">
-    <h1 class="text-6xl text-black font-semibold">Projects</h1>
-
-    <div class="mt-32">
-        <div id="search-bar" class="mb-4 gap-2.5 flex items-center text-md">
-            <label class="relative block w-1/5">
-                <svg class="pointer-events-none w-5 h-5 absolute top-1/2 transform -translate-y-1/2 left-4" width="14" height="15"
-                    viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M2.59993 1H11.3999C12.1333 1 12.7333 1.6 12.7333 2.33333V3.8C12.7333 4.33333 12.3999 5 12.0666 5.33333L9.19993 7.86667C8.79993 8.2 8.53327 8.86667 8.53327 9.4V12.2667C8.53327 12.6667 8.2666 13.2 7.93327 13.4L6.99994 14C6.13327 14.5333 4.93327 13.9333 4.93327 12.8667V9.33333C4.93327 8.86667 4.6666 8.26667 4.39994 7.93333L1.8666 5.26667C1.53327 4.93333 1.2666 4.33333 1.2666 3.93333V2.4C1.2666 1.6 1.8666 1 2.59993 1Z"
-                        stroke="#787486" stroke-width="1.3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                <select class="pl-12 py-3 w-full bg-white border-search-box border-2 rounded-lg text-2xl appearance-none">
-                    <option value="">Status</option>
-                    <option value="option1">Option 1</option>
-                    <option value="option2">Option 2</option>
-                    <option value="option3">Option 3</option>
-                </select>
-                <svg class="w-4 h-4 absolute top-1/2 transform -translate-y-1/2 right-4" width="12" height="7" viewBox="0 0 12 7"
-                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M6.00001 6.20005C5.53335 6.20005 5.06668 6.02005 4.71335 5.66672L0.36668 1.32005C0.173346 1.12672 0.173346 0.806717 0.36668 0.613384C0.560013 0.42005 0.880013 0.42005 1.07335 0.613384L5.42001 4.96005C5.74001 5.28005 6.26001 5.28005 6.58001 4.96005L10.9267 0.613384C11.12 0.42005 11.44 0.42005 11.6333 0.613384C11.8267 0.806717 11.8267 1.12672 11.6333 1.32005L7.28668 5.66672C6.93335 6.02005 6.46668 6.20005 6.00001 6.20005Z"
-                        fill="#787486" />
-                </svg>
-            </label>
-
-            <label class="relative block w-1/5">
-                <svg class="pointer-events-none w-5 h-5 absolute top-1/2 transform -translate-y-1/2 left-4" width="14" height="15"
-                    viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M2.59993 1H11.3999C12.1333 1 12.7333 1.6 12.7333 2.33333V3.8C12.7333 4.33333 12.3999 5 12.0666 5.33333L9.19993 7.86667C8.79993 8.2 8.53327 8.86667 8.53327 9.4V12.2667C8.53327 12.6667 8.2666 13.2 7.93327 13.4L6.99994 14C6.13327 14.5333 4.93327 13.9333 4.93327 12.8667V9.33333C4.93327 8.86667 4.6666 8.26667 4.39994 7.93333L1.8666 5.26667C1.53327 4.93333 1.2666 4.33333 1.2666 3.93333V2.4C1.2666 1.6 1.8666 1 2.59993 1Z"
-                        stroke="#787486" stroke-width="1.3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                <select class="pl-12 py-3 w-full bg-white border-search-box border-2 rounded-lg text-2xl appearance-none">
-                    <option value="">Category</option>
-                    <option value="option1">Option 1</option>
-                    <option value="option2">Option 2</option>
-                    <option value="option3">Option 3</option>
-                </select>
-                <svg class="w-4 h-4 absolute top-1/2 transform -translate-y-1/2 right-4" width="12" height="7" viewBox="0 0 12 7"
-                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M6.00001 6.20005C5.53335 6.20005 5.06668 6.02005 4.71335 5.66672L0.36668 1.32005C0.173346 1.12672 0.173346 0.806717 0.36668 0.613384C0.560013 0.42005 0.880013 0.42005 1.07335 0.613384L5.42001 4.96005C5.74001 5.28005 6.26001 5.28005 6.58001 4.96005L10.9267 0.613384C11.12 0.42005 11.44 0.42005 11.6333 0.613384C11.8267 0.806717 11.8267 1.12672 11.6333 1.32005L7.28668 5.66672C6.93335 6.02005 6.46668 6.20005 6.00001 6.20005Z"
-                        fill="#787486" />
-                </svg>
-            </label>
-            <div class="relative w-1/4">
-                <input type="text" placeholder="Search Projects"
-                    class="pl-4 py-3 w-full bg-white border-search-box border-2 rounded-lg text-2xl" />
-                <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-6 top-1/2 -translate-y-1/2 w-5 h-5"
-                    width="20" height="20" viewBox="0 0 16 16" fill="none">
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M6 2C3.79086 2 2 3.79086 2 6C2 8.20914 3.79086 10 6 10C8.20914 10 10 8.20914 10 6C10 3.79086 8.20914 2 6 2ZM0 6C0 2.68629 2.68629 0 6 0C9.31371 0 12 2.68629 12 6C12 7.29583 11.5892 8.49572 10.8907 9.47653L15.7071 14.2929C16.0976 14.6834 16.0976 15.3166 15.7071 15.7071C15.3166 16.0976 14.6834 16.0976 14.2929 15.7071L9.47653 10.8907C8.49572 11.5892 7.29583 12 6 12C2.68629 12 0 9.31371 0 6Z"
-                        fill="#9CA3AF" />
-                </svg>
-            </div>
+<div class="bg-white h-full p-14">
+  <h1 class="text-6xl text-black font-semibold">Projects</h1>
+  <div class="mt-32">
+    <div class="table-panel w-100">
+      <div class="mb-8 flex justify-between items-center">
+        <app-table-header [count]="5" [tableHeader]="tableHeader" />
+        <div class="flex justify-center px-4">
+          <button mat-fab extended class="bg-primary" routerLink="create">
+            <mat-icon>add</mat-icon>
+            Create
+          </button>
         </div>
+      </div>
+        
+      <table mat-table [dataSource]="dataSource" matSort>
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let element">{{element.id}}</td>
+        </ng-container>
+      
+        <!-- Avatar Column -->
+        <ng-container matColumnDef="key">
+          <th mat-header-cell *matHeaderCellDef>Key</th>
+          <td mat-cell *matCellDef="let element">{{element.key}}</td>
+        </ng-container>
+      
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let element">{{element.name}}</td>
+        </ng-container>
+      
+        <!-- Description Column -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let element">{{element.description}}</td>
+        </ng-container>
 
-        <div class="bg-table-bg rounded-3xl p-6">
-            <div id="all-team" class="mb-8 flex justify-between items-center">
-                <div id="left-side"
-                    class="pb-3 flex text-2xl items-center justify-start w-[22.5%] border-b-4 border-orange-line">
-                    <svg class="" width="42" height="42" fill="rgb(242 169	59)" viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg" stroke="rgb(242	169	59)	">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path d="M7.8 10a2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0-4.4 0z"></path>
-                        </g>
-                    </svg>
-                    <h3 class="text-black font-medium whitespace-pre pl-1 pr-4">All Projects</h3>
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let element">{{element.status}}</td>
+        </ng-container>
+    
+        <!-- Leader Column -->
+        <ng-container matColumnDef="leader">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Leader</th>
+          <td mat-cell *matCellDef="let element">{{element.leader}}</td>
+        </ng-container>
 
-                    <div class="bg-gray-200 rounded-full px-2.5 relative
-                       flex justify-center items-center">
-                        <p class="text-black  text-xl">{{ projectCount }}</p>
-                    </div>
-                </div>
-
-                <button class="btn btn-active text-xl text-white bg-purple-button">
-                    <div class="flex items-center justify-around w-36 gap-2.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 11 11" fill="none"
-                            class="">
-                            <path fill-rule="evenodd" clip-rule="evenodd"
-                                d="M5.55203 0.904297C5.93978 0.904297 6.25412 1.21863 6.25412 1.60638V5.1168H9.76453C10.1523 5.1168 10.4666 5.43113 10.4666 5.81888C10.4666 6.20663 10.1523 6.52096 9.76453 6.52096H6.25412V10.0314C6.25412 10.4191 5.93978 10.7335 5.55203 10.7335C5.16428 10.7335 4.84995 10.4191 4.84995 10.0314V6.52096H1.33953C0.951785 6.52096 0.637451 6.20663 0.637451 5.81888C0.637451 5.43113 0.951785 5.1168 1.33953 5.1168H4.84995V1.60638C4.84995 1.21863 5.16428 0.904297 5.55203 0.904297Z"
-                                fill="white" />
-                        </svg>
-                        Add Project
-                    </div>
-                </button>
-            </div>
-
-            <div class="overflow-hidden overflow-x-auto">
-                <table class="table rounded-lg text-xl">
-                    <thead class="bg-thead border-gray-200 border-2 rounded-t-3xl text-xl text-gray-500">
-                        <th>NAME</th>
-                        <th>KEY</th>
-                        <th>DESCRIPTION</th>
-                        <th>STATUS</th>
-                        <th>LEAD</th>
-                        <th>CATEGORY</th>
-                        <th>MORE ACTIONS</th>
-                    </thead>
-
-                    <tbody class="bg-white text-gray-400 border-gray-200">
-                        <tr *ngFor="let project of projects; let i = index">
-
-                            <td [ngClass]="tableDataPadding">
-                                {{ project.name }}
-                            </td>
-
-                            <td [ngClass]="tableDataPadding">
-                                {{ project.key }}
-                            </td>
-
-                            <td [ngClass]="tableDataPadding">
-                                {{ project.description }}
-                            </td>
-
-                            <td [ngClass]="tableDataPadding">
-                                {{ project.status || 'Pending' }}
-                            </td>
-
-                            <td [ngClass]="tableDataPadding">
-                                <div class="avatar">
-                                    <div class="mask mask-circle h-12 w-12">
-                                        <img [src]="project.imageUrl" alt="Avatar" />
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td [ngClass]="tableDataPadding">
-                                {{ project.category || 'General' }}
-                            </td>
-
-                            <td>
-                                <div class="relative">
-                                    <div class="dropdown z-40">
-                                        <div tabindex="0" role="button" class="btn m-1 bg-white border-0 z-30">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="5"
-                                                viewBox="0 0 19 5">
-                                                <path
-                                                    d="M2.55212 0.202148C1.45212 0.202148 0.552124 1.10215 0.552124 2.20215C0.552124 3.30215 1.45212 4.20215 2.55212 4.20215C3.65212 4.20215 4.55212 3.30215 4.55212 2.20215C4.55212 1.10215 3.65212 0.202148 2.55212 0.202148ZM16.5521 0.202148C15.4521 0.202148 14.5521 1.10215 14.5521 2.20215C14.5521 3.30215 15.4521 4.20215 16.5521 4.20215C17.6521 4.20215 18.5521 3.30215 18.5521 2.20215C18.5521 1.10215 17.6521 0.202148 16.5521 0.202148ZM9.55212 0.202148C8.45212 0.202148 7.55212 1.10215 7.55212 2.20215C7.55212 3.30215 8.45212 4.20215 9.55212 4.20215C10.6521 4.20215 11.5521 3.30215 11.5521 2.20215C11.5521 1.10215 10.6521 0.202148 9.55212 0.202148Z" />
-                                            </svg>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell mat-sort-header *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element">
+            <!-- <button class="p-2 rounded-lg hover:bg-zinc-600" (click)="viewUser(element)">
+              <mat-icon>visibility</mat-icon>
+          </button>
+          <button class="p-2 rounded-lg hover:bg-zinc-600" (click)="editUser(element)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button class="p-2 rounded-lg hover:bg-zinc-600" (click)="deleteUser(element)">
+            <mat-icon>delete</mat-icon>
+          </button> -->
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns;"
+            (click)="toView(row)"
+        ></tr>
+      </table>
     </div>
+  </div>
 </div>

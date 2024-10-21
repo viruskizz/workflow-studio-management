@@ -1,0 +1,26 @@
+name: Manual Full Deployment
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        options:
+        - dev
+        - prod
+        required: true
+        default: dev
+
+jobs:  
+  nest-build:
+    name: NestJS Framework Build on ${{ inputs.environment }}
+    uses: ./.github/workflows/tpl-nest-build.yml
+    with:
+      environment: ${{ inputs.environment }}
+    secrets: inherit
+  nest-deploy:
+    name: NestJS Framework Deploy on ${{ inputs.environment }}
+    needs: ["nest-build"]
+    uses: ./.github/workflows/tpl-nest-deploy.yml
+    with:
+      environment: ${{ inputs.environment }}
+    secrets: inherit

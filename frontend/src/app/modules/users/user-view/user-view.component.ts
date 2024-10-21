@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, 
 @Component({
   selector: 'app-user-view',
   templateUrl: './user-view.component.html',
-  styleUrl: './user-view.component.css'
+  // styleUrl: './user-view.component.css'
 })
 export class UserViewComponent implements AfterViewInit, OnChanges {
   @Input() isShow = false;

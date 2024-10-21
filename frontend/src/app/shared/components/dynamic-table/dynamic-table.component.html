@@ -1,0 +1,11 @@
+<table class="table rounded-lg text-xl">
+    <thead class="bg-thead border-gray-200 border-2 rounded-t-3xl text-xl text-gray-500">
+        <tr>
+            <th *ngFor="let header of headers">{{ header.key }}</th>
+        </tr>
+    </thead>
+
+    <tbody class="bg-white text-gray-400 border-gray-200">
+        <ng-content/>
+    </tbody>
+</table>
