@@ -50,14 +50,6 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'user-detail',
-    component: DashboardLayoutComponent,
-    loadChildren: () =>
-      import('./modules/users/user-detail/user-detail.module').then(
-        (m) => m.UserDetailModule
-      ),
-  },
-  {
     path: '',
     component: MainLayoutComponent,
     children: rootRoutes,
