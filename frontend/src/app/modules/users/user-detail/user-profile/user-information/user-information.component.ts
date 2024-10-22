@@ -11,7 +11,7 @@ export class UserInformationComponent implements OnChanges{
   @Input() userInformation: User = {} as User;
 
   informationForm = new FormGroup({
-      email: new FormControl(''),
+      email: new FormControl('sd'),
       'job-title': new FormControl(''),
       phone: new FormControl(''),
       department: new FormControl(''),
@@ -19,11 +19,8 @@ export class UserInformationComponent implements OnChanges{
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['userInformation']) {
-      this.informationForm = new FormGroup({
-        email: new FormControl(this.userInformation.email),
-        'job-title': new FormControl(''),
-        phone: new FormControl(''),
-        department: new FormControl(''),
+      this.informationForm.patchValue({
+        email: this.userInformation.email
       });
     }
   }
