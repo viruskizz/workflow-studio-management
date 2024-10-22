@@ -11,7 +11,7 @@ export class UserInformationComponent implements OnChanges{
   @Input() userInformation: User = {} as User;
 
   informationForm = new FormGroup({
-      email: new FormControl('sd'),
+      email: new FormControl(''),
       'job-title': new FormControl(''),
       phone: new FormControl(''),
       department: new FormControl(''),
