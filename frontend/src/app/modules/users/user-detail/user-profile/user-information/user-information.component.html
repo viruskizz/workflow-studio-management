@@ -1,4 +1,4 @@
-<form action="">
+<form [formGroup]="informationForm" (ngSubmit)="onSubmit()">
   <input type="file"
          class="file-input w-full
                 max-w-xs my-4 h-8
@@ -9,18 +9,35 @@
 
     <div class="flex flex-col gap-4">
       <h2>ABOUT</h2>
-      <app-user-input fontIcon="apartment" labelId="job-title" placeholder="Job Title" (isDisabled)="setDisabledState($event)"/>
-      <app-user-input fontIcon="account_tree" labelId="department" placeholder="Your Department" (isDisabled)="setDisabledState($event)"/>
+      <app-user-input fontIcon="apartment"
+                      labelId="job-title"
+                      formControlName="job-title"
+                      placeholder="Job Title"
+                      (isDisabled)="setDisabledState($event)"/>
+
+      <app-user-input fontIcon="account_tree"
+                      labelId="department"
+                      formControlName="department"
+                      placeholder="Your Department"
+                      (isDisabled)="setDisabledState($event)"/>
 
       <h2>CONTACT</h2>
-      <app-user-input fontIcon="email" labelId="email" placeholder="Your email" (isDisabled)="setDisabledState($event)"
+      <app-user-input fontIcon="email"
+                      labelId="email"
+                      formControlName="email"
+                      placeholder="Your email" (isDisabled)="setDisabledState($event)"
                       [defaultValue]="userInformation.email"/>
-      <app-user-input fontIcon="phone" labelId="phone" placeholder="Your phone number" (isDisabled)="setDisabledState($event)"/>
+
+      <app-user-input fontIcon="phone"
+                      labelId="phone"
+                      formControlName="phone"
+                      placeholder="Your phone number"
+                      (isDisabled)="setDisabledState($event)"/>
 
       <h2>TEAM</h2>
       <app-user-team teamIcon="../assets/images/avatar-default.jpg"
-                teamName="GoodGeek"
-                memberAmount="15" />
+                     teamName="GoodGeek"
+                     memberAmount="15" />
 
     </div>
   </div>

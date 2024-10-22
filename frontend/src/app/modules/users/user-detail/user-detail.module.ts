@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterModule, Routes } from '@angular/router';
 import { UserDetailComponent } from './user-detail.component';
 import { UserInputComponent } from './components/input/input.component';
 import { WorkMembmerComponent } from './components/member/member.component';
@@ -14,11 +13,7 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { WorkOnComponent } from './work-on/work-on.component';
 import { WorkStatComponent } from './work-stat/work-stat.component';
 import { WorkWithComponent } from './work-with/work-with.component';
-
-
-export const userDetailRoutes: Routes = [
-  { path: '', component: UserDetailComponent },
-];
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -36,9 +31,9 @@ export const userDetailRoutes: Routes = [
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(userDetailRoutes),
     MatButtonModule,
     MatIconModule,
+    ReactiveFormsModule
   ],
 })
 export class UserDetailModule {}
