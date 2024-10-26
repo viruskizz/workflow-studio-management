@@ -42,19 +42,19 @@ const routes: Routes = [
       import('./modules/team/team.module').then((m) => m.TeamModule),
   },
   {
+    path: 'users/:id',
+    component: DashboardLayoutComponent,
+    loadChildren: () =>
+      import('./modules/users/user-detail/user-detail.module').then(
+        (m) => m.UserDetailModule
+      ),
+  },
+  {
     path: 'settings',
     component: DashboardLayoutComponent,
     loadChildren: () =>
       import('./modules/settings/settings.module').then(
         (m) => m.SettingsModule
-      ),
-  },
-  {
-    path: 'user-detail',
-    component: DashboardLayoutComponent,
-    loadChildren: () =>
-      import('./modules/user-detail/user-detail.module').then(
-        (m) => m.UserDetailModule
       ),
   },
   {
