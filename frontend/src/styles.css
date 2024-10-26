@@ -2,3 +2,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .btn-add {
+    @apply btn btn-active text-xl text-white bg-purple-button;
+  }
+
+  .table-panel {
+    @apply bg-table-bg rounded-3xl p-6;
+  }
+
+  .data-padding {
+    @apply px-4 py-4;
+  }
+
+  .icon-outline {
+    @apply outline outline-4 outline-white rounded-full;
+  }
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

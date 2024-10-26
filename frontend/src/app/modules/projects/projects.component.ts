@@ -1,40 +1,32 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProjectService } from '../../services/project.service';
 import { Project } from '../../models/project.model';
-import {
-  TableHeader,
-  DynamicTableComponent,
-} from '../../shared/components/dynamic-table/dynamic-table.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-projects',
+  styleUrl: './projects.component.css',
   templateUrl: './projects.component.html',
 })
-export class ProjectsComponent implements AfterViewInit {
-  data: Project[] = [];
-  @ViewChild('dyntable') table!: DynamicTableComponent;
+export class ProjectsComponent implements OnInit {
+  tableHeader = "Project";
+  displayedColumns: string[] = ['id', 'key', 'name', 'description', 'status', 'leader', 'actions'];
+  dataSource = new MatTableDataSource<Project>([]);
+  @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private projectService: ProjectService) {}
 
-  ngAfterViewInit(): void {
+  constructor(private projectService: ProjectService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.dataSource.sort = this.sort;
     this.projectService.listProject().subscribe((projects) => {
-      this.data = projects;
-
-      const headers: TableHeader[] = [
-        { key: 'NAME', index: 0, isSelected: true },
-        { key: 'KEY', index: 1, isSelected: true },
-        { key: 'DESCRIPTION', index: 2, isSelected: true },
-        { key: 'STATUS', index: 3, isSelected: true },
-        { key: 'LEAD', index: 4, isSelected: true },
-        { key: 'CATEGORY', index: 5, isSelected: true },
-        { key: 'MORE ACTIONS', index: 6, isSelected: true },
-      ];
-
-      this.table.render(headers, this.data);
-    });
+      this.dataSource.data = projects;
+    })
   }
 
-  get projectCount(): number {
-    return this.data.length;
+  toView(project: Project) {
+    this.router.navigate(['projects', project.id,])
   }
 }
