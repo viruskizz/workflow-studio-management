@@ -2,27 +2,27 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { User } from '../../models/user.model';
 import { PeriodicElement } from '../users/users.component';
-import { UserService } from '../../services/user.service';
+import { Task } from '../../models/task.model';
+import { TaskService } from '../../services/task.service';
 
 @Component({
   selector: 'app-taks',
   templateUrl: './tasks.component.html'
 })
 export class TasksComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'avatar', 'username', 'firstname', 'lastname', 'actions'];
-  dataSource = new MatTableDataSource<User>([]);
+  displayedColumns: string[] = ['id', 'summary', 'type', 'status', 'project', 'assignee'];
+  dataSource = new MatTableDataSource<Task>([]);
   clickedRows = new Set<PeriodicElement>();
   searchKeywordFilter = new FormControl();
 
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private userService: UserService) {}
+  constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
-    this.userService.listUser().subscribe((users) => {
+    this.taskService.list().subscribe((tasks) => {
       this.dataSource.sort = this.sort;
-      this.dataSource.data = users;
+      this.dataSource.data = tasks;
     });
   }
 
