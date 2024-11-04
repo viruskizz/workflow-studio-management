@@ -33,7 +33,7 @@ jobs:
           echo "${{ secrets.ANGULAR_ENVIRONMENT }}" > src/environments/environment.ts
           echo "${{ secrets.ANGULAR_ENVIRONMENT }}" > src/environments/environment.development.ts
       - name: Build
-        run: npm run build:prod
+        run: npm run build
       - uses: actions/upload-artifact@master
         with:
           name: dist-frontend-${{ github.sha }}
