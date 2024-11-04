@@ -8,7 +8,6 @@ import { MainLayoutComponent } from './shared/layouts/main/main-layout.component
 const routes: Routes = [
   {
     path: 'dashboard',
-    // component: UserLayoutComponent,
     component: DashboardLayoutComponent,
     loadChildren: () =>
       import('./modules/dashboard/dashboard.module').then(
@@ -40,14 +39,6 @@ const routes: Routes = [
     component: DashboardLayoutComponent,
     loadChildren: () =>
       import('./modules/team/team.module').then((m) => m.TeamModule),
-  },
-  {
-    path: 'users/:id',
-    component: DashboardLayoutComponent,
-    loadChildren: () =>
-      import('./modules/users/user-detail/user-detail.module').then(
-        (m) => m.UserDetailModule
-      ),
   },
   {
     path: 'settings',
