@@ -1,0 +1,8 @@
+h1, h2, p {
+  margin:0;
+  padding:0;
+}
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(50%) sepia(100%) saturate(10000%) hue-rotate(180deg)
+}

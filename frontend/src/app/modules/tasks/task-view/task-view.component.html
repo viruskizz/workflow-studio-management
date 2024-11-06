@@ -1,1 +1,206 @@
-<p>task-view works!</p>
+<div class="h-3/4 overflow-y-scroll bg-white p-8 text-black rounded-md">
+  <div class="flex justify-between text-gray-500">
+
+    <div class="flex items-center gap-2 text-gray-500">
+      <mat-icon
+        fontIcon="tag"
+        aria-hidden="false"
+        aria-label="Example home icon"
+      />
+      <h2>Task-id</h2>
+    </div>
+
+    <button type="button">
+      <mat-icon
+        fontIcon="delete"
+        aria-hidden="false"
+        aria-label="Example home icon"
+        class="hover:text-gray-400"
+      />
+    </button>
+  </div>
+
+  <header class="my-4">
+    <h1>Computer</h1>
+    <p class="text-gray-500">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis
+      facilis praesentium, error ab inventore earum ipsum? Corrupti, deleniti
+      eligendi quos dolorem temporibus vitae sequi quia facilis quibusdam, harum
+      autem cum.
+    </p>
+  </header>
+
+  <img [src]="imgSrc" alt="teemo picture" class="my-4 w-96 " />
+
+
+  <input type="file" class="file-input w-full max-w-xs bg-white" />
+
+  <div class="my-4">
+    <h2 class="">Properties</h2>
+  </div>
+
+
+  <form
+    class="grid w-1/2 min-w-fit grid-cols-2 gap-4"
+    [formGroup]="propertiesForm"
+    (ngSubmit)="submitHandler()"
+    method="dialog"
+  >
+    <!--State property-->
+    <label for="state" [ngClass]="labelClass">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Example home icon"
+        fontIcon="track_changes"
+      />
+      <p>State</p>
+    </label>
+
+    <div class="relative flex items-center">
+      <mat-icon
+        fontIcon="track_changes"
+        aria-hidden="false"
+        aria-label="Example home icon"
+        class="absolute left-2 top-1/2 -translate-y-1/2"
+        [ngClass]="{
+          'text-gray-500': this.propertiesForm.value.state === 1,
+          'text-yellow-500': this.propertiesForm.value.state === 2,
+          'text-green-500': this.propertiesForm.value.state === 3,
+        }"
+      />
+
+      <select
+        class="w-full border-0 bg-white py-0 pl-10 outline-0"
+        formControlName="state"
+      >
+        <option *ngFor="let state of states" [ngValue]="state.value">
+          {{ state.label }}
+        </option>
+      </select>
+    </div>
+
+    <!--Assignees-->
+    <label for="assignees" [ngClass]="labelClass">
+      <mat-icon
+        fontIcon="account_circle"
+        aria-hidden="false"
+        aria-label="Example home icon"
+      />
+      <p>Assignees</p>
+    </label>
+
+    <div class="relative flex items-center">
+      <img
+        [src]="imgSrc"
+        alt="iconPath"
+        class="absolute left-2 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full"
+      />
+      <input
+        type="text"
+        id="assignees"
+        [ngClass]="inputBoxWithIcon"
+        class="w-full"
+        type="text"
+        value="mok maard"
+        formControlName="assignees"
+      />
+    </div>
+
+    <!--Start date-->
+    <label for="start-date" [ngClass]="labelClass">
+      <mat-icon
+        fontIcon="calendar_month"
+        aria-hidden="false"
+        aria-label="Example home icon"
+      />
+      <p>Start date</p>
+    </label>
+
+    <div class="relative flex items-center">
+      <input
+        type="text"
+        id="start-date"
+        [ngClass]="inputBox"
+        class="w-full"
+        type="date"
+        formControlName="startDate"
+      />
+    </div>
+
+    <!--Task flow-->
+    <label for="task-flow" [ngClass]="labelClass">
+      <mat-icon
+        fontIcon="rotate_right"
+        aria-hidden="false"
+        aria-label="Example home icon"
+      />
+      <p>Task flow</p>
+    </label>
+
+    <div class="relative flex items-center">
+      <input
+        type="text"
+        [ngClass]="inputBox"
+        class="w-full"
+        type="text"
+        value="Animate"
+        id="task-flow"
+        placeholder="Add workflow"
+        formControlName="taskFlow"
+      />
+    </div>
+
+    <!--Task flow-->
+    <label for="add-parent" [ngClass]="labelClass">
+      <mat-icon
+        fontIcon="dynamic_feed"
+        aria-hidden="false"
+        aria-label="add parent"
+      />
+      <p>Add parent</p>
+    </label>
+
+    <div class="relative flex items-center">
+      <input
+        type="text"
+        [ngClass]="inputBox"
+        class="w-full"
+        type="text"
+        placeholder="Add parent"
+        id="add-parent"
+        formControlName="parentTask"
+      />
+    </div>
+
+    <!--Sub task-->
+    <label for="sub-task" [ngClass]="labelClass">
+      <mat-icon fontIcon="task" aria-hidden="false" aria-label="sub task" />
+      <p>Sub task</p>
+    </label>
+
+    <div class="relative flex items-center">
+      <input
+        type="text"
+        [ngClass]="inputBox"
+        class="w-full"
+        type="text"
+        placeholder="Add sub-task"
+        id="sub-task"
+        formControlName="subTask"
+      />
+    </div>
+
+    <textarea
+      name="comment"
+      class="textarea textarea-bordered col-span-2 h-24 bg-white"
+      placeholder="Comment"
+      formControlName="comment"
+    ></textarea>
+    <button
+      type="submit"
+      class="btn btn-primary btn-active col-span-2 text-white"
+    >
+      Save
+    </button>
+  </form>
+</div>
