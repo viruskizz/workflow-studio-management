@@ -9,10 +9,11 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from '@angular/material/input';
 import { UserDetailComponent } from "./user-detail/user-detail.component";
+import { UserDetailModule } from "./user-detail/user-detail.module";
 
 const routes: Routes = [
   { path: '', component: UsersComponent },
-  { path: ':userId', component: UserDetailComponent }
+  { path: ':id', component: UserDetailComponent }
 ]
 
 @NgModule({
@@ -20,6 +21,7 @@ const routes: Routes = [
     UsersComponent
   ],
   imports: [
+    UserDetailModule,
     CommonModule,
     RouterModule.forChild(routes),
     ReactiveFormsModule,

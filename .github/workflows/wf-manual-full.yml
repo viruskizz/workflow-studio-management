@@ -10,7 +10,21 @@ on:
         required: true
         default: dev
 
-jobs:  
+jobs:
+  ng-build:
+    name: Angular build on ${{ inputs.environment }}
+    uses: ./.github/workflows/tpl-angular-build.yml
+    with:
+      environment: ${{ inputs.environment }}
+    secrets: inherit
+  ng-deploy:
+    name: Angular Deploy on ${{ inputs.environment }}
+    needs: ["ng-build"]
+    uses: ./.github/workflows/tpl-angular-deploy.yml
+    with:
+      environment: ${{ inputs.environment }}
+      refreshCached: true
+    secrets: inherit
   nest-build:
     name: NestJS Framework Build on ${{ inputs.environment }}
     uses: ./.github/workflows/tpl-nest-build.yml
