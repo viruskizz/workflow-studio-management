@@ -1,67 +1,51 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { TeamRow } from '../../models/team.model';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TeamsService } from '../../services/teams.service';
-import { DynamicTableComponent, TableHeader } from '../../shared/components/dynamic-table/dynamic-table.component';
+import { TeamRow } from '../../models/team.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-team',
   templateUrl: './team.component.html',
 })
-export class TeamComponent implements AfterViewInit {
+export class TeamComponent implements OnInit {
   tableHeader = 'Teams';
-  rowCount = 0;
+  displayedColumns: string[] = ['name', 'key', 'description', 'lead', 'members', 'currentProject', 'actions'];
+  dataSource = new MatTableDataSource<TeamRow>([]);
+  @ViewChild(MatSort) sort!: MatSort;
 
-  teamRows: TeamRow[] = [];
+  teamLogo = 'https://masteringruneterra.com/wp-content/plugins/deck-viewer/assets/images/champions/01PZ008.webp';
+  leaderPic = 'https://64.media.tumblr.com/4af2b4026f724a749b27e4cbae3f914a/d2464c1d38422cb8-d8/s1280x1920/1873c68cbe57ab93ef97412adb1d715082e73bc6.jpg';
+  memberPic = 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp';
 
-  @ViewChild('dyntable') table!: DynamicTableComponent;
+  constructor(private teamsService: TeamsService, private router: Router) {}
 
-  key = 'KEY';
-  description = 'description';
-  currentProject = 'currentProject';
-  //icons
-  teamIcon =
-    'https://masteringruneterra.com/wp-content/plugins/deck-viewer/assets/images/champions/01PZ008.webp';
-  leaderIcon =
-    'https://64.media.tumblr.com/4af2b4026f724a749b27e4cbae3f914a/d2464c1d38422cb8-d8/s1280x1920/1873c68cbe57ab93ef97412adb1d715082e73bc6.jpg';
-  memberIcon =
-    'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp';
+  ngOnInit(): void {
+    this.dataSource.sort = this.sort;
+    // this.teamsService.getTeam().subscribe((teams) => {
+    //   this.dataSource.data = teams;
+    // });
 
-  teamName = 'Delta Force 510';
-
-  datas = Array.from({length : 4}, () => {
-    return {
-      teamIcon: this.teamIcon,
-      teamName: this.teamName,
-      key: this.key,
-      description: this.description,
-      leaderIcon: this.leaderIcon,
-      membersIcon: Array.from({ length: 14 }, () => this.memberIcon),
-      currentProject: this.currentProject,
-    };
-  });
-
-  constructor(private TeamsService: TeamsService) {}
-
-  ngAfterViewInit(): void {
-    const headers: TableHeader[] = [
-      { key: 'NAME', index: 0, isSelected: true },
-      { key: 'KEY', index: 1, isSelected: true },
-      { key: 'DESCRIPTION', index: 2, isSelected: true },
-      { key: 'LEAD', index: 3, isSelected: true },
-      { key: 'MEMBERS', index: 4, isSelected: true },
-      { key: 'PROJECT ACTIVE', index: 5, isSelected: true },
-      { key: 'MORE ACTIONS', index: 6, isSelected: true },
-    ];
-
-    this.table.render(headers);
-
-    this.rowCount = this.datas.length;
+    // For the dummy data
+    this.dataSource.data = this.getDummyData();
   }
 
-  // ngOnInit(): void {
-  //   this.TeamsService.getTeam().subscribe((team) => {
-  //     this.teamRows = team;
-  //     console.log( this.teamRows );
-  //   });
-  // }
+  getDummyData(): TeamRow[] {
+    return Array.from({ length: 4 }, () => ({
+      teamLogo: this.teamLogo,
+      teamName: 'Delta Force 510',
+      key: 'KEY',
+      description: 'description',
+      leaderPic: this.leaderPic,
+      memberPics: Array.from({ length: 14 }, () => this.memberPic),
+      currentProject: 'Current Project',
+      projectName: "A1"
+    }));
+  }
+
+  toView(team: TeamRow): void {
+    // navigation to team details page
+    this.router.navigate(['teams', team.key]);
+  }
 }
