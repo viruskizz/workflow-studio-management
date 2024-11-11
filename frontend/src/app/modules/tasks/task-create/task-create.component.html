@@ -1,56 +1,101 @@
-<div class="container px-4">
-    <mat-card class="w-96" appearance="outlined">
-        <mat-card-header>
-            <mat-card-title-group class="flex flex-col items-center gap-4">
-                <mat-card-title>Create Task</mat-card-title>
-                <img mat-card-lg-image
-                    class="object-cover object-top"
-                    alt="cover-img"
-                    [src]="imgUrl">
-            </mat-card-title-group>
-        </mat-card-header>
-        <mat-card-content>
-            <form>
-                <div>
-                    <div class="label">
-                        <span class="label-text">Select cover</span>
-                    </div>
-                    <input
-                        (change)="onChangeFile($event)"
-                        type="file"
-                        class="file-input file-input-bordered file-input-md text-slate-500"/>
-                </div>
-                <!-- Summary Input -->
-                <label class="form-control">
-                    <div class="label">
-                        <span class="label-text">Summary</span>
-                    </div>
-                    <input
-                        formControlName="summary"
-                        type="text"
-                        placeholder="Type here"
-                        class="input input-bordered" />
-                    <div class="label">
-                        <span class="label-text-alt text-error">Error</span>
-                    </div>
-                </label>
-                <!-- Description Input -->
-                <label class="form-control">
-                    <div class="label">
-                      <span class="label-text">Description</span>
-                    </div>
-                    <textarea class="textarea textarea-bordered h-24"></textarea>
-                </label>
-                <mat-label>Choose a date</mat-label>
-                <input matInput [matDatepicker]="picker">
-                <mat-hint>MM/DD/YYYY</mat-hint>
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </form>
-        </mat-card-content>
-        <mat-card-actions class="flex flex-row justify-between m-2 gap-4">
-            <button type="submit" (click)="onSubmit()" mat-flat-button color="primary" class="w-1/2">Create</button>
-            <button mat-button color="tertiary" class="w-1/2">Cancle</button>
-          </mat-card-actions>
-    </mat-card>
+<div class="p-6">
+  <h1>Add Task</h1>
+
+  <p-image
+    src="https://primefaces.org/cdn/primeng/images/galleria/galleria10.jpg"
+    alt="Image"
+    width="250"
+  />
+
+  <p-fileUpload
+    mode="basic"
+    chooseLabel="Choose"
+    chooseIcon="pi pi-upload"
+    name="demo[]"
+    url="https://www.primefaces.org/cdn/api/upload.php"
+    accept="image/*"
+    maxFileSize="1000000"
+  />
+
+  <div class="flex-column flex gap-2">
+    <label for="task-title">Task Title <span class="text-red-500">*</span></label>
+    <input pInputText id="task-title" placeholder="Add task title" />
+  </div>
+
+  <div class="flex-column flex gap-2">
+    <label for="description"
+      >Description <span class="text-red-500">*</span></label
+    >
+    <textarea
+      pInputTextarea
+      placeholder="Add task description"
+      id="description"
+    ></textarea>
+  </div>
+
+  <p-calendar formControlName="date" />
+
+  <p-calendar
+    formControlName="date"
+    placeholder="Due Date"
+    [showIcon]="true"
+    [iconDisplay]="'input'"
+  />
+
+  <p-dropdown
+    [options]="progressLists"
+    [(ngModel)]="selectedProgress"
+    optionLabel="name"
+    placeholder="State"
+  >
+
+    <ng-template pTemplate="selectedItem">
+      <div class="align-items-center flex gap-2"
+           *ngIf="selectedProgress">
+        <i
+          class="pi pi-bullseye"
+          [ngClass]="{
+            'text-blue-400': selectedProgress.value === 0,
+            'text-yellow-400': selectedProgress.value === 1,
+            'text-green-400': selectedProgress.value === 2,
+          }"
+        ></i>
+        <div>{{ selectedProgress.name }}</div>
+      </div>
+    </ng-template>
+
+    <ng-template let-progress pTemplate="item">
+      <div class="align-items-center flex gap-2">
+        <i
+          class="pi pi-bullseye"
+          [ngClass]="{
+            'text-blue-400': progress.value === 0,
+            'text-yellow-400': progress.value === 1,
+            'text-green-400': progress.value === 2,
+          }"
+        ></i>
+        <div>{{ progress.name }}</div>
+      </div>
+    </ng-template>
+  </p-dropdown>
+
+  <p-multiSelect
+      [options]="assigneesLists"
+      formControlName="selectedAssignees"
+      optionLabel="name"
+      placeholder="Assignees" />
+
+  <p-multiSelect
+      [options]="taskFlowLists"
+      formControlName="selectedTaskFlows"
+      optionLabel="name"
+      placeholder="Flow" />
+
+  <p-dropdown
+      [options]="parentTaskLists"
+      formControlName="selectedTaskList"
+      optionLabel="name"
+      placeholder="Add parent"
+      [filter]="true"
+      filterBy="name" />
 </div>
