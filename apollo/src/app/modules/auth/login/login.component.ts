@@ -19,6 +19,7 @@ export class LoginComponent {
 
   onSubmit() {
     this.loginForm.setErrors(null)
+    console.log(this.loginForm)
     this.loginForm.disable()
     if (this.loginForm.invalid) {
       return;
@@ -27,15 +28,14 @@ export class LoginComponent {
     const password = this.loginForm.value.password!;
     this.authService.signIn(username, password).subscribe({
       next: (v) => {
-        console.log(v);
-        // this.authService.saveLogin(v)
+        this.authService.saveLogin(v.access_token);
+        this.router.navigate([''])
       },
       error: (e) => {
-        console.log('Error:', e);
+        this.loginForm.enable()
         this.loginForm.setErrors({
           incorrect: e.error.message
         })
-        this.loginForm.enable()
       }
     })
   }

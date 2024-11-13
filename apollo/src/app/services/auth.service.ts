@@ -3,17 +3,18 @@ import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { LocalStorageService } from './local-storage.service';
+import { SignInResponse } from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  backendUrl = environment.apiUrl + '/auth' 
-  constructor(private httpClient: HttpClient, public jwtHelper: JwtHelperService) {}
+  backendUrl = environment.apiUrl + '/auth'
+  constructor(private httpClient: HttpClient, public jwtHelper: JwtHelperService) { }
 
   signIn(username: string, password: string) {
     const url = this.backendUrl + '/signin';
-    return this.httpClient.post(url, {
+    return this.httpClient.post<SignInResponse>(url, {
       username,
       password
     })
