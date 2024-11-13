@@ -45,7 +45,7 @@ import { ButtonModule } from 'primeng/button';
         TooltipModule,
         RippleModule,
         RouterModule,
-        AppConfigModule
+        AppConfigModule,
     ]
 })
 export class AppLayoutModule { }
