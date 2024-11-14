@@ -3,14 +3,22 @@ import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { LocalStorageService } from './local-storage.service';
-import { SignInResponse } from '../models/auth.model';
+import { AuthUser, SignInResponse } from '../models/auth.model';
+import { User } from '../models/user.model';
+import { Router } from '@angular/router';
+import { UserService } from './user.service';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   backendUrl = environment.apiUrl + '/auth'
-  constructor(private httpClient: HttpClient, public jwtHelper: JwtHelperService) { }
+  constructor(
+    private httpClient: HttpClient,
+    public jwtHelper: JwtHelperService,
+    private router: Router,
+    private userService: UserService) { }
 
   signIn(username: string, password: string) {
     const url = this.backendUrl + '/signin';
@@ -28,11 +36,25 @@ export class AuthService {
     return !this.jwtHelper.isTokenExpired(token);
   }
 
-  saveLogin(jwt: string) {
+  saveLogin(jwt: string): Observable<User> {
     const data = this.jwtHelper.decodeToken(jwt);
-    console.log(data);
+    console.log('JWT decoded:', data);
     LocalStorageService.save('accessToken', jwt);
-    LocalStorageService.save('profile', data);
+    LocalStorageService.save('user', data);
+    return this.userService.getUser(data.sub).pipe(
+      map((v: User) => {
+        v.password = undefined;
+        LocalStorageService.save('profile', v);
+        return v;
+      })
+    )
+  }
+
+  signOut() {
+    LocalStorageService.remove('accessToken');
+    LocalStorageService.remove('user');
+    LocalStorageService.remove('profile');
+    this.router.navigate(['/auth/login'])
   }
 
   saveToken(jwt: any) {
@@ -44,7 +66,11 @@ export class AuthService {
     return LocalStorageService.get('accessToken');
   }
 
-  static getProfile() {
+  static getUser(): AuthUser {
+    return LocalStorageService.get('user');
+  }
+
+  static getProfile(): User {
     return LocalStorageService.get('profile');
   }
 }
