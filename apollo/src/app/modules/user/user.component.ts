@@ -3,6 +3,8 @@ import { Product } from 'src/app/demo/api/product';
 import { ProductService } from 'src/app/demo/service/product.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { UserService } from 'src/app/services/user.service';
+import { User } from 'src/app/models/user.model';
 
 @Component({
     templateUrl: './user.component.html',
@@ -30,23 +32,35 @@ export class UserComponent implements OnInit {
 
     rowsPerPageOptions = [5, 10, 20];
 
-    constructor(private productService: ProductService, private messageService: MessageService, private confirmationService: ConfirmationService) { }
+    users: User[] = [];
+    user?: User;
+
+    constructor(
+        private productService: ProductService,
+        private messageService: MessageService,
+        private confirmationService: ConfirmationService,
+        private userService: UserService,
+    ) { }
 
     ngOnInit() {
         this.productService.getProducts().then(data => this.products = data);
+        this.userService.listUser().subscribe({
+            next: (v) => {
+                this.users = v;
+                console.log(v);
+            }
+        })
 
         this.cols = [
-            { field: 'product', header: 'Product' },
-            { field: 'price', header: 'Price' },
-            { field: 'category', header: 'Category' },
-            { field: 'rating', header: 'Reviews' },
-            { field: 'inventoryStatus', header: 'Status' }
+            { field: 'id', header: 'ID' },
+            { field: 'username', header: 'Username' },
+            { field: 'role', header: 'Role' },
         ];
 
         this.statuses = [
-            { label: 'INSTOCK', value: 'instock' },
-            { label: 'LOWSTOCK', value: 'lowstock' },
-            { label: 'OUTOFSTOCK', value: 'outofstock' }
+            { label: 'MEMBER', value: 'member' },
+            { label: 'MODERATOR', value: 'moderator' },
+            { label: 'ADMIN', value: 'admin' },
         ];
     }
 

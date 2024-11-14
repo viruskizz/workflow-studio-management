@@ -19,11 +19,11 @@ const routes: Routes = [
                 },
                 loadChildren: () => import('./modules/dashboards/dashboards.module').then(m => m.DashboardsModule)
             },
-            // {
-            //     path: 'users',
-            //     canActivateChild: [AuthGuard],
-            //     loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule)
-            // },
+            {
+                path: 'users',
+                canActivateChild: [AuthGuard],
+                loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule)
+            },
             // Template Apollo
             //     { path: 'dashboard', loadChildren: () => import('./demo/components/dashboards/dashboards.module').then(m => m.DashboardsModule) },
             //     { path: 'uikit', data: { breadcrumb: 'UI Kit' }, loadChildren: () => import('./demo/components/uikit/uikit.module').then(m => m.UIkitModule) },
