@@ -28,8 +28,9 @@ export class LoginComponent {
     const password = this.loginForm.value.password!;
     this.authService.signIn(username, password).subscribe({
       next: (v) => {
-        this.authService.saveLogin(v.access_token);
-        this.router.navigate([''])
+        this.authService.saveLogin(v.access_token).subscribe(v => {
+          this.router.navigate([''])
+        });
       },
       error: (e) => {
         this.loginForm.enable()

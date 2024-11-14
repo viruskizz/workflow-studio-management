@@ -9,8 +9,8 @@ export class AppSidebarComponent {
     timeout: any = null;
 
     @ViewChild('menuContainer') menuContainer!: ElementRef;
-    constructor(public layoutService: LayoutService, public el: ElementRef) {}
-    
+    constructor(public layoutService: LayoutService, public el: ElementRef) { }
+
 
     onMouseEnter() {
         if (!this.layoutService.state.anchored) {
@@ -19,8 +19,8 @@ export class AppSidebarComponent {
                 this.timeout = null;
             }
             this.layoutService.state.sidebarActive = true;
-           
-    
+
+
         }
     }
 
