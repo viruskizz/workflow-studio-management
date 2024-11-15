@@ -86,8 +86,7 @@ export class UserComponent implements OnInit {
         if (event && this.user?.id) {
             // Edited 
             this.users[this.users.findIndex(u => u.id === this.user!.id)] = event;
-        }
-        if (event) {
+        } else if (event) {
             // Created user
             this.users.push(event);
             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });

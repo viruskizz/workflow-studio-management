@@ -62,7 +62,7 @@
             </p-table>
         </div>
 
-        <app-user-form [isShow]="userDialog" [(user)]="user" (onCloseEvent)="hideDialog($event)"></app-user-form>
+        <app-user-form [(visible)]="userDialog" [(user)]="user" (onCloseEvent)="hideDialog($event)"></app-user-form>
 
         <!-- Confirm Delete Dialog -->
         <p-dialog [(visible)]="deleteUserDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">

@@ -13,9 +13,11 @@ export class UserFormComponent implements OnChanges {
 
   @Output() onCloseEvent = new EventEmitter<User | null>()
 
-  @Input() isShow = false;
+  @Input() visible: boolean = false;
+  @Output() visibleChange = new EventEmitter<boolean>();
 
   isPatch = false;
+  isSubmited = false;
 
   userForm = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -57,19 +59,19 @@ export class UserFormComponent implements OnChanges {
       lastName: this.userForm.value.lastName!,
       username: this.userForm.value.username!,
       email: this.userForm.value.email!,
-      role: this.userForm.value.role || undefined,
+      // role: this.userForm.value.role || undefined,
     };
+    this.isSubmited = true;
     if (this.isPatch && this.user) {
       this.userService.patchUser(this.user.id!, body).subscribe({
         next: (v: any) => {
-          console.log('Updated', v);
-          this.isShow = false;
           const updatedUser = {
             ...this.user,
             ...body,
+            username: this.user?.username || undefined,
           } as User
           this.onCloseEvent.emit(updatedUser)
-          this.isShow = false;
+          this.visible = false;
         }
       })
     } else {
@@ -78,21 +80,23 @@ export class UserFormComponent implements OnChanges {
         next: (v) => {
           console.log('Created', v);
           this.onCloseEvent.emit(v);
-          this.isShow = false;
+          // this.visible = false;
         }
       })
     }
   }
 
   onCancel() {
-    this.isShow = false;
-    this.onCloseEvent.emit(null)
+    this.visible = false;
   }
 
   onHide() {
-    this.userChange.emit(undefined);
-    this.onCloseEvent.emit(null)
+    if (!this.isSubmited) {
+      this.onCloseEvent.emit(null)
+    }
     // Reset Everything
+    this.visible = false;
+    this.isSubmited = false;
     this.userForm.reset();
   }
 
