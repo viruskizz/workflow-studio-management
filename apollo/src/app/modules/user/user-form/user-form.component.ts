@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { User } from 'src/app/models/user.model';
 
 @Component({
@@ -11,6 +12,21 @@ export class UserFormComponent {
   @Output() onCloseEvent = new EventEmitter<User | null>()
 
   @Input() isShow = false;
+
+  userForm = new FormGroup({
+    username: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    firstName: new FormControl('', Validators.required),
+    lastName: new FormControl('', Validators.required),
+    email: new FormControl('', Validators.email),
+    role: new FormControl('', Validators.required),
+  })
+
+  roles = [
+    { label: 'Member', value: 'MEMBER' },
+    { label: 'Moderator', value: 'Moderator' },
+    { label: 'Admin', value: 'Admin' },
+  ]
 
   constructor() { }
 
@@ -28,12 +44,14 @@ export class UserFormComponent {
       createdAt: '',
       updatedAt: ''
     }
-    this.isShow = false;
     this.onCloseEvent.emit(newUser)
   }
 
   onCancel() {
-    this.isShow = false;
+    this.onCloseEvent.emit(null)
+  }
+
+  onHide() {
     this.onCloseEvent.emit(null)
   }
 }

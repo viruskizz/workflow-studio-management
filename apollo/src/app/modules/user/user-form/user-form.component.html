@@ -1,12 +1,68 @@
-<p-dialog [(visible)]="isShow" [style]="{width: '450px'}" header="Product Details" [modal]="true" class="p-fluid">
+<p-dialog
+    [(visible)]="isShow"
+    (onHide)="onHide()"
+    [style]="{width: '450px'}"
+    [header]="user ? 'Edit' : 'Create' + 'User'"
+    [modal]="true"
+    class="p-fluid">
 
-<ng-template pTemplate="content">
-    <img [src]="user?.imageUrl" [alt]="user?.username" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="user?.imageUrl">
-</ng-template>
+    <ng-template pTemplate="content">
+        <form [formGroup]="userForm">
+            <img [src]="user?.imageUrl" [alt]="user?.username" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="user?.imageUrl">
 
-<ng-template pTemplate="footer">
-    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="onCancel()"></button>
-    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="onSave()"></button>
-</ng-template>
+            <div class="field">
+                <label for="username">Username</label>
+                <input formControlName="username" type="text" pInputText id="username"/>
+                <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !product.name">Name is required.</small> -->
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input formControlName="password" type="text" pInputText id="password"/>
+                <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !product.name">Name is required.</small> -->
+            </div>
+            <div class="field">
+                <label for="role">Role</label>
+                <p-dropdown
+                    formControlName="role"
+                    inputId="role"
+                    optionValue="label"
+                    [options]="roles"
+                    placeholder="Select"></p-dropdown>
+            </div>
+            <div class="formgrid grid">
+                <div class="field col">
+                    <label for="firstName">First Name</label>
+                    <input formControlName="firstName" pInputText id="firstName"/>
+                </div>
+                <div class="field col">
+                    <label for="lastName">Last Name</label>
+                    <input formControlName="lastName" type="text" pInputText id="lastName"/>
+                </div>
+            </div>
+            <div class="field">
+                <label for="email">Email</label>
+                <input formControlName="email" type="text" pInputText id="email"/>
+                <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !product.name">Name is required.</small> -->
+            </div>
+            <div class="field">
+                <label for="avatar">Avatar</label>
+                <p-fileUpload
+                    id="avatar"
+                    mode="basic"
+                    name="avatar"
+                    accept="image/*"
+                    [maxFileSize]="1000000"
+                    styleClass="p-button-outlined p-button-plain"
+                    chooseLabel="Upload Image"></p-fileUpload>
+            </div>
+        </form>
+    </ng-template>
+
+
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="onCancel()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="onSave()"></button>
+    </ng-template>
 
 </p-dialog>

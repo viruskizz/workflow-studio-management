@@ -34,7 +34,8 @@ export class UserComponent implements OnInit {
 
     users: User[] = [];
     user?: User;
-    userDialog = false;
+    userDialog = true;
+    // userDialog = false;
 
     constructor(
         private productService: ProductService,
@@ -67,6 +68,10 @@ export class UserComponent implements OnInit {
 
     editUser(user: User) {
         this.user = { ...user };
+        this.userDialog = true;
+    }
+
+    createUser() {
         this.userDialog = true;
     }
 
