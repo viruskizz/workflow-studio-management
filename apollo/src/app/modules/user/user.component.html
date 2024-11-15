@@ -60,7 +60,7 @@
             </p-table>
         </div>
 
-        <app-user-form [isShow]="userDialog" [user]="user" (onCloseEvent)="hideDialog($event)"></app-user-form>
+        <app-user-form [isShow]="userDialog" [(user)]="user" (onCloseEvent)="hideDialog($event)"></app-user-form>
 
         <p-dialog [(visible)]="deleteProductDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
