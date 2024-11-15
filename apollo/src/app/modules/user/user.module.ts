@@ -16,6 +16,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { UserRoutingModule } from './user-routing.module';
 import { UserComponent } from './user.component';
+import { UserFormComponent } from './user-form/user-form.component';
 
 @NgModule({
 	imports: [
@@ -36,6 +37,6 @@ import { UserComponent } from './user.component';
 		InputNumberModule,
 		DialogModule
 	],
-	declarations: [UserComponent]
+	declarations: [UserComponent, UserFormComponent]
 })
 export class UserModule { }

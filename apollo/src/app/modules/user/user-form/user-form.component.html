@@ -1,0 +1,12 @@
+<p-dialog [(visible)]="isShow" [style]="{width: '450px'}" header="Product Details" [modal]="true" class="p-fluid">
+
+<ng-template pTemplate="content">
+    <img [src]="user?.imageUrl" [alt]="user?.username" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="user?.imageUrl">
+</ng-template>
+
+<ng-template pTemplate="footer">
+    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="onCancel()"></button>
+    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="onSave()"></button>
+</ng-template>
+
+</p-dialog>

@@ -3,16 +3,11 @@
         <div class="card px-6 py-6">
             <p-toast></p-toast>
             <p-toolbar styleClass="mb-4">
-                <ng-template pTemplate="left">
+                <ng-template pTemplate="right">
                     <div class="my-2">
                         <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
                         <!-- <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length"></button> -->
                     </div>
-                </ng-template>
-
-                <ng-template pTemplate="right">
-                    <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
-                    <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help" (click)="dt.exportCSV()"></button>
                 </ng-template>
             </p-toolbar>
 
@@ -33,10 +28,6 @@
                         <th>Avatar</th>
                         <th pSortableColumn="username">Username <p-sortIcon field="username"></p-sortIcon></th>
                         <th pSortableColumn="role">Role <p-sortIcon field="role"></p-sortIcon></th>
-                        <!-- <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
-                        <th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon></th>
-                        <th pSortableColumn="rating">Reviews <p-sortIcon field="rating"></p-sortIcon></th>
-                        <th pSortableColumn="inventoryStatus">Status <p-sortIcon field="inventoryStatus"></p-sortIcon></th> -->
                         <th></th>
                     </tr>
                 </ng-template>
@@ -60,7 +51,7 @@
                             <div class="flex">
                                 <!-- <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(product)"></button> -->
                                 <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button> -->
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editUser(user)"></button>
                                 <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
                             </div>
                         </td>
@@ -69,6 +60,8 @@
             </p-table>
         </div>
 
+        <app-user-form [isShow]="userDialog" [user]="user" (onCloseEvent)="hideDialog($event)"></app-user-form>
+        <!--
         <p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true" class="p-fluid">
             <ng-template pTemplate="content">
                 <img [src]="'assets/demo/images/product/' + product.image" [alt]="product.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="product.image">
@@ -133,6 +126,7 @@
                 <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
             </ng-template>
         </p-dialog>
+        -->
 
         <p-dialog [(visible)]="deleteProductDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">

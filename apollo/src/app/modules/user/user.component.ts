@@ -34,6 +34,7 @@ export class UserComponent implements OnInit {
 
     users: User[] = [];
     user?: User;
+    userDialog = false;
 
     constructor(
         private productService: ProductService,
@@ -64,6 +65,11 @@ export class UserComponent implements OnInit {
         ];
     }
 
+    editUser(user: User) {
+        this.user = { ...user };
+        this.userDialog = true;
+    }
+
     openNew() {
         this.product = {};
         this.submitted = false;
@@ -74,10 +80,10 @@ export class UserComponent implements OnInit {
         this.deleteProductsDialog = true;
     }
 
-    editProduct(product: Product) {
-        this.product = { ...product };
-        this.productDialog = true;
-    }
+    // editProduct(product: Product) {
+    //     this.product = { ...product };
+    //     this.productDialog = true;
+    // }
 
     deleteProduct(product: Product) {
         this.deleteProductDialog = true;
@@ -98,9 +104,10 @@ export class UserComponent implements OnInit {
         this.product = {};
     }
 
-    hideDialog() {
+    hideDialog(event: any) {
         this.productDialog = false;
         this.submitted = false;
+        this.userDialog = false;
     }
 
     saveProduct() {
