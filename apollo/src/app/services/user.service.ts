@@ -30,4 +30,9 @@ export class UserService {
       headers: { 'Content-Type': 'application/json' },
     });
   }
+
+  deleteUser(id: number) {
+    const url = this.baseUrl + id;
+    return this.httpClient.delete(url)
+  }
 }

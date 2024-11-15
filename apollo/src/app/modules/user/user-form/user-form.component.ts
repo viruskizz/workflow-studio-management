@@ -15,7 +15,6 @@ export class UserFormComponent implements OnChanges {
 
   @Input() isShow = false;
 
-  submitted = false;
   isPatch = false;
 
   userForm = new FormGroup({
@@ -49,7 +48,10 @@ export class UserFormComponent implements OnChanges {
 
   onSave() {
     // Mapping only use fields
-    if (this.userForm.invalid) { return; }
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched();
+      return;
+    }
     const body: Partial<User> = {
       firstName: this.userForm.value.firstName!,
       lastName: this.userForm.value.lastName!,
@@ -57,20 +59,24 @@ export class UserFormComponent implements OnChanges {
       email: this.userForm.value.email!,
       role: this.userForm.value.role || undefined,
     };
-    this.submitted = true;
-    const next = (v: any) => {
-      console.log(v);
-      this.submitted = true;
-      this.isShow = false;
-      const newUser = this.userForm.value as User;
-      this.onCloseEvent.emit(newUser)
-    }
     if (this.isPatch && this.user) {
-      this.userService.patchUser(this.user.id, body).subscribe({ next: next })
+      this.userService.patchUser(this.user.id!, body).subscribe({
+        next: (v: any) => {
+          console.log('Updated', v);
+          this.isShow = false;
+          const updatedUser = {
+            ...this.user,
+            ...body,
+          } as User
+          this.onCloseEvent.emit(updatedUser)
+          this.isShow = false;
+        }
+      })
     } else {
       body.password = this.userForm.value.password || undefined;
       this.userService.createUser(body).subscribe({
         next: (v) => {
+          console.log('Created', v);
           this.onCloseEvent.emit(v);
           this.isShow = false;
         }
@@ -88,6 +94,12 @@ export class UserFormComponent implements OnChanges {
     this.onCloseEvent.emit(null)
     // Reset Everything
     this.userForm.reset();
-    this.submitted = false;
   }
+
+  get username() { return this.userForm.get('username'); }
+  get password() { return this.userForm.get('password'); }
+  get firstName() { return this.userForm.get('firstName'); }
+  get lastName() { return this.userForm.get('lastName'); }
+  get role() { return this.userForm.get('role'); }
+  get email() { return this.userForm.get('email'); }
 }
