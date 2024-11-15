@@ -111,9 +111,15 @@ export class UserComponent implements OnInit {
     }
 
     hideDialog(event: any) {
-        this.productDialog = false;
-        this.submitted = false;
         this.userDialog = false;
+        if (event && this.user) {
+            // Edited User
+        }
+        if (event) {
+            // Created user
+            this.users.push(event);
+            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
+        }
     }
 
     saveProduct() {

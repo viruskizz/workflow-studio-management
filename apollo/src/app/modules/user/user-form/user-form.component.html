@@ -15,7 +15,7 @@
                 <input formControlName="username" type="text" pInputText id="username"/>
                 <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !product.name">Name is required.</small> -->
             </div>
-            <div class="field">
+            <div class="field" *ngIf="!isPatch">
                 <label for="password">Password</label>
                 <input formControlName="password" type="text" pInputText id="password"/>
                 <!-- <small class="ng-dirty ng-invalid" *ngIf="submitted && !product.name">Name is required.</small> -->

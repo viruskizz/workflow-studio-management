@@ -7,7 +7,7 @@ import { User } from '../models/user.model';
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   private readonly baseUrl = `${environment.apiUrl}/users/`;
 
@@ -20,7 +20,11 @@ export class UserService {
     return this.httpClient.get<User>(url);
   }
 
-  patchUser(id: number, body: any) {
+  createUser(body: Partial<User>) {
+    return this.httpClient.post<User>(this.baseUrl, body);
+  }
+
+  patchUser(id: number, body: Partial<User>) {
     const url = this.baseUrl + id;
     return this.httpClient.patch(url, body, {
       headers: { 'Content-Type': 'application/json' },

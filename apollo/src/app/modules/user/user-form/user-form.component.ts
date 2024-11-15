@@ -20,10 +20,10 @@ export class UserFormComponent implements OnChanges {
 
   userForm = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    password: new FormControl(''),
     firstName: new FormControl('', Validators.required),
     lastName: new FormControl('', Validators.required),
-    email: new FormControl('', Validators.email),
+    email: new FormControl('', [Validators.email, Validators.email]),
     role: new FormControl('', Validators.required),
   })
 
@@ -37,23 +37,25 @@ export class UserFormComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['user']?.currentValue) {
-      this.userForm.patchValue(changes['user'].currentValue);
-      this.userForm.patchValue({ password: undefined })
-      this.userForm.controls.username.disable()
       this.isPatch = true;
+      this.userForm.patchValue(changes['user'].currentValue);
+      this.userForm.controls.username.disable()
     } else {
       this.isPatch = false;
+      this.userForm.controls.password.addValidators([Validators.required, Validators.minLength(6)])
+      this.userForm.controls.username.enable()
     }
   }
 
   onSave() {
     // Mapping only use fields
-    const body = {
-      firstName: this.userForm.value.firstName,
-      lastName: this.userForm.value.lastName,
-      username: this.userForm.value.username,
-      // role: this.userForm.value.role,
-      // password: this.userForm.value.password,
+    if (this.userForm.invalid) { return; }
+    const body: Partial<User> = {
+      firstName: this.userForm.value.firstName!,
+      lastName: this.userForm.value.lastName!,
+      username: this.userForm.value.username!,
+      email: this.userForm.value.email!,
+      role: this.userForm.value.role || undefined,
     };
     this.submitted = true;
     const next = (v: any) => {
@@ -65,10 +67,19 @@ export class UserFormComponent implements OnChanges {
     }
     if (this.isPatch && this.user) {
       this.userService.patchUser(this.user.id, body).subscribe({ next: next })
+    } else {
+      body.password = this.userForm.value.password || undefined;
+      this.userService.createUser(body).subscribe({
+        next: (v) => {
+          this.onCloseEvent.emit(v);
+          this.isShow = false;
+        }
+      })
     }
   }
 
   onCancel() {
+    this.isShow = false;
     this.onCloseEvent.emit(null)
   }
 
