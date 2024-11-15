@@ -1,17 +1,51 @@
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 
+interface LayoutModel {
+    label: string;
+    icon: string;
+    routerLink?: string[];
+    routerLinkActiveOptions?: any;
+    url?: string[];
+    target?: string;
+    items?: LayoutModel[]
+    separator?: boolean
+}
+
 @Component({
     selector: 'app-menu',
     templateUrl: './app.menu.component.html'
 })
 export class AppMenuComponent implements OnInit {
 
-    model: any[] = [];
-    demoModel: any[] = [];
+    model: LayoutModel[] = [];
+    demoModel: LayoutModel[] = [];
 
     ngOnInit() {
-        this.model = [];
+        this.model = [
+            {
+                label: 'Dashboards',
+                icon: 'pi pi-home',
+                items: [
+                    {
+                        label: 'Personal',
+                        icon: 'pi pi-fw pi-home',
+                        routerLink: ['/']
+                    },
+                ]
+            },
+            {
+                label: 'Admin Console',
+                icon: 'pi pi-fw pi-compass',
+                items: [
+                    {
+                        label: 'Users',
+                        icon: 'pi pi-fw pi-user',
+                        routerLink: ['/users']
+                    },
+                ]
+            }
+        ];
 
         this.demoModel = [
             {
