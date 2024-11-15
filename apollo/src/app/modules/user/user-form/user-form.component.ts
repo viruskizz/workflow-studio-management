@@ -56,14 +56,15 @@ export class UserFormComponent implements OnChanges {
       // password: this.userForm.value.password,
     };
     this.submitted = true;
+    const next = (v: any) => {
+      console.log(v);
+      this.submitted = true;
+      this.isShow = false;
+      const newUser = this.userForm.value as User;
+      this.onCloseEvent.emit(newUser)
+    }
     if (this.isPatch && this.user) {
-      this.userService.patchUser(this.user.id, body).subscribe(res => {
-        console.log(res);
-        this.submitted = true;
-        this.isShow = false;
-        const newUser = this.userForm.value as User;
-        this.onCloseEvent.emit(newUser)
-      })
+      this.userService.patchUser(this.user.id, body).subscribe({ next: next })
     }
   }
 
