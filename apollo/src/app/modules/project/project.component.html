@@ -36,6 +36,7 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+                        <th>Avatar</th>
                         <th pSortableColumn="key">Key <p-sortIcon field="key"></p-sortIcon></th>
                         <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
                         <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
@@ -50,9 +51,12 @@
                             {{ project?.id }}
                         </td>
                         <td>
+                            <span class="p-column-title">Cover</span>
+                            <img [src]="getImage(project?.imageUrl)" [alt]="project?.key" width="100" class="shadow-4" />
+                        </td>
+                        <td>
                             <span class="p-column-title">Key</span>
                             {{project?.key}}
-                            <!-- <img [src]="project?.imageUrl" [alt]="project?.key" width="100" class="shadow-4" /> -->
                         </td>
 
                         <td style=" min-width:10rem;">
@@ -68,8 +72,8 @@
                         </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProject(project)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProject(project)"></button>
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning mr-2" (click)="editProject(project)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProject(project)"></button>
                             </div>
                         </td>
                     </tr>

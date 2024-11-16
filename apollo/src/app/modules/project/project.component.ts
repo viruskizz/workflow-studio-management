@@ -3,6 +3,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { ProjectService } from 'src/app/services/project.service';
 import { Project } from 'src/app/models/project.model';
+import { getImageExists } from 'src/app/utils';
 
 @Component({
     templateUrl: './project.component.html',
@@ -29,6 +30,7 @@ export class ProjectComponent implements OnInit {
     ngOnInit() {
         this.projectService.listProject().subscribe({
             next: (v) => {
+                console.log(v);
                 this.projects = v;
             }
         })
@@ -93,5 +95,9 @@ export class ProjectComponent implements OnInit {
 
     onGlobalFilter(table: Table, event: Event) {
         table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
+
+    getImage(url: string) {
+        return 'assets/images/noimage.jpg';
     }
 }
