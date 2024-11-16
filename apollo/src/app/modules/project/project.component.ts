@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { UserService } from 'src/app/services/user.service';
-import { User } from 'src/app/models/user.model';
+import { ProjectService } from 'src/app/services/project.service';
+import { Project } from 'src/app/models/project.model';
 
 @Component({
     templateUrl: './project.component.html',
@@ -15,81 +15,80 @@ export class ProjectComponent implements OnInit {
     rowsPerPageOptions = [5, 10, 20];
 
     // Data config
-    users: User[] = [];
-    user?: User;
-    userDialog = false;
-    deleteUserDialog = false;
+    projects: Project[] = [];
+    project?: Project;
+    projectDialog = false;
+    deleteProjectDialog = false;
 
     constructor(
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
-        private userService: UserService,
+        private projectService: ProjectService,
     ) { }
 
     ngOnInit() {
-        this.userService.listUser().subscribe({
+        this.projectService.listProject().subscribe({
             next: (v) => {
-                this.users = v;
-                console.log(v);
+                this.projects = v;
             }
         })
 
         this.cols = [
             { field: 'id', header: 'ID' },
-            { field: 'username', header: 'Username' },
-            { field: 'role', header: 'Role' },
+            { field: 'name', header: 'Name' },
+            { field: 'status', header: 'Status' },
+            { field: 'leader', header: 'Leader' },
         ];
 
         this.statuses = [
-            { label: 'MEMBER', value: 'member' },
-            { label: 'MODERATOR', value: 'moderator' },
-            { label: 'ADMIN', value: 'admin' },
+            { label: 'TODO', value: 'todo' },
+            { label: 'DOING', value: 'doing' },
+            { label: 'DONE', value: 'done' },
         ];
     }
 
-    editUser(user: User) {
-        this.user = { ...user };
-        console.log('Edit:', user);
-        this.userDialog = true;
+    editProject(project: Project) {
+        this.project = { ...project };
+        console.log('Edit:', project);
+        this.projectDialog = true;
     }
 
-    createUser() {
-        this.user = undefined;
-        this.userDialog = true;
+    createProject() {
+        this.project = undefined;
+        this.projectDialog = true;
     }
 
-    deleteUser(user: User) {
-        this.deleteUserDialog = true;
-        this.user = { ...user };
+    deleteProject(project: Project) {
+        this.deleteProjectDialog = true;
+        this.project = { ...project };
     }
 
     confirmDelete() {
-        if (!this.user) {
-            this.deleteUserDialog = false
-            return;
-        }
-        this.userService.deleteUser(this.user!.id!).subscribe({
-            next: (v) => {
-                this.users = this.users.filter(u => u.id !== this.user!.id);
-                this.deleteUserDialog = false;
-                this.user = undefined;
-                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
-            }
-        })
-
+        // if (!this.project) {
+        //     this.deleteProjectDialog = false
+        //     return;
+        // }
+        // this.projectService.deleteproject(this.project!.id!).subscribe({
+        //     next: (v) => {
+        //         this.projects = this.projects.filter(u => u.id !== this.project!.id);
+        //         this.deleteProjectDialog = false;
+        //         this.project = undefined;
+        //         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Pser Deleted', life: 3000 });
+        //     }
+        // })
     }
 
     hideDialog(event: any) {
-        this.userDialog = false;
-        if (event && this.user?.id) {
+        this.projectDialog = false;
+        if (event && this.project?.id) {
             // Edited 
-            this.users[this.users.findIndex(u => u.id === this.user!.id)] = event;
+            this.projects[this.projects.findIndex(u => u.id === this.project!.id)] = event;
         } else if (event) {
-            // Created user
-            this.users.push(event);
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
+            // Created project
+            this.projects.push(event);
+            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Project Created', life: 3000 });
         }
-        this.user = undefined;
+        this.project = undefined;
     }
 
     onGlobalFilter(table: Table, event: Event) {
