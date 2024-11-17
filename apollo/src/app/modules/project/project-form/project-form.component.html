@@ -11,7 +11,7 @@
             <img [src]="project?.imageUrl" [alt]="project?.key" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="project?.imageUrl">
             <div class="field" *ngIf="!isPatch">
                 <label for="key">Key <span class="text-red-600">*</span></label>
-                <input formControlName="key" type="text" pInputText id="key"/>
+                <input formControlName="key" type="text" pInputText id="key" oninput="this.value = this.value.toUpperCase()"/>
                 <small class="ng-dirty ng-invalid" *ngIf="key?.errors?.['required'] && key?.touched">Key is required.</small>
                 <small class="ng-dirty ng-invalid" *ngIf="key?.errors?.['minlength'] && key?.touched">Key length is 4</small>
             </div>
@@ -36,6 +36,16 @@
                     [ngClass]="{'ng-dirty ng-invalid': status?.invalid && status?.touched }" 
                     placeholder="Select"></p-dropdown>
                 <small class="ng-dirty ng-invalid" *ngIf="status?.errors?.['required'] && status?.touched">Status is required.</small>
+            </div>
+            <div class="field">
+                <label for="leader">Leader</label>
+                <p-autoComplete
+                    formControlName="leader"
+                    [dropdown]="false"
+                    [suggestions]="filteredUsers"
+                    (completeMethod)="filterUsers($event)"
+                    optionValue="id"
+                    optionLabel="username" />
             </div>
             <div class="field">
                 <label for="cover">Cover</label>

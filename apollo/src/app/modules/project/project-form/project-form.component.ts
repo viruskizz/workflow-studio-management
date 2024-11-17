@@ -1,13 +1,16 @@
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { Project } from 'src/app/models/project.model';
+import { User } from 'src/app/models/user.model';
 import { ProjectService } from 'src/app/services/project.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-project-form',
   templateUrl: './project-form.component.html',
 })
-export class ProjectFormComponent implements OnChanges {
+export class ProjectFormComponent implements OnChanges, OnInit {
   @Input() project?: Project;
   @Output() projectChange = new EventEmitter<Project>();
 
@@ -24,7 +27,7 @@ export class ProjectFormComponent implements OnChanges {
     description: new FormControl(''),
     key: new FormControl('', [Validators.maxLength(4), Validators.minLength(4)]),
     status: new FormControl('', [Validators.required]),
-    leader: new FormControl(''),
+    leader: new FormControl(),
   })
 
   statuses = [
@@ -33,8 +36,17 @@ export class ProjectFormComponent implements OnChanges {
     { label: 'DONE', value: 'DONE' },
   ]
 
-  constructor(private projectService: ProjectService) { }
+  users: Partial<User>[] = [];
+  filteredUsers: Partial<User>[] = []
+  constructor(private projectService: ProjectService, private userService: UserService) { }
 
+  ngOnInit(): void {
+    this.userService.listUser().subscribe({
+      next: (v) => {
+        this.users = v;
+      }
+    })
+  }
   ngOnChanges(changes: SimpleChanges) {
     if (changes['project']?.currentValue) {
       this.isPatch = true;
@@ -46,22 +58,39 @@ export class ProjectFormComponent implements OnChanges {
     }
   }
 
+  showSelectedOption(selected: any) {
+    console.log('Selected:', selected)
+    return 0;
+  }
+
+  filterUsers(event: AutoCompleteCompleteEvent) {
+    const query = event.query;
+    const fields = ['username', 'firstName', 'lastName'];
+    const filtered = this.users.slice().filter((user: any) => {
+      const str = fields.reduce((prev, cur) => prev + user[cur], '');
+      return str.toLowerCase().includes(query.toLowerCase());
+    });
+    this.filteredUsers = filtered;
+  }
+
   onSave() {
     // Mapping only use fields
     if (this.projectForm.invalid) {
       this.projectForm.markAllAsTouched();
       return;
     }
-    const body: Partial<Project> = {
+    console.log(this.projectForm.value);
+    const body: Partial<Project> | any = {
       name: this.projectForm.value.name!,
-      key: this.projectForm.value.key!,
+      key: this.projectForm.value.key!.toUpperCase(),
       description: this.projectForm.value.description!,
       status: this.projectForm.value.status!,
-      // role: this.projectForm.value.role || undefined,
+      ownerId: this.projectForm.value.leader?.id! || undefined,
     };
     this.isSubmited = true;
+    console.log('body:', body);
     if (this.isPatch && this.project) {
-      this.projectService.patch(this.project.id!, body).subscribe({
+      this.projectService.patch(this.project!.id!, body).subscribe({
         next: (v: any) => {
           console.log('patched', v)
           const updatedProject = {

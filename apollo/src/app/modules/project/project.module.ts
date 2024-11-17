@@ -17,6 +17,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ProjectComponent } from './project.component';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 import { ProjectRoutingModule } from './project-routing.module';
 import { ProjectFormComponent } from './project-form/project-form.component';
@@ -43,6 +44,7 @@ import { ProjectFormComponent } from './project-form/project-form.component';
     DialogModule,
     InputGroupModule,
     InputGroupAddonModule,
+    AutoCompleteModule,
   ],
   declarations: [ProjectComponent, ProjectFormComponent]
 })
