@@ -7,7 +7,7 @@ import { Project } from '../models/project.model';
   providedIn: 'root',
 })
 export class ProjectService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   private readonly baseUrl = `${environment.apiUrl}/projects/`;
 
@@ -18,5 +18,15 @@ export class ProjectService {
   getProject(id: number) {
     const url = this.baseUrl + id;
     return this.httpClient.get<Project>(url);
+  }
+
+  create(body: Partial<Project>) {
+    const url = this.baseUrl;
+    return this.httpClient.post<Project>(url, body);
+  }
+
+  patch(id: number, body: Partial<Project>) {
+    const url = this.baseUrl + id;
+    return this.httpClient.patch<Project>(url, body);
   }
 }

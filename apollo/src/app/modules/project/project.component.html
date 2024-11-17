@@ -81,7 +81,7 @@
             </p-table>
         </div>
 
-        <!-- <app-project-form [(visible)]="projectDialog" [(user)]="project" (onCloseEvent)="hideDialog($event)"></app-project-form> -->
+        <app-project-form [(visible)]="projectDialog" [(project)]="project" (onCloseEvent)="hideDialog($event)"></app-project-form>
 
         <!-- Confirm Delete Dialog -->
         <p-dialog [(visible)]="deleteProjectDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">

@@ -1,17 +1,17 @@
 import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { User } from 'src/app/models/user.model';
-import { UserService } from 'src/app/services/user.service';
+import { Project } from 'src/app/models/project.model';
+import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
   selector: 'app-project-form',
   templateUrl: './project-form.component.html',
 })
 export class ProjectFormComponent implements OnChanges {
-  @Input() user?: User;
-  @Output() userChange = new EventEmitter<User>();
+  @Input() project?: Project;
+  @Output() projectChange = new EventEmitter<Project>();
 
-  @Output() onCloseEvent = new EventEmitter<User | null>()
+  @Output() onCloseEvent = new EventEmitter<Project | null>()
 
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
@@ -19,64 +19,61 @@ export class ProjectFormComponent implements OnChanges {
   isPatch = false;
   isSubmited = false;
 
-  userForm = new FormGroup({
-    username: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    password: new FormControl(''),
-    firstName: new FormControl('', Validators.required),
-    lastName: new FormControl('', Validators.required),
-    email: new FormControl('', [Validators.email, Validators.email]),
-    role: new FormControl('', Validators.required),
+  projectForm = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    description: new FormControl(''),
+    key: new FormControl('', [Validators.maxLength(4), Validators.minLength(4)]),
+    status: new FormControl('', [Validators.required]),
+    leader: new FormControl(''),
   })
 
-  roles = [
-    { label: 'Member', value: 'MEMBER' },
-    { label: 'Moderator', value: 'Moderator' },
-    { label: 'Admin', value: 'Admin' },
+  statuses = [
+    { label: 'TODO', value: 'TODO' },
+    { label: 'IN PROGRESS', value: 'IN_PROGRESS' },
+    { label: 'DONE', value: 'DONE' },
   ]
 
-  constructor(private userService: UserService) { }
+  constructor(private projectService: ProjectService) { }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['user']?.currentValue) {
+    if (changes['project']?.currentValue) {
       this.isPatch = true;
-      this.userForm.patchValue(changes['user'].currentValue);
-      this.userForm.controls.username.disable()
+      this.projectForm.patchValue(changes['project'].currentValue);
+      this.projectForm.controls.key.disable()
     } else {
       this.isPatch = false;
-      this.userForm.controls.password.addValidators([Validators.required, Validators.minLength(6)])
-      this.userForm.controls.username.enable()
+      this.projectForm.controls.key.enable()
     }
   }
 
   onSave() {
     // Mapping only use fields
-    if (this.userForm.invalid) {
-      this.userForm.markAllAsTouched();
+    if (this.projectForm.invalid) {
+      this.projectForm.markAllAsTouched();
       return;
     }
-    const body: Partial<User> = {
-      firstName: this.userForm.value.firstName!,
-      lastName: this.userForm.value.lastName!,
-      username: this.userForm.value.username!,
-      email: this.userForm.value.email!,
-      // role: this.userForm.value.role || undefined,
+    const body: Partial<Project> = {
+      name: this.projectForm.value.name!,
+      key: this.projectForm.value.key!,
+      description: this.projectForm.value.description!,
+      status: this.projectForm.value.status!,
+      // role: this.projectForm.value.role || undefined,
     };
     this.isSubmited = true;
-    if (this.isPatch && this.user) {
-      this.userService.patchUser(this.user.id!, body).subscribe({
+    if (this.isPatch && this.project) {
+      this.projectService.patch(this.project.id!, body).subscribe({
         next: (v: any) => {
-          const updatedUser = {
-            ...this.user,
+          console.log('patched', v)
+          const updatedProject = {
+            ...this.project,
             ...body,
-            username: this.user?.username || undefined,
-          } as User
-          this.onCloseEvent.emit(updatedUser)
+          } as Project
+          this.onCloseEvent.emit(updatedProject)
           this.visible = false;
         }
       })
     } else {
-      body.password = this.userForm.value.password || undefined;
-      this.userService.createUser(body).subscribe({
+      this.projectService.create(body).subscribe({
         next: (v) => {
           console.log('Created', v);
           this.onCloseEvent.emit(v);
@@ -97,13 +94,12 @@ export class ProjectFormComponent implements OnChanges {
     // Reset Everything
     this.visible = false;
     this.isSubmited = false;
-    this.userForm.reset();
+    this.projectForm.reset();
   }
 
-  get username() { return this.userForm.get('username'); }
-  get password() { return this.userForm.get('password'); }
-  get firstName() { return this.userForm.get('firstName'); }
-  get lastName() { return this.userForm.get('lastName'); }
-  get role() { return this.userForm.get('role'); }
-  get email() { return this.userForm.get('email'); }
+  get name() { return this.projectForm.get('name'); }
+  get key() { return this.projectForm.get('key'); }
+  get description() { return this.projectForm.get('description'); }
+  get leader() { return this.projectForm.get('leader'); }
+  get status() { return this.projectForm.get('status'); }
 }
