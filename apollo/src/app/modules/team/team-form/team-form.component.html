@@ -1,48 +1,36 @@
 <p-dialog
   [(visible)]="visible"
-  (onHide)="onHide()"
   [style]="{ width: '450px' }"
   [header]="team ? 'Edit Team' : 'Create Team'"
   [modal]="true"
-  class="p-fluid"
+  styleClass="p-fluid"
+  (onHide)="closeDialog()"
 >
   <ng-template pTemplate="content">
-    <form [formGroup]="teamForm" (ngSubmit)="onSave()">
+    <form [formGroup]="teamForm">
       <div class="field">
-        <label for="name">Team Name <span class="text-red-600">*</span></label>
-        <input formControlName="name" type="text" pInputText id="name" />
-        <small
-          class="ng-dirty ng-invalid"
-          *ngIf="name?.errors?.['required'] && name?.touched"
-        >
+        <label for="name">Team Name</label>
+        <input id="name" type="text" pInputText formControlName="name" required autofocus />
+        <small class="p-error" *ngIf="isSubmitted && formControls['name'].errors?.['required']">
           Team name is required.
         </small>
-        <small
-          class="ng-dirty ng-invalid"
-          *ngIf="name?.errors?.['minlength'] && name?.touched"
-        >
-          Minimum name length is 3 characters.
+        <small class="p-error" *ngIf="isSubmitted && formControls['name'].errors?.['minlength']">
+          Team name must be at least 3 characters long.
         </small>
       </div>
 
       <div class="field">
-        <label for="leaderId">Team Leader <span class="text-red-600">*</span></label>
-        <input formControlName="leaderId" type="text" pInputText id="leaderId" />
-        <small
-          class="ng-dirty ng-invalid"
-          *ngIf="leaderId?.errors?.['required'] && leaderId?.touched"
-        >
+        <label for="leaderId">Team Leader</label>
+        <input id="leaderId" type="text" pInputText formControlName="leaderId" required />
+        <small class="p-error" *ngIf="isSubmitted && formControls['leaderId'].errors?.['required']">
           Team leader is required.
         </small>
       </div>
 
       <div class="field">
-        <label for="members">Members <span class="text-red-600">*</span></label>
-        <input formControlName="members" type="text" pInputText id="members" />
-        <small
-          class="ng-dirty ng-invalid"
-          *ngIf="members?.errors?.['required'] && members?.touched"
-        >
+        <label for="members">Members</label>
+        <input id="members" type="text" pInputText formControlName="members" required />
+        <small class="p-error" *ngIf="isSubmitted && formControls['members'].errors?.['required']">
           At least one member is required.
         </small>
       </div>
@@ -50,21 +38,8 @@
   </ng-template>
 
   <ng-template pTemplate="footer">
-    <button
-      pButton
-      pRipple
-      label="Cancel"
-      icon="pi pi-times"
-      class="p-button-text"
-      (click)="onCancel()"
-    ></button>
-    <button
-      pButton
-      pRipple
-      label="Save"
-      icon="pi pi-check"
-      class="p-button-text"
-      (click)="onSave()"
-    ></button>
+    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="closeDialog()"></button>
+    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="onSave()"></button>
   </ng-template>
 </p-dialog>
+

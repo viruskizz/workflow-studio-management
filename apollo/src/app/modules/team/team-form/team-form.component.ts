@@ -1,12 +1,5 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Team } from 'src/app/models/team.model';
 import { TeamService } from 'src/app/services/team.service';
 
@@ -16,99 +9,72 @@ import { TeamService } from 'src/app/services/team.service';
 })
 export class TeamFormComponent implements OnChanges {
   @Input() team?: Team;
+  @Input() visible = false;
+  @Output() visibleChange = new EventEmitter<boolean>();
   @Output() teamChange = new EventEmitter<Team>();
 
-  @Output() onCloseEvent = new EventEmitter<Team | null>();
+  teamForm: FormGroup;
+  isSubmitted = false;
 
-  @Input() visible: boolean = false;
-  @Output() visibleChange = new EventEmitter<boolean>();
-
-  isPatch = false;
-  isSubmited = false;
-
-  teamForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    leaderId: new FormControl('', [Validators.required]),
-    members: new FormControl('', Validators.required), // Comma-separated members
-  });
-
-  constructor(private teamService: TeamService) {}
+  constructor(private fb: FormBuilder, private teamService: TeamService) {
+    this.teamForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      leaderId: ['', [Validators.required]],
+      members: ['', [Validators.required]],
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['team']?.currentValue) {
-      this.isPatch = true;
       this.teamForm.patchValue({
         ...changes['team'].currentValue,
-        members: changes['team'].currentValue.members?.join(', '), // Convert to comma-separated string
+        members: changes['team'].currentValue.members?.join(', '),
       });
     } else {
-      this.isPatch = false;
+      this.teamForm.reset();
     }
   }
 
   onSave() {
+    this.isSubmitted = true;
     if (this.teamForm.invalid) {
-      this.teamForm.markAllAsTouched();
       return;
     }
-  
-    console.log('Form Data:', this.teamForm.value);
-  
-    const body: Partial<Team> = {
-      name: this.teamForm.value.name ?? '',
-      leaderId: this.teamForm.value.leaderId ? parseInt(this.teamForm.value.leaderId, 10) : undefined,
-      members: this.teamForm.value.members
-        ?.split(',')
-        .map((m) => m.trim())
-        .filter(Boolean) || [],
+
+    console.log('Form data:', this.teamForm.value); // Log form data after validation
+
+    const formData = this.teamForm.value;
+    const teamData: Partial<Team> = {
+      name: formData.name,
+      leaderId: parseInt(formData.leaderId, 10),
+      members: formData.members.split(',').map((m: string) => m.trim()).filter(Boolean),
     };
-  
-    this.isSubmited = true;
-  
-    if (this.isPatch && this.team?.id) {
-      this.teamService.updateTeam(this.team.id, body).subscribe({
-        next: (updatedTeam) => {
-          this.onCloseEvent.emit({ ...this.team, ...updatedTeam });
-          this.visible = false;
-        },
-        error: (error) => {
-          console.error('Error updating team:', error);
-        }
-      });
-    } else {
-      this.teamService.createTeam(body as Team).subscribe({
-        next: (newTeam) => {
-          this.onCloseEvent.emit(newTeam);
-          this.visible = false;
-        },
-        error: (error) => {
-          console.error('Error creating team:', error);
-        }
-      });
-    }
+
+    console.log('Team data to be sent:', teamData); // Log team data before API call
+
+    const action = this.team?.id
+      ? this.teamService.updateTeam(this.team.id, teamData)
+      : this.teamService.createTeam(teamData as Team);
+
+    action.subscribe({
+      next: (updatedTeam) => {
+        console.log('Team saved successfully:', updatedTeam); // Log success message
+        this.teamChange.emit(updatedTeam);
+        this.closeDialog();
+      },
+      error: (error) => console.error('Error saving team:', error), // Log error message
+    });
   }
 
-  onCancel() {
+  closeDialog() {
     this.visible = false;
-    this.onHide();
-  }
-
-  onHide() {
-    if (!this.isSubmited) {
-      this.onCloseEvent.emit(null);
-    }
-    this.visible = false;
-    this.isSubmited = false;
+    this.visibleChange.emit(false);
     this.teamForm.reset();
+    this.isSubmitted = false;
   }
 
-  get name() {
-    return this.teamForm.get('name');
-  }
-  get members() {
-    return this.teamForm.get('members');
-  }
-  get leaderId() {
-    return this.teamForm.get('leaderId');
+  get formControls() {
+    return this.teamForm.controls;
   }
 }
+

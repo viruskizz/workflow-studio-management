@@ -8,7 +8,7 @@ import { Team } from '../models/team.model';
     providedIn: 'root'
 })
 export class TeamService {
-    private readonly baseUrl = `${environment.apiUrl}/teams/`;
+    private readonly baseUrl = `${environment.apiUrl}/teams`;
 
     constructor(private httpClient: HttpClient) { }
 
@@ -25,6 +25,6 @@ export class TeamService {
     }
 
     updateTeam(id: number, team: Partial<Team>): Observable<Team> {
-        return this.httpClient.put<Team>(`${this.baseUrl}/${id}`, team);
+        return this.httpClient.patch<Team>(`${this.baseUrl}/${id}`, team);
     }
 }
