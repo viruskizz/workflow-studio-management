@@ -3,6 +3,8 @@ import { Team } from 'src/app/models/team.model';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { TeamService } from 'src/app/services/team.service';
+import { User } from 'src/app/models/user.model';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   templateUrl: './team.component.html',
@@ -10,6 +12,7 @@ import { TeamService } from 'src/app/services/team.service';
 })
 export class TeamComponent implements OnInit {
   teams: Team[] = [];
+  users: User[] = [];
   selectedTeam?: Team;
   teamDialog = false;
   deleteTeamDialog = false;
@@ -18,22 +21,37 @@ export class TeamComponent implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private teamService: TeamService,
+    private userService: UserService,
   ) { }
 
   ngOnInit() {
     this.loadTeams();
+    this.loadUsers();
   }
 
   loadTeams() {
     this.teamService.listTeams().subscribe({
       next: (teams) => {
         this.teams = teams;
-        console.log('Teams loaded:', teams);
+        // console.log('Teams loaded:', teams);
       },
       error: (error) => console.error('Error loading teams:', error)
     });
   }
 
+  loadUsers() {
+    this.userService.listUser().subscribe({
+      next: (users) => {
+        this.users = users;
+        // console.log('Users loaded:', users);
+      },
+      error: (error) => console.error('Error loading users:', error)
+    });
+  }
+
+  getUser(id: number): User | undefined {
+    return this.users.find(user => user.id === id);
+  }
   openNewTeamDialog() {
     this.selectedTeam = undefined;
     this.teamDialog = true;

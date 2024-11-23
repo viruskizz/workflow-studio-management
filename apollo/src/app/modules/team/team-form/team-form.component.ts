@@ -1,13 +1,15 @@
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Team } from 'src/app/models/team.model';
+import { User } from 'src/app/models/user.model';
 import { TeamService } from 'src/app/services/team.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-team-form',
   templateUrl: './team-form.component.html',
 })
-export class TeamFormComponent implements OnChanges {
+export class TeamFormComponent implements OnChanges, OnInit {
   @Input() team?: Team;
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
@@ -15,20 +17,49 @@ export class TeamFormComponent implements OnChanges {
 
   teamForm: FormGroup;
   isSubmitted = false;
+  users: User[] = [];
+  filteredUsers: User[] = [];
 
-  constructor(private fb: FormBuilder, private teamService: TeamService) {
+  get selectedLeader(): User | undefined {
+    const leaderId = this.teamForm.get('leaderId')?.value;
+    return this.users.find(user => user.id === leaderId);
+  }
+
+  constructor(
+    private fb: FormBuilder, 
+    private teamService: TeamService,
+    private userService: UserService
+  ) {
     this.teamForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      leaderId: ['', [Validators.required]],
-      members: ['', [Validators.required]],
+      leaderId: [null, [Validators.required]],
+      members: [[], [Validators.required]],
     });
+  }
+
+  ngOnInit() {
+    this.loadUsers();
+  }
+
+  loadUsers() {
+    this.userService.listUser().subscribe({
+      next: (users) => {
+        this.users = users;
+        this.filteredUsers = [...this.users];
+      },
+      error: (error) => console.error('Error loading users:', error)
+    });
+  }
+
+  getUser(id: number): User | undefined {
+    return this.users.find(user => user.id === id);
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['team']?.currentValue) {
       this.teamForm.patchValue({
         ...changes['team'].currentValue,
-        members: changes['team'].currentValue.members?.join(', '),
+        members: changes['team'].currentValue.members,
       });
     } else {
       this.teamForm.reset();
@@ -41,16 +72,12 @@ export class TeamFormComponent implements OnChanges {
       return;
     }
 
-    console.log('Form data:', this.teamForm.value); // Log form data after validation
-
     const formData = this.teamForm.value;
     const teamData: Partial<Team> = {
       name: formData.name,
-      leaderId: parseInt(formData.leaderId, 10),
-      members: formData.members.split(',').map((m: string) => m.trim()).filter(Boolean),
+      leaderId: formData.leaderId,
+      members: formData.members,
     };
-
-    console.log('Team data to be sent:', teamData); // Log team data before API call
 
     const action = this.team?.id
       ? this.teamService.updateTeam(this.team.id, teamData)
@@ -58,11 +85,10 @@ export class TeamFormComponent implements OnChanges {
 
     action.subscribe({
       next: (updatedTeam) => {
-        console.log('Team saved successfully:', updatedTeam); // Log success message
         this.teamChange.emit(updatedTeam);
         this.closeDialog();
       },
-      error: (error) => console.error('Error saving team:', error), // Log error message
+      error: (error) => console.error('Error saving team:', error),
     });
   }
 

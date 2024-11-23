@@ -1,40 +1,89 @@
-<p-dialog
-  [(visible)]="visible"
-  [style]="{ width: '450px' }"
-  [header]="team ? 'Edit Team' : 'Create Team'"
-  [modal]="true"
-  styleClass="p-fluid"
-  (onHide)="closeDialog()"
+<p-dialog 
+  [(visible)]="visible" 
+  [style]="{ width: '450px' }" 
+  [header]="team ? 'Edit Team' : 'Create Team'" 
+  [modal]="true" 
+  styleClass="p-fluid team-dialog" 
+  (onHide)="closeDialog()" 
+  [maximizable]="true" 
+  [baseZIndex]="1000" 
 >
   <ng-template pTemplate="content">
-    <form [formGroup]="teamForm">
-      <div class="field">
-        <label for="name">Team Name</label>
-        <input id="name" type="text" pInputText formControlName="name" required autofocus />
-        <small class="p-error" *ngIf="isSubmitted && formControls['name'].errors?.['required']">
-          Team name is required.
-        </small>
-        <small class="p-error" *ngIf="isSubmitted && formControls['name'].errors?.['minlength']">
-          Team name must be at least 3 characters long.
-        </small>
-      </div>
+    <div class="form-container">
+      <form [formGroup]="teamForm" class="flex flex-column">
+        <div class="field">
+          <label for="name">Team Name</label>
+          <input id="name" type="text" pInputText formControlName="name" required autofocus />
+          <small class="p-error" *ngIf="isSubmitted && formControls['name'].errors?.['required']">
+            Team name is required.
+          </small>
+          <small class="p-error" *ngIf="isSubmitted && formControls['name'].errors?.['minlength']">
+            Team name must be at least 3 characters long.
+          </small>
+        </div>
 
-      <div class="field">
-        <label for="leaderId">Team Leader</label>
-        <input id="leaderId" type="text" pInputText formControlName="leaderId" required />
-        <small class="p-error" *ngIf="isSubmitted && formControls['leaderId'].errors?.['required']">
-          Team leader is required.
-        </small>
-      </div>
+        <div class="field">
+          <label for="leaderId">Team Leader</label>
+          <p-dropdown 
+            id="leaderId" 
+            [options]="users" 
+            formControlName="leaderId" 
+            optionLabel="username" 
+            optionValue="id" 
+            [filter]="true" 
+            filterBy="username" 
+            [showClear]="true" 
+            placeholder="Select a Team Leader"
+            [style]="{'width': '100%'}"
+            appendTo="body"
+          >
+            <ng-template pTemplate="selectedItem">
+              <div class="flex align-items-center gap-2" *ngIf="selectedLeader">
+                <img [src]="selectedLeader.imageUrl || '/placeholder.svg'" class="w-2 h-2 rounded-full" />
+                <div>{{ selectedLeader.username }}</div>
+              </div>
+            </ng-template>
+            <ng-template pTemplate="item" let-user>
+              <div class="flex align-items-center gap-2">
+                <img [src]="user.imageUrl || '/placeholder.svg'" class="w-2 h-2 rounded-full" />
+                <div>{{ user.username }}</div>
+              </div>
+            </ng-template>
+          </p-dropdown>
+          <small class="p-error" *ngIf="isSubmitted && formControls['leaderId'].errors?.['required']">
+            Team leader is required.
+          </small>
+        </div>
 
-      <div class="field">
-        <label for="members">Members</label>
-        <input id="members" type="text" pInputText formControlName="members" required />
-        <small class="p-error" *ngIf="isSubmitted && formControls['members'].errors?.['required']">
-          At least one member is required.
-        </small>
-      </div>
-    </form>
+        <div class="field">
+          <label for="members">Members</label>
+          <p-multiSelect
+            id="members"
+            [options]="users"
+            formControlName="members"
+            optionLabel="username"
+            [style]="{'width': '100%'}"
+            [filter]="true"
+            filterBy="username"
+            placeholder="Select Team Members"
+            [showToggleAll]="true"
+            appendTo="body"
+          >
+            <ng-template pTemplate="header">
+            </ng-template>
+            <ng-template pTemplate="member" let-user>
+              <div class="flex align-items-center gap-2 p-2">
+                <img [src]="user.imageUrl || 'ImageUrl'" class="w-2 h-2 rounded-full" />
+                <div>{{ user.username }}</div>
+              </div>
+            </ng-template>
+          </p-multiSelect>
+          <small class="p-error" *ngIf="isSubmitted && formControls['members'].errors?.['required']">
+            At least one member is required.
+          </small>
+        </div>
+      </form>
+    </div>
   </ng-template>
 
   <ng-template pTemplate="footer">
@@ -42,4 +91,3 @@
     <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="onSave()"></button>
   </ng-template>
 </p-dialog>
-
