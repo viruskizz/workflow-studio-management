@@ -28,12 +28,15 @@ export class ProjectsService {
   }
 
   async create(data: CreateProjectDto) {
-    const user = await this.usersService.findOne(data.ownerId);
-    if (!user) {
-      throw new BadRequestException('Not found user');
+    const project = this.repository.create(data);
+    if (data.leaderId) {
+      const user = await this.usersService.findOne(data.leaderId);
+      if (!user) {
+        throw new BadRequestException('Not found user');
+      }
+      project.leaderId = data.leaderId;
     }
-    const project = Project.create(data);
-    project.owner = user;
+    console.log('save:', project);
     return project.save();
   }
 

@@ -3,9 +3,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
@@ -14,7 +15,7 @@ import { Task } from './task.entity';
 
 @Entity({ name: 'projects' })
 export class Project extends BaseEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   @ApiProperty({ example: 1 })
   id: number;
 
@@ -42,8 +43,13 @@ export class Project extends BaseEntity {
   /*
   Relational column
   */
+  @Column({ name: 'leader_id', nullable: true })
+  @ApiProperty({ example: 1 })
+  leaderId?: number;
+
   @ManyToOne(() => User, (user) => user.projects)
-  owner: User;
+  @JoinColumn({ name: 'leader_id' })
+  leader?: User | null;
 
   @OneToMany(() => Task, (task) => task.id)
   tasks: Task[];
