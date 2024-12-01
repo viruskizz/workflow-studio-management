@@ -98,6 +98,6 @@ export class ProjectComponent implements OnInit {
     }
 
     getImage(url: string) {
-        return 'assets/images/noimage.jpg';
+        return url || 'assets/images/noimage.jpg';
     }
 }

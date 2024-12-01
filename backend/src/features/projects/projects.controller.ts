@@ -25,9 +25,6 @@ export class ProjectsController {
   @Post()
   @ApiOperation({ summary: 'Create new project' })
   async create(@Body() body: CreateProjectDto) {
-    const user = this.usersService.findOne(body.ownerId);
-    if (!user) {
-    }
     return this.service.create(body);
   }
 

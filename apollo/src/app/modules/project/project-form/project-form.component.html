@@ -2,62 +2,57 @@
     [(visible)]="visible"
     (onHide)="onHide()"
     [style]="{width: '450px'}"
-    [header]="user ? 'Edit' : 'Create' + 'User'"
+    [header]="project ? 'Edit' : 'Create' + ' Project'"
     [modal]="true"
     class="p-fluid">
 
     <ng-template pTemplate="content">
-        <form [formGroup]="userForm">
-            <img [src]="user?.imageUrl" [alt]="user?.username" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="user?.imageUrl">
-
-            <div class="field">
-                <label for="username">Username <span class="text-red-600">*</span></label>
-                <input formControlName="username" type="text" pInputText id="username"/>
-                <small class="ng-dirty ng-invalid" *ngIf="username?.errors?.['required'] && username?.touched">Username is required.</small>
-                <small class="ng-dirty ng-invalid" *ngIf="username?.errors?.['minlength'] && username?.touched">Minimum charaters length is 6</small>
-            </div>
+        <form [formGroup]="projectForm">
+            <img [src]="project?.imageUrl" [alt]="project?.key" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="project?.imageUrl">
             <div class="field" *ngIf="!isPatch">
-                <label for="password">Password <span class="text-red-600">*</span></label>
-                <input formControlName="password" type="text" pInputText id="password"/>
-                <small class="ng-dirty ng-invalid" *ngIf="password?.errors?.['required'] && password?.touched">password is required.</small>
-                <small class="ng-dirty ng-invalid" *ngIf="password?.errors?.['minlength'] && password?.touched">Minimum password length is 6</small>
+                <label for="key">Key <span class="text-red-600">*</span></label>
+                <input formControlName="key" type="text" pInputText id="key" oninput="this.value = this.value.toUpperCase()"/>
+                <small class="ng-dirty ng-invalid" *ngIf="key?.errors?.['required'] && key?.touched">Key is required.</small>
+                <small class="ng-dirty ng-invalid" *ngIf="key?.errors?.['minlength'] && key?.touched">Key length is 4</small>
             </div>
             <div class="field">
-                <label for="role">Role</label>
+                <label for="name">Name <span class="text-red-600">*</span></label>
+                <input formControlName="name" type="text" pInputText id="name"/>
+                <small class="ng-dirty ng-invalid" *ngIf="name?.errors?.['required'] && name?.touched">Name is required.</small>
+                <small class="ng-dirty ng-invalid" *ngIf="name?.errors?.['minlength'] && name?.touched">Minimum charaters length is 6</small>
+            </div>
+            <div class="field">
+                <label for="description">Description</label>
+                <input formControlName="description" type="text" pInputText id="description"/>
+                <small class="ng-dirty ng-invalid" *ngIf="description?.errors?.['required'] && description?.touched">Description is required.</small>
+            </div>
+            <div class="field">
+                <label for="status">Status</label>
                 <p-dropdown
-                    formControlName="role"
-                    inputId="role"
+                    formControlName="status"
+                    inputId="status"
                     optionValue="label"
-                    [options]="roles"
-                    [ngClass]="{'ng-dirty ng-invalid': role?.invalid && role?.touched }" 
+                    [options]="statuses"
+                    [ngClass]="{'ng-dirty ng-invalid': status?.invalid && status?.touched }" 
                     placeholder="Select"></p-dropdown>
-                <small class="ng-dirty ng-invalid" *ngIf="role?.errors?.['required'] && role?.touched">Role is required.</small>
-            </div>
-            <div class="formgrid grid">
-                <div class="field col">
-                    <label for="firstName">First Name</label>
-                    <input formControlName="firstName" pInputText id="firstName"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="firstName?.errors?.['required'] && firstName?.touched">First Name is required.</small>
-                </div>
-                <div class="field col">
-                    <label for="lastName">Last Name</label>
-                    <input formControlName="lastName" type="text" pInputText id="lastName"/>
-                    <small class="ng-dirty ng-invalid" *ngIf="lastName?.errors?.['required'] && lastName?.touched">Last Name is required.</small>
-
-                </div>
+                <small class="ng-dirty ng-invalid" *ngIf="status?.errors?.['required'] && status?.touched">Status is required.</small>
             </div>
             <div class="field">
-                <label for="email">Email</label>
-                <input formControlName="email" type="text" pInputText id="email"/>
-                <small class="ng-dirty ng-invalid" *ngIf="email?.errors?.['required']">Email is required.</small>
-                <small class="ng-dirty ng-invalid" *ngIf="email?.errors?.['email']">Email is invalid format.</small>
+                <label for="leader">Leader</label>
+                <p-autoComplete
+                    formControlName="leader"
+                    [dropdown]="false"
+                    [suggestions]="filteredUsers"
+                    (completeMethod)="filterUsers($event)"
+                    optionValue="id"
+                    optionLabel="username" />
             </div>
             <div class="field">
-                <label for="avatar">Avatar</label>
+                <label for="cover">Cover</label>
                 <p-fileUpload
-                    id="avatar"
+                    id="cover"
                     mode="basic"
-                    name="avatar"
+                    name="cover"
                     accept="image/*"
                     [maxFileSize]="1000000"
                     styleClass="p-button-outlined p-button-plain"

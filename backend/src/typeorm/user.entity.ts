@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   OneToMany,
   PrimaryGeneratedColumn,
   Unique,
@@ -37,7 +38,7 @@ export class User extends BaseEntity {
   /*
   Relational column
   */
-  @OneToMany(() => Project, (project) => project.id)
+  @OneToMany(() => Project, (project) => project.leader)
   projects?: Project[];
 
   @OneToMany(() => Task, (task) => task.id)
