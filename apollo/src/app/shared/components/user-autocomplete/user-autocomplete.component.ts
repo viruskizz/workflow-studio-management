@@ -20,7 +20,7 @@ export class UserAutocompleteComponent implements OnInit {
   @Input() optionLabel = 'username'
   @Input() optionValue = 'id'
   @Input() multiple: boolean = false
-  @Input() limit = 3;
+  @Input() limit = 1;
   @Input() unique = true;
   @Input() dropdown: boolean = false
 
@@ -54,20 +54,20 @@ export class UserAutocompleteComponent implements OnInit {
 
   onSelect(event: AutoCompleteSelectEvent) {
     if (this.multiple) {
-      const values = this.form.controls[this.controlName].value;
+      let values = this.form.controls[this.controlName].value;
+      if (this.unique) {
+        values = [
+          ...values.filter((user: Partial<User>) => user.id !== event.value.id),
+          event.value
+        ]
+        this.form.controls[this.controlName].patchValue(values)
+      }
       if (values.length > this.limit) {
         this.form.controls[this.controlName].patchValue(
           values.slice(1)
         )
       }
-      if (this.unique) {
-        this.form.controls[this.controlName].patchValue(
-          [
-            ...values.filter((user: Partial<User>) => user.id !== event.value.id),
-            event.value
-          ]
-        )
-      }
+      
     }
   }
 }
