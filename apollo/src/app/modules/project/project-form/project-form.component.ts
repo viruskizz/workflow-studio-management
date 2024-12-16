@@ -46,6 +46,9 @@ export class ProjectFormComponent implements OnChanges, OnInit {
         this.users = v;
       }
     })
+    // this.projectForm.controls['leader'].patchValue({
+    //   id: 1, username: 'araiva'
+    // })
   }
   ngOnChanges(changes: SimpleChanges) {
     if (changes['project']?.currentValue) {

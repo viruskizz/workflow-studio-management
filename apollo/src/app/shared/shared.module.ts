@@ -5,6 +5,7 @@ import { TestComponent } from './components/test/test.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputTextModule } from 'primeng/inputtext';
 import { AvatarModule } from 'primeng/avatar';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const sharedComponents: any[] = [
   UserAutocompleteComponent,
@@ -20,6 +21,8 @@ const sharedComponents: any[] = [
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
 
     InputTextModule,
     AutoCompleteModule,

@@ -1,6 +1,7 @@
-import { Component, forwardRef, Input } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { filter } from 'rxjs';
+import { AfterViewInit, Component, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 import { getDefaultAvatar } from 'src/app/utils';
@@ -8,23 +9,20 @@ import { getDefaultAvatar } from 'src/app/utils';
 @Component({
   selector: 'app-user-autocomplete',
   templateUrl: './user-autocomplete.component.html',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => UserAutocompleteComponent),
-      multi: true,
-    },
-  ],
 })
-export class UserAutocompleteComponent implements ControlValueAccessor {
+export class UserAutocompleteComponent implements OnInit {
   users: Partial<User>[] = []
   filteredUsers: Partial<User>[] = []
 
-  formControl = new FormControl()
+  @Input({ required: true }) form: FormGroup = new FormGroup({});
+  @Input({ required: true }) controlName: string = 'user';
   @Input() labelFor = 'User'
   @Input() optionLabel = 'username'
   @Input() optionValue = 'id'
-  @Input() dropdown = true
+  @Input() multiple: boolean = false
+  @Input() limit = 3;
+  @Input() unique = true;
+  @Input() dropdown: boolean = false
 
   constructor(private userService: UserService) {}
 
@@ -47,27 +45,29 @@ export class UserAutocompleteComponent implements ControlValueAccessor {
   }
 
   onImageError(event: Event, idx: number) {
-    console.log(idx);
-    console.log(event);
     this.filteredUsers[idx].imageUrl = getDefaultAvatar()
   }
 
+  onUnselect(event: any) {
+    console.log('onUnselect: ', event)
+  }
+
   onSelect(event: AutoCompleteSelectEvent) {
-    this.formControl.patchValue(event.value);
-  }
-
-  writeValue(value: any): void {
-    this.formControl.patchValue(value);
-  }
-
-  registerOnChange(fn: any): void {
-    this.formControl.valueChanges.subscribe((val) => {
-      console.log('Change:', val);
-      fn(val)
-    });
-  }
-
-  registerOnTouched(fn: any): void {
-    this.formControl.valueChanges.subscribe(val => fn(val));
+    if (this.multiple) {
+      const values = this.form.controls[this.controlName].value;
+      if (values.length > this.limit) {
+        this.form.controls[this.controlName].patchValue(
+          values.slice(1)
+        )
+      }
+      if (this.unique) {
+        this.form.controls[this.controlName].patchValue(
+          [
+            ...values.filter((user: Partial<User>) => user.id !== event.value.id),
+            event.value
+          ]
+        )
+      }
+    }
   }
 }
