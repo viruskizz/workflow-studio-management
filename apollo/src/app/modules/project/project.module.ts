@@ -21,9 +21,11 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 
 import { ProjectRoutingModule } from './project-routing.module';
 import { ProjectFormComponent } from './project-form/project-form.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
+    SharedModule,
     CommonModule,
     ProjectRoutingModule,
     ReactiveFormsModule,

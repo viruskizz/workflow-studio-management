@@ -1,0 +1,28 @@
+<div class="field" [formGroup]="form">
+    <label for="user-autocomplete">{{labelFor}}</label>
+    <p-autoComplete
+        #pAutocomplete
+        [formControlName]="controlName"
+        [dropdown]="dropdown"
+        [suggestions]="filteredUsers"
+        (onSelect)="onSelect($event)"
+        (onUnselect)="onUnselect($event)"
+        (completeMethod)="filterUsers($event)"
+        [multiple]="multiple"
+        optionValue="id"
+        optionLabel="username">
+        <ng-template let-user let-i="index" pTemplate="item">
+            <div class="flex items-center gap-2">
+                <p-avatar [image]="user.imageUrl" size="normal" styleClass="mr-2" shape="circle" (onImageError)="onImageError($event, i)"/>
+                <div>{{ user.username }}</div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <div class="font-medium px-3 py-2">All Users</div>
+        </ng-template>
+        <ng-template let-user pTemplate="selectedItem">
+            <p-avatar [image]="user.imageUrl" size="normal" styleClass="mr-2" shape="circle"/>
+            <div>{{ user.username }}</div>
+        </ng-template>
+    </p-autoComplete>
+</div>
