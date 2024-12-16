@@ -1,0 +1,11 @@
+<div class="field">
+    <label for="user-autocomplete">{{labelFor}}</label>
+    <p-autoComplete
+        [formControl]="formControl"
+        [dropdown]="dropdown"
+        [suggestions]="filteredUsers"
+        (onSelect)="onSelect($event)"
+        (completeMethod)="filterUsers($event)"
+        [optionValue]="optionValue"
+        [optionLabel]="optionLabel" />
+</div>

@@ -26,7 +26,7 @@ export class ProjectFormComponent implements OnChanges, OnInit {
     name: new FormControl('', [Validators.required]),
     description: new FormControl(''),
     key: new FormControl('', [Validators.maxLength(4), Validators.minLength(4)]),
-    status: new FormControl('', [Validators.required]),
+    status: new FormControl('TODO', [Validators.required]),
     leader: new FormControl(),
   })
 

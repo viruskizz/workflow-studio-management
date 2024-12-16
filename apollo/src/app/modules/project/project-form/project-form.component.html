@@ -37,6 +37,7 @@
                     placeholder="Select"></p-dropdown>
                 <small class="ng-dirty ng-invalid" *ngIf="status?.errors?.['required'] && status?.touched">Status is required.</small>
             </div>
+            <!--
             <div class="field">
                 <label for="leader">Leader</label>
                 <p-autoComplete
@@ -47,6 +48,10 @@
                     optionValue="id"
                     optionLabel="username" />
             </div>
+            -->
+            <app-user-autocomplete
+                formControlName="leader"
+            ></app-user-autocomplete>
             <div class="field">
                 <label for="cover">Cover</label>
                 <p-fileUpload
