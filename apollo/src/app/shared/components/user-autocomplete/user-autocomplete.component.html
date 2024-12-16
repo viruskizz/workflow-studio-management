@@ -6,6 +6,15 @@
         [suggestions]="filteredUsers"
         (onSelect)="onSelect($event)"
         (completeMethod)="filterUsers($event)"
-        [optionValue]="optionValue"
-        [optionLabel]="optionLabel" />
+        optionLabel="username">
+        <ng-template let-user let-i="index" pTemplate="item">
+            <div class="flex items-center gap-2">
+                <p-avatar [image]="user.imageUrl" size="normal" styleClass="mr-2" shape="circle" (onImageError)="onImageError($event, i)"/>
+                <div>{{ user.username }}</div>
+            </div>
+        </ng-template>
+        <ng-template #header>
+            <div class="font-medium px-3 py-2">All Users</div>
+        </ng-template>
+    </p-autoComplete>
 </div>

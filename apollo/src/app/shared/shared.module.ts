@@ -4,6 +4,7 @@ import { UserAutocompleteComponent } from './components/user-autocomplete/user-a
 import { TestComponent } from './components/test/test.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputTextModule } from 'primeng/inputtext';
+import { AvatarModule } from 'primeng/avatar';
 
 const sharedComponents: any[] = [
   UserAutocompleteComponent,
@@ -22,6 +23,7 @@ const sharedComponents: any[] = [
 
     InputTextModule,
     AutoCompleteModule,
+    AvatarModule,
   ],
   exports: [
     ...sharedComponents,

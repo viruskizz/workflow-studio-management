@@ -1,8 +1,9 @@
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
+import { getDefaultAvatar } from 'src/app/utils';
 
 @Component({
   selector: 'app-user-autocomplete',
@@ -23,7 +24,7 @@ export class UserAutocompleteComponent implements ControlValueAccessor {
   @Input() labelFor = 'User'
   @Input() optionLabel = 'username'
   @Input() optionValue = 'id'
-  @Input() dropdown = false
+  @Input() dropdown = true
 
   constructor(private userService: UserService) {}
 
@@ -43,6 +44,12 @@ export class UserAutocompleteComponent implements ControlValueAccessor {
       return str.toLowerCase().includes(query.toLowerCase());
     });
     this.filteredUsers = filtered;
+  }
+
+  onImageError(event: Event, idx: number) {
+    console.log(idx);
+    console.log(event);
+    this.filteredUsers[idx].imageUrl = getDefaultAvatar()
   }
 
   onSelect(event: AutoCompleteSelectEvent) {
