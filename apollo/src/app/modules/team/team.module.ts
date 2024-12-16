@@ -14,6 +14,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TeamComponent } from './team.component';
 import { TeamFormComponent } from './team-form/team-form.component';
 import { TeamRoutingModule } from './team-routing.module';
+import { CheckboxModule } from 'primeng/checkbox';
+import { AvatarModule } from 'primeng/avatar';
 
 @NgModule({
   imports: [
@@ -31,6 +33,8 @@ import { TeamRoutingModule } from './team-routing.module';
     ConfirmDialogModule,
     DropdownModule,
     MultiSelectModule,
+    CheckboxModule,
+    AvatarModule
   ],
   declarations: [TeamComponent, TeamFormComponent]
 })

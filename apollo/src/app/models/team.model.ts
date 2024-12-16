@@ -1,11 +1,10 @@
+import { User } from "./user.model";
+
 export interface Team {
     id?: number;
     name: string;
-    key: string;
-    description: string;
     leaderId: number;
-    members: string[];
-    projectActive: boolean;
+    members: User[];
     createdAt?: string;
     updatedAt?: string;
 }

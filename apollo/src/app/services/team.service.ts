@@ -5,12 +5,12 @@ import { Observable } from 'rxjs';
 import { Team } from '../models/team.model';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class TeamService {
     private readonly baseUrl = `${environment.apiUrl}/teams`;
 
-    constructor(private httpClient: HttpClient) { }
+    constructor(private httpClient: HttpClient) {}
 
     listTeams(): Observable<Team[]> {
         return this.httpClient.get<Team[]>(`${this.baseUrl}`);

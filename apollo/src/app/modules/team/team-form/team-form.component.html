@@ -1,16 +1,8 @@
-<p-dialog 
-  [(visible)]="visible" 
-  [style]="{ width: '450px' }" 
-  [header]="team ? 'Edit Team' : 'Create Team'" 
-  [modal]="true" 
-  styleClass="p-fluid team-dialog" 
-  (onHide)="closeDialog()" 
-  [maximizable]="true" 
-  [baseZIndex]="1000" 
->
+<p-dialog [(visible)]="visible" [style]="{ width: '750px' }" [header]="team ? 'Edit Team' : 'Create Team'"
+  [modal]="true" styleClass="p-fluid team-dialog" (onHide)="closeDialog()" [maximizable]="true" [baseZIndex]="1000">
   <ng-template pTemplate="content">
     <div class="form-container">
-      <form [formGroup]="teamForm" class="flex flex-column">
+      <form [formGroup]="teamForm">
         <div class="field">
           <label for="name">Team Name</label>
           <input id="name" type="text" pInputText formControlName="name" required autofocus />
@@ -24,28 +16,18 @@
 
         <div class="field">
           <label for="leaderId">Team Leader</label>
-          <p-dropdown 
-            id="leaderId" 
-            [options]="users" 
-            formControlName="leaderId" 
-            optionLabel="username" 
-            optionValue="id" 
-            [filter]="true" 
-            filterBy="username" 
-            [showClear]="true" 
-            placeholder="Select a Team Leader"
-            [style]="{'width': '100%'}"
-            appendTo="body"
-          >
-            <ng-template pTemplate="selectedItem">
-              <div class="flex align-items-center gap-2" *ngIf="selectedLeader">
-                <img [src]="selectedLeader.imageUrl || '/placeholder.svg'" class="w-2 h-2 rounded-full" />
-                <div>{{ selectedLeader.username }}</div>
+          <p-dropdown id="leaderId" [options]="users" formControlName="leaderId" optionLabel="username" optionValue="id"
+            [filter]="true" filterBy="username" [showClear]="true" placeholder="Select a Team Leader" class="w-full"
+            appendTo="body">
+            <ng-template pTemplate="selectedItem" let-selectedUser>
+              <div class="flex items-center gap-2" *ngIf="selectedUser ">
+                <p-avatar [image]="selectedUser .imageUrl" size="xlarge" shape="circle" class="mr-2"></p-avatar>
+                <div>{{ selectedUser .username }}</div>
               </div>
             </ng-template>
             <ng-template pTemplate="item" let-user>
-              <div class="flex align-items-center gap-2">
-                <img [src]="user.imageUrl || '/placeholder.svg'" class="w-2 h-2 rounded-full" />
+              <div class="flex items-center gap-2">
+                <p-avatar [image]="user.imageUrl" size="xlarge" shape="circle" class="mr-2"></p-avatar>
                 <div>{{ user.username }}</div>
               </div>
             </ng-template>
@@ -56,31 +38,30 @@
         </div>
 
         <div class="field">
-          <label for="members">Members</label>
-          <p-multiSelect
-            id="members"
-            [options]="users"
-            formControlName="members"
-            optionLabel="username"
-            [style]="{'width': '100%'}"
-            [filter]="true"
-            filterBy="username"
-            placeholder="Select Team Members"
-            [showToggleAll]="true"
-            appendTo="body"
-          >
-            <ng-template pTemplate="header">
-            </ng-template>
-            <ng-template pTemplate="member" let-user>
-              <div class="flex align-items-center gap-2 p-2">
-                <img [src]="user.imageUrl || 'ImageUrl'" class="w-2 h-2 rounded-full" />
+          <label for="members" class="block text-sm font-medium text-gray-700">Members</label>
+          <p-multiSelect id="members" [options]="users" formControlName="members" optionLabel="username"
+            class="w-full mt-1" [filter]="true" filterBy="username" placeholder="Select Team Members" [showClear]="true"
+            appendTo="body">
+            <ng-template pTemplate="item" let-user>
+              <div class="flex items-center gap-2 p-2">
+                <p-avatar [image]="user.imageUrl" size="xlarge" shape="circle" class="mr-2"></p-avatar>
                 <div>{{ user.username }}</div>
               </div>
             </ng-template>
           </p-multiSelect>
-          <small class="p-error" *ngIf="isSubmitted && formControls['members'].errors?.['required']">
+          <small class="p-error text-red-500" *ngIf="isSubmitted && formControls['members'].errors?.['required']">
             At least one member is required.
           </small>
+          <div class="selected-members mt-4">
+            <div *ngFor="let member of teamForm.get('members')?.value"
+              class="selected-member grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="flex items-center p-2 bg-gray-100 rounded-lg shadow-sm w-full">
+                <p-avatar [image]="member.imageUrl" size="xlarge" shape="circle" class="mr-2"></p-avatar>
+                <div class="ml-2">{{ member.username }}</div>
+                <i class="pi pi-times cursor-pointer ml-auto text-red-500" (click)="removeMember(member)"></i>
+              </div>
+            </div>
+          </div>
         </div>
       </form>
     </div>
