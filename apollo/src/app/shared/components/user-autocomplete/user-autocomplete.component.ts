@@ -1,7 +1,6 @@
-import { filter } from 'rxjs';
-import { AfterViewInit, Component, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 import { getDefaultAvatar } from 'src/app/utils';
