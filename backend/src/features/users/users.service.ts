@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from '../auth/auth.service';
 import * as argon2 from 'argon2';
+import { QueryOptionInterface } from '@backend/shared/decorators/query-option.decorator';
 
 @Injectable()
 export class UsersService {
@@ -27,8 +28,12 @@ export class UsersService {
     return this.usersRepository.save(user).catch((e) => console.log(e));
   }
 
-  findAll() {
-    return this.usersRepository.find();
+  findAll(options: QueryOptionInterface) {
+    return this.usersRepository.find({
+      select: options.select,
+      skip: options.offset,
+      take: options.limit,
+    });
   }
 
   findByUsername(username: string) {
