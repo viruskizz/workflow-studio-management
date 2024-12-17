@@ -11,6 +11,10 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import {
+  QueryOption,
+  QueryOptionInterface,
+} from '@backend/shared/decorators/query-option.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -25,8 +29,9 @@ export class UsersController {
 
   @Get()
   @ApiOperation({ summary: 'List all users' })
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@QueryOption() options: QueryOptionInterface) {
+    console.log('Options:', options);
+    return this.usersService.findAll(options);
   }
 
   @Get(':id')
