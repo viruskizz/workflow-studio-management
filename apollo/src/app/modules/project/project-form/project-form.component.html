@@ -37,16 +37,13 @@
                     placeholder="Select"></p-dropdown>
                 <small class="ng-dirty ng-invalid" *ngIf="status?.errors?.['required'] && status?.touched">Status is required.</small>
             </div>
-            <div class="field">
-                <label for="leader">Leader</label>
-                <p-autoComplete
-                    formControlName="leader"
-                    [dropdown]="false"
-                    [suggestions]="filteredUsers"
-                    (completeMethod)="filterUsers($event)"
-                    optionValue="id"
-                    optionLabel="username" />
-            </div>
+
+            <app-user-autocomplete
+                [form]="projectForm"
+                controlName="leader"
+                [multiple]="true"
+                [dropdown]="true"
+            ></app-user-autocomplete>
             <div class="field">
                 <label for="cover">Cover</label>
                 <p-fileUpload

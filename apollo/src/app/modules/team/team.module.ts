@@ -16,6 +16,8 @@ import { TeamFormComponent } from './team-form/team-form.component';
 import { TeamRoutingModule } from './team-routing.module';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AvatarModule } from 'primeng/avatar';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @NgModule({
   imports: [
@@ -34,7 +36,9 @@ import { AvatarModule } from 'primeng/avatar';
     DropdownModule,
     MultiSelectModule,
     CheckboxModule,
-    AvatarModule
+    AvatarModule,
+    FileUploadModule,
+    SharedModule,
   ],
   declarations: [TeamComponent, TeamFormComponent]
 })

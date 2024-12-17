@@ -5,6 +5,7 @@ export interface Team {
     name: string;
     leaderId: number;
     members: User[];
+    imageUrl: string;
     createdAt?: string;
     updatedAt?: string;
 }

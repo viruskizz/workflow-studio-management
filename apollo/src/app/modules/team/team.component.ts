@@ -33,7 +33,6 @@ export class TeamComponent implements OnInit {
     this.teamService.listTeams().subscribe({
       next: (teams) => {
         this.teams = teams;
-        // console.log('Teams loaded:', teams);
       },
       error: (error) => console.error('Error loading teams:', error)
     });
@@ -43,7 +42,6 @@ export class TeamComponent implements OnInit {
     this.userService.listUser().subscribe({
       next: (users) => {
         this.users = users;
-        // console.log('Users loaded:', users);
       },
       error: (error) => console.error('Error loading users:', error)
     });
@@ -52,6 +50,7 @@ export class TeamComponent implements OnInit {
   getUser(id: number): User | undefined {
     return this.users.find(user => user.id === id);
   }
+
   openNewTeamDialog() {
     this.selectedTeam = undefined;
     this.teamDialog = true;
@@ -71,7 +70,6 @@ export class TeamComponent implements OnInit {
         this.teamService.deleteTeam(team.id!).subscribe({
           next: () => {
             this.teams = this.teams.filter(t => t.id !== team.id);
-            console.log('Team deleted:', team);
             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Team Deleted', life: 3000 });
           },
           error: (error) => console.error('Error deleting team:', error)
@@ -84,11 +82,9 @@ export class TeamComponent implements OnInit {
     const index = this.teams.findIndex(t => t.id === team.id);
     if (index > -1) {
       this.teams[index] = team;
-      console.log('Team saved:', team);
       this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Team Updated', life: 3000 });
     } else {
       this.teams.push(team);
-      console.log('Team saved:', team);
       this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Team Created', life: 3000 });
     }
     this.teamDialog = false;
@@ -98,5 +94,5 @@ export class TeamComponent implements OnInit {
   onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
-
 }
+

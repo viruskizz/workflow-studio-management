@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { AppLayoutComponent } from './layout/app.layout.component';
 import { AuthGuard } from './auth.guard';
+import { TestComponent } from './shared/components/test/test.component';
 
 const routerOptions: ExtraOptions = {
     anchorScrolling: 'enabled'
@@ -33,6 +34,10 @@ const routes: Routes = [
                 path: 'projects',
                 canActivateChild: [AuthGuard],
                 loadChildren: () => import('./modules/project/project.module').then(m => m.ProjectModule)
+            },
+            {
+                path: 'test',
+                component: TestComponent
             },
             // Template Apollo
             //     { path: 'dashboard', loadChildren: () => import('./demo/components/dashboards/dashboards.module').then(m => m.DashboardsModule) },

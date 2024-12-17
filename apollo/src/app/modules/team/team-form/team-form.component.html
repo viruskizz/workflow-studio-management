@@ -1,8 +1,10 @@
-<p-dialog [(visible)]="visible" [style]="{ width: '750px' }" [header]="team ? 'Edit Team' : 'Create Team'"
+<p-dialog [(visible)]="visible" [style]="{ width: '450px', height: '80vh' }" [header]="team ? 'Edit Team' : 'Create Team'"
   [modal]="true" styleClass="p-fluid team-dialog" (onHide)="closeDialog()" [maximizable]="true" [baseZIndex]="1000">
   <ng-template pTemplate="content">
     <div class="form-container">
       <form [formGroup]="teamForm">
+        <img [src]="teamForm.get('imageUrl')?.value" [alt]="" width="150" class="mt-0 mx-auto mb-5 block shadow-2">
+        
         <div class="field">
           <label for="name">Team Name</label>
           <input id="name" type="text" pInputText formControlName="name" required autofocus />
@@ -14,54 +16,41 @@
           </small>
         </div>
 
-        <div class="field">
-          <label for="leaderId">Team Leader</label>
-          <p-dropdown id="leaderId" [options]="users" formControlName="leaderId" optionLabel="username" optionValue="id"
-            [filter]="true" filterBy="username" [showClear]="true" placeholder="Select a Team Leader" class="w-full"
-            appendTo="body">
-            <ng-template pTemplate="selectedItem" let-selectedUser>
-              <div class="flex items-center gap-2" *ngIf="selectedUser ">
-                <p-avatar [image]="selectedUser .imageUrl" size="xlarge" shape="circle" class="mr-2"></p-avatar>
-                <div>{{ selectedUser .username }}</div>
-              </div>
-            </ng-template>
-            <ng-template pTemplate="item" let-user>
-              <div class="flex items-center gap-2">
-                <p-avatar [image]="user.imageUrl" size="xlarge" shape="circle" class="mr-2"></p-avatar>
-                <div>{{ user.username }}</div>
-              </div>
-            </ng-template>
-          </p-dropdown>
-          <small class="p-error" *ngIf="isSubmitted && formControls['leaderId'].errors?.['required']">
-            Team leader is required.
-          </small>
-        </div>
+        <app-user-autocomplete
+          [form]="teamForm"
+          controlName="leader"
+          labelFor="Team Leader"
+          [dropdown]="true"
+          [limit]="1"
+        ></app-user-autocomplete>
+        <small class="p-error" *ngIf="isSubmitted && formControls['leader'].errors?.['required']">
+          Team leader is required.
+        </small>
+
+        <app-user-autocomplete
+          [form]="teamForm"
+          controlName="members"
+          labelFor="Members"
+          [multiple]="true"
+          [dropdown]="true"
+          [limit]="null"
+        ></app-user-autocomplete>
+        <small class="p-error" *ngIf="isSubmitted && formControls['members'].errors?.['required']">
+          At least one member is required.
+        </small>
 
         <div class="field">
-          <label for="members" class="block text-sm font-medium text-gray-700">Members</label>
-          <p-multiSelect id="members" [options]="users" formControlName="members" optionLabel="username"
-            class="w-full mt-1" [filter]="true" filterBy="username" placeholder="Select Team Members" [showClear]="true"
-            appendTo="body">
-            <ng-template pTemplate="item" let-user>
-              <div class="flex items-center gap-2 p-2">
-                <p-avatar [image]="user.imageUrl" size="xlarge" shape="circle" class="mr-2"></p-avatar>
-                <div>{{ user.username }}</div>
-              </div>
-            </ng-template>
-          </p-multiSelect>
-          <small class="p-error text-red-500" *ngIf="isSubmitted && formControls['members'].errors?.['required']">
-            At least one member is required.
-          </small>
-          <div class="selected-members mt-4">
-            <div *ngFor="let member of teamForm.get('members')?.value"
-              class="selected-member grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div class="flex items-center p-2 bg-gray-100 rounded-lg shadow-sm w-full">
-                <p-avatar [image]="member.imageUrl" size="xlarge" shape="circle" class="mr-2"></p-avatar>
-                <div class="ml-2">{{ member.username }}</div>
-                <i class="pi pi-times cursor-pointer ml-auto text-red-500" (click)="removeMember(member)"></i>
-              </div>
-            </div>
-          </div>
+          <label for="cover">Cover Image</label>
+          <p-fileUpload
+            id="cover"
+            mode="basic"
+            name="cover"
+            accept="image/*"
+            [maxFileSize]="1000000"
+            styleClass="p-button-outlined p-button-plain"
+            chooseLabel="Upload Image"
+            (onSelect)="onUpload($event)"
+          ></p-fileUpload>
         </div>
       </form>
     </div>
@@ -72,3 +61,4 @@
     <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="onSave()"></button>
   </ng-template>
 </p-dialog>
+
