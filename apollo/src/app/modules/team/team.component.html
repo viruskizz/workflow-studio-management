@@ -26,28 +26,34 @@
             <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
             <th pSortableColumn="leaderId">Lead <p-sortIcon field="leaderId"></p-sortIcon></th>
             <th pSortableColumn="members">Members <p-sortIcon field="members"></p-sortIcon></th>
+            <th>Actions</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-team>
           <tr>
             <td>
-              <img [src]="team.imageUrl" [alt]="team.name" width="50"
-                class="shadow-2 rounded-circle">
-              <span>{{team.name}}</span>
-
+              <span class="ml-2">{{team.name}}</span>
             </td>
             <td>
               <div class="flex align-items-center">
-                <p-avatar [image]="getUser(team.leaderId)?.imageUrl" size="xlarge" shape="circle"
+                <p-avatar [image]="getUser(team.leaderId)?.imageUrl" size="large" shape="circle"
                   class="mr-2"></p-avatar>
                 <span>{{getUser(team.leaderId)?.username}}</span>
               </div>
             </td>
             <td>
               <div class="flex gap-2">
-                <div *ngFor="let memberId of team.members" class="relative">
-                  <p-avatar [image]="getUser(memberId)?.imageUrl" size="xlarge" shape="circle" class="mr-2"></p-avatar>
-                </div>
+                <p-avatar *ngFor="let member of team.members?.slice(0, 5); let i = index"
+                  [image]="member.imageUrl"
+                  size="large"
+                  shape="circle"
+                  [style]="{'z-index': 5 - i, 'margin-left': i > 0 ? '-0.5rem' : '0'}"
+                  [pTooltip]="member.username"
+                  tooltipPosition="top">
+                </p-avatar>
+                <span *ngIf="team.members && team.members.length > 5" class="ml-2 flex items-center">
+                  +{{ team.members.length - 5 }}
+                </span>
               </div>
             </td>
             <td>
@@ -66,3 +72,4 @@
     <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
   </div>
 </div>
+

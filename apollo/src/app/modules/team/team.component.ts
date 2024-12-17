@@ -7,92 +7,129 @@ import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
-  templateUrl: './team.component.html',
-  providers: [MessageService, ConfirmationService]
+    templateUrl: './team.component.html',
+    providers: [MessageService, ConfirmationService],
 })
 export class TeamComponent implements OnInit {
-  teams: Team[] = [];
-  users: User[] = [];
-  selectedTeam?: Team;
-  teamDialog = false;
-  deleteTeamDialog = false;
+    teams: Team[] = [];
+    users: User[] = [];
+    selectedTeam?: Team;
+    teamDialog = false;
+    deleteTeamDialog = false;
 
-  constructor(
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService,
-    private teamService: TeamService,
-    private userService: UserService,
-  ) { }
+    constructor(
+        private messageService: MessageService,
+        private confirmationService: ConfirmationService,
+        private teamService: TeamService,
+        private userService: UserService
+    ) {}
 
-  ngOnInit() {
-    this.loadTeams();
-    this.loadUsers();
-  }
-
-  loadTeams() {
-    this.teamService.listTeams().subscribe({
-      next: (teams) => {
-        this.teams = teams;
-      },
-      error: (error) => console.error('Error loading teams:', error)
-    });
-  }
-
-  loadUsers() {
-    this.userService.listUser().subscribe({
-      next: (users) => {
-        this.users = users;
-      },
-      error: (error) => console.error('Error loading users:', error)
-    });
-  }
-
-  getUser(id: number): User | undefined {
-    return this.users.find(user => user.id === id);
-  }
-
-  openNewTeamDialog() {
-    this.selectedTeam = undefined;
-    this.teamDialog = true;
-  }
-
-  editTeam(team: Team) {
-    this.selectedTeam = { ...team };
-    this.teamDialog = true;
-  }
-
-  deleteTeam(team: Team) {
-    this.confirmationService.confirm({
-      message: `Are you sure you want to delete ${team.name}?`,
-      header: 'Confirm',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.teamService.deleteTeam(team.id!).subscribe({
-          next: () => {
-            this.teams = this.teams.filter(t => t.id !== team.id);
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Team Deleted', life: 3000 });
-          },
-          error: (error) => console.error('Error deleting team:', error)
-        });
-      }
-    });
-  }
-
-  onTeamSave(team: Team) {
-    const index = this.teams.findIndex(t => t.id === team.id);
-    if (index > -1) {
-      this.teams[index] = team;
-      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Team Updated', life: 3000 });
-    } else {
-      this.teams.push(team);
-      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Team Created', life: 3000 });
+    ngOnInit() {
+        this.loadTeams();
+        this.loadUsers();
     }
-    this.teamDialog = false;
-    this.selectedTeam = undefined;
-  }
 
-  onGlobalFilter(table: Table, event: Event) {
-    table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-  }
+    loadTeams() {
+        this.teamService.listTeams().subscribe({
+            next: (teams) => {
+                this.teams = teams;
+                teams.forEach((team) => this.loadTeamMembers(team.id!));
+            },
+            error: (error) => console.error('Error loading teams:', error),
+        });
+    }
+
+    loadUsers() {
+        this.userService.listUser().subscribe({
+            next: (users) => {
+                this.users = users;
+            },
+            error: (error) => console.error('Error loading users:', error),
+        });
+    }
+
+    loadTeamMembers(teamId: number) {
+        this.teamService.getTeamMembers(teamId).subscribe({
+            next: (members) => {
+                const team = this.teams.find(t => t.id === teamId);
+                if (team) {
+                    team.members = members;
+                }
+            },
+            error: (error) => console.error(`Error loading members for team ${teamId}:`, error),
+        });
+    }
+
+    editTeam(team: Team) {
+        this.teamService.getTeamWithMembers(team.id!).subscribe({
+            next: (teamWithMembers) => {
+                this.selectedTeam = teamWithMembers;
+                this.teamDialog = true;
+            },
+            error: (error) => console.error('Error loading team details:', error),
+        });
+    }
+
+    getUser(id: number): User | undefined {
+        return this.users.find((user) => user.id === id);
+    }
+
+    openNewTeamDialog() {
+        this.selectedTeam = undefined;
+        this.teamDialog = true;
+    }
+
+    deleteTeam(team: Team) {
+        this.confirmationService.confirm({
+            message: `Are you sure you want to delete ${team.name}?`,
+            header: 'Confirm',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {
+                this.teamService.deleteTeam(team.id!).subscribe({
+                    next: () => {
+                        this.teams = this.teams.filter((t) => t.id !== team.id);
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Successful',
+                            detail: 'Team Deleted',
+                            life: 3000,
+                        });
+                    },
+                    error: (error) =>
+                        console.error('Error deleting team:', error),
+                });
+            },
+        });
+    }
+
+    onTeamSave(team: Team) {
+        const index = this.teams.findIndex((t) => t.id === team.id);
+        if (index > -1) {
+            this.teams[index] = team;
+            this.messageService.add({
+                severity: 'success',
+                summary: 'Successful',
+                detail: 'Team Updated',
+                life: 3000,
+            });
+        } else {
+            this.teams.push(team);
+            this.messageService.add({
+                severity: 'success',
+                summary: 'Successful',
+                detail: 'Team Created',
+                life: 3000,
+            });
+        }
+        this.teamDialog = false;
+        this.selectedTeam = undefined;
+    }
+
+    onGlobalFilter(table: Table, event: Event) {
+        table.filterGlobal(
+            (event.target as HTMLInputElement).value,
+            'contains'
+        );
+    }
 }
 

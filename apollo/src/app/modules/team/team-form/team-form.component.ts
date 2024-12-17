@@ -75,29 +75,31 @@ export class TeamFormComponent implements OnChanges, OnInit {
     onSave() {
         this.isSubmitted = true;
         if (this.teamForm.invalid) {
-          return;
+            return;
         }
-    
+
         const formValue = this.teamForm.value;
         const teamData: Partial<Team> = {
-          name: formValue.name,
-          members: formValue.members,
-          imageUrl: formValue.imageUrl,
-          leaderId: formValue.leader?.id ? Number(formValue.leader.id) : undefined
+            name: formValue.name,
+            members: formValue.members.map((member: User) => member.id),
+            imageUrl: formValue.imageUrl,
+            leaderId: formValue.leader?.id
+                ? Number(formValue.leader.id)
+                : undefined,
         };
-    
+
         const action = this.team?.id
-          ? this.teamService.updateTeam(this.team.id, teamData)
-          : this.teamService.createTeam(teamData as Team);
-    
+            ? this.teamService.updateTeam(this.team.id, teamData)
+            : this.teamService.createTeam(teamData as Team);
+
         action.subscribe({
-          next: (updatedTeam) => {
-            this.teamChange.emit(updatedTeam);
-            this.closeDialog();
-          },
-          error: (error) => console.error('Error saving team:', error),
+            next: (updatedTeam) => {
+                this.teamChange.emit(updatedTeam);
+                this.closeDialog();
+            },
+            error: (error) => console.error('Error saving team:', error),
         });
-      }
+    }
 
     closeDialog() {
         this.visible = false;
@@ -123,26 +125,6 @@ export class TeamFormComponent implements OnChanges, OnInit {
         }
     }
 
-    filterLeaders(event: AutoCompleteCompleteEvent) {
-        const query = event.query.toLowerCase();
-        this.filteredLeaders = this.users.filter(
-            (user) =>
-                user.username.toLowerCase().includes(query) ||
-                user.firstName.toLowerCase().includes(query) ||
-                user.lastName.toLowerCase().includes(query)
-        );
-    }
-
-    filterMembers(event: AutoCompleteCompleteEvent) {
-        const query = event.query.toLowerCase();
-        this.filteredMembers = this.users.filter(
-            (user) =>
-                user.username.toLowerCase().includes(query) ||
-                user.firstName.toLowerCase().includes(query) ||
-                user.lastName.toLowerCase().includes(query)
-        );
-    }
-
     onMemberSelect(event: any) {
         const selectedMember = event.value;
         const currentMembers = this.teamForm.get('members')?.value || [];
@@ -165,3 +147,4 @@ export class TeamFormComponent implements OnChanges, OnInit {
         this.teamForm.patchValue({ members: updatedMembers });
     }
 }
+

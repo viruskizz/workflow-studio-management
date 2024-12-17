@@ -18,6 +18,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { AvatarModule } from 'primeng/avatar';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FileUploadModule } from 'primeng/fileupload';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { FileUploadModule } from 'primeng/fileupload';
     CheckboxModule,
     AvatarModule,
     FileUploadModule,
+    TooltipModule,
     SharedModule,
   ],
   declarations: [TeamComponent, TeamFormComponent]
