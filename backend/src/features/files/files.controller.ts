@@ -24,7 +24,7 @@ export class FilesController {
   @Get('search')
   @ApiOperation({ summary: 'List all uploaded public file from server' })
   list() {
-    return [];
+    return this.filesService.list();
   }
 
   @UseInterceptors(FileInterceptor('file'))
@@ -58,7 +58,7 @@ export class FilesController {
   @Get()
   @ApiOperation({ summary: 'Retrieve file metadata' })
   get(@Query('filename') filename: string) {
-    if (!filename.startsWith(this.filesService.rootPath)) {
+    if (filename && !filename.startsWith(this.filesService.rootPath)) {
       filename = path.join(this.filesService.rootPath, filename);
     }
     return this.filesService.getRecord(filename);

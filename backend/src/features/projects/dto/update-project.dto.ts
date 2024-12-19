@@ -4,7 +4,7 @@ import { IsEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateProjectDto extends PartialType(CreateProjectDto) {
-  @IsEmpty()
+  // @IsEmpty()
   @ApiProperty({ required: false })
   key?: string;
 }

@@ -66,7 +66,6 @@ export class UserAutocompleteComponent implements OnInit {
           values.slice(1)
         )
       }
-      
     }
   }
 }
