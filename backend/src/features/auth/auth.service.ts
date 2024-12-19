@@ -18,6 +18,7 @@ export class AuthService {
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.userService.getRepository().findOne({
+      where: { username },
       select: {
         id: true,
         username: true,
