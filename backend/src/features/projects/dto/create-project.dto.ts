@@ -39,7 +39,8 @@ export class CreateProjectDto extends PartialType(Project) {
   @ApiProperty({ required: false, example: 1 })
   leaderId?: number;
 
-  @IsUrl()
+  @IsString()
+  // @IsUrl()
   @IsOptional()
   @ApiProperty({
     required: false,

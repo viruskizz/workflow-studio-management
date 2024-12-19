@@ -20,7 +20,11 @@ export class ProjectsService {
   }
 
   findAll() {
-    return this.repository.find();
+    return this.repository.find({
+      relations: {
+        leader: true,
+      },
+    });
   }
 
   findOne(id: number) {
@@ -36,7 +40,6 @@ export class ProjectsService {
       }
       project.leaderId = data.leaderId;
     }
-    console.log('save:', project);
     return project.save();
   }
 

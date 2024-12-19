@@ -94,7 +94,7 @@ export class ProjectFormComponent implements OnChanges, OnInit {
       key: this.projectForm.getRawValue().key?.toUpperCase(),
       description: this.projectForm.value.description!,
       status: this.projectForm.value.status!,
-      leaderId: this.projectForm.value.leader?.id! || undefined,
+      leaderId: this.projectForm.value.leader[0]?.id! || undefined,
     };
     this.isSubmited = true;
     console.log('Body:', body);

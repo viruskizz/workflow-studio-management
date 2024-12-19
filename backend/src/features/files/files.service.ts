@@ -23,10 +23,7 @@ export class FilesService {
   ) {}
 
   list() {
-    return {
-      path: '',
-      files: [],
-    };
+    return this.repository.find();
   }
 
   save(file: Express.Multer.File, body: CreateFileDto) {

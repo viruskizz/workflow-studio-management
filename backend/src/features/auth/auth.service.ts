@@ -17,7 +17,13 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.userService.findByUsername(username);
+    const user = await this.userService.getRepository().findOne({
+      select: {
+        id: true,
+        username: true,
+        password: true,
+      },
+    });
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
@@ -26,8 +32,8 @@ export class AuthService {
     if (!isMatch) {
       throw new UnauthorizedException('Password does not match');
     }
-    const { password, ...result } = user;
-    return result;
+    const fullUser = await this.userService.findOne(user.id);
+    return fullUser;
   }
 
   async signin(user: any) {

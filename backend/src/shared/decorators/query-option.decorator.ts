@@ -10,6 +10,9 @@ export interface QueryOptionInterface {
 }
 
 const fieldsToSelects = (fields: string[]) => {
+  if (!fields) {
+    return;
+  }
   const select: object = {};
   fields.forEach((el: string) => {
     select[el] = true;
@@ -21,7 +24,10 @@ export const QueryOption = createParamDecorator(
   (data: string, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     const { query } = request;
-    const fields = query.fields?.split(',').map((el: string) => el.trim());
+    let fields = [];
+    if (query.fields) {
+      fields = query.fields?.split(',').map((el: string) => el.trim());
+    }
     return {
       fields,
       select: fieldsToSelects(fields),
