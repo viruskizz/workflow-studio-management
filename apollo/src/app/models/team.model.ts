@@ -4,9 +4,8 @@ export interface Team {
     id?: number;
     name: string;
     leaderId: number;
-    memberIds: number[];
     members?: User[];
-    imageUrl: string;
+    imageUrl?: string;
     createdAt?: string;
     updatedAt?: string;
 }

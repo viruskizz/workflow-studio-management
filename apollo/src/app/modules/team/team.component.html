@@ -25,13 +25,15 @@
           <tr>
             <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
             <th pSortableColumn="leaderId">Lead <p-sortIcon field="leaderId"></p-sortIcon></th>
-            <th pSortableColumn="members">Members <p-sortIcon field="members"></p-sortIcon></th>
+            <th>Members</th>
             <th>Actions</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-team>
           <tr>
             <td>
+              <img [src]="team.imageUrl" [alt]="team.name" width="50"
+                class="shadow-2 rounded-circle">
               <span class="ml-2">{{team.name}}</span>
             </td>
             <td>

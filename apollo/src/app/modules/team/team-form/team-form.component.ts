@@ -12,7 +12,7 @@ import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
 import { TeamService } from 'src/app/services/team.service';
 import { UserService } from 'src/app/services/user.service';
-import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
+import { finalize } from 'rxjs/operators';
 
 @Component({
     selector: 'app-team-form',
@@ -27,8 +27,7 @@ export class TeamFormComponent implements OnChanges, OnInit {
     teamForm: FormGroup;
     isSubmitted = false;
     users: User[] = [];
-    filteredLeaders: User[] = [];
-    filteredMembers: User[] = [];
+    loading = false;
 
     constructor(
         private fb: FormBuilder,
@@ -47,23 +46,12 @@ export class TeamFormComponent implements OnChanges, OnInit {
         this.loadUsers();
     }
 
-    loadUsers() {
-        this.userService.listUser().subscribe({
-            next: (users) => {
-                this.users = users;
-                this.filteredLeaders = [...this.users];
-                this.filteredMembers = [...this.users];
-            },
-            error: (error) => console.error('Error loading users:', error),
-        });
-    }
-
     ngOnChanges(changes: SimpleChanges) {
         if (changes['team']?.currentValue) {
             const team = changes['team'].currentValue;
             this.teamForm.patchValue({
                 name: team.name,
-                leader: team.leader,
+                leader: this.users.find((u) => u.id === team.leaderId),
                 members: team.members || [],
                 imageUrl: team.imageUrl || '',
             });
@@ -72,27 +60,31 @@ export class TeamFormComponent implements OnChanges, OnInit {
         }
     }
 
+    loadUsers() {
+        this.userService.listUser().subscribe({
+            next: (users) => (this.users = users),
+            error: (error) => console.error('Error loading users:', error),
+        });
+    }
+
     onSave() {
         this.isSubmitted = true;
-        if (this.teamForm.invalid) {
-            return;
-        }
+        if (this.teamForm.invalid) return;
 
         const formValue = this.teamForm.value;
         const teamData: Partial<Team> = {
             name: formValue.name,
-            members: formValue.members.map((member: User) => member.id),
+            members: formValue.members,
             imageUrl: formValue.imageUrl,
-            leaderId: formValue.leader?.id
-                ? Number(formValue.leader.id)
-                : undefined,
+            leaderId: formValue.leader?.id,
         };
 
+        this.loading = true;
         const action = this.team?.id
             ? this.teamService.updateTeam(this.team.id, teamData)
             : this.teamService.createTeam(teamData as Team);
 
-        action.subscribe({
+        action.pipe(finalize(() => (this.loading = false))).subscribe({
             next: (updatedTeam) => {
                 this.teamChange.emit(updatedTeam);
                 this.closeDialog();
@@ -124,27 +116,4 @@ export class TeamFormComponent implements OnChanges, OnInit {
             };
         }
     }
-
-    onMemberSelect(event: any) {
-        const selectedMember = event.value;
-        const currentMembers = this.teamForm.get('members')?.value || [];
-        if (
-            !currentMembers.some(
-                (member: User) => member.id === selectedMember.id
-            )
-        ) {
-            this.teamForm.patchValue({
-                members: [...currentMembers, selectedMember],
-            });
-        }
-    }
-
-    removeMember(member: User) {
-        const currentMembers = this.teamForm.get('members')?.value || [];
-        const updatedMembers = currentMembers.filter(
-            (m: User) => m.id !== member.id
-        );
-        this.teamForm.patchValue({ members: updatedMembers });
-    }
 }
-

@@ -39,24 +39,27 @@ export class TeamComponent implements OnInit {
         });
     }
 
+    loadTeamMembers(teamId: number) {
+        this.teamService.getTeamMembers(teamId).subscribe({
+            next: (members) => {
+                const teamIndex = this.teams.findIndex((t) => t.id === teamId);
+                if (teamIndex !== -1) {
+                    this.teams[teamIndex] = {
+                        ...this.teams[teamIndex],
+                        members,
+                    };
+                }
+            },
+            error: (error) => console.error(`Error loading members for team ${teamId}:`, error),
+        });
+    }
+
     loadUsers() {
         this.userService.listUser().subscribe({
             next: (users) => {
                 this.users = users;
             },
             error: (error) => console.error('Error loading users:', error),
-        });
-    }
-
-    loadTeamMembers(teamId: number) {
-        this.teamService.getTeamMembers(teamId).subscribe({
-            next: (members) => {
-                const team = this.teams.find(t => t.id === teamId);
-                if (team) {
-                    team.members = members;
-                }
-            },
-            error: (error) => console.error(`Error loading members for team ${teamId}:`, error),
         });
     }
 
@@ -103,24 +106,13 @@ export class TeamComponent implements OnInit {
     }
 
     onTeamSave(team: Team) {
-        const index = this.teams.findIndex((t) => t.id === team.id);
-        if (index > -1) {
-            this.teams[index] = team;
-            this.messageService.add({
-                severity: 'success',
-                summary: 'Successful',
-                detail: 'Team Updated',
-                life: 3000,
-            });
-        } else {
-            this.teams.push(team);
-            this.messageService.add({
-                severity: 'success',
-                summary: 'Successful',
-                detail: 'Team Created',
-                life: 3000,
-            });
-        }
+        this.loadTeams(); 
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Successful',
+            detail: team.id ? 'Team Updated' : 'Team Created',
+            life: 3000,
+        });
         this.teamDialog = false;
         this.selectedTeam = undefined;
     }
