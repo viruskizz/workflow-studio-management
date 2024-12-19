@@ -1,6 +1,10 @@
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges, OnInit } from '@angular/core';
+import { FileService } from './../../../services/file.service';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
+import { MessageService } from 'primeng/api';
+import { FileSelectEvent, UploadEvent } from 'primeng/fileupload';
+import { EMPTY, map, Observable, of, switchMap, catchError } from 'rxjs';
+import { FileResponse } from 'src/app/models/file.model';
 import { Project } from 'src/app/models/project.model';
 import { User } from 'src/app/models/user.model';
 import { ProjectService } from 'src/app/services/project.service';
@@ -19,6 +23,9 @@ export class ProjectFormComponent implements OnChanges, OnInit {
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
 
+  imagePreview?: string;
+  coverFile?: File;
+
   isPatch = false;
   isSubmited = false;
 
@@ -28,7 +35,9 @@ export class ProjectFormComponent implements OnChanges, OnInit {
     key: new FormControl('', [Validators.maxLength(4), Validators.minLength(4)]),
     status: new FormControl('TODO', [Validators.required]),
     leader: new FormControl(),
+    imageUrl: new FormControl()
   })
+
 
   statuses = [
     { label: 'TODO', value: 'TODO' },
@@ -38,20 +47,19 @@ export class ProjectFormComponent implements OnChanges, OnInit {
 
   users: Partial<User>[] = [];
   filteredUsers: Partial<User>[] = []
-  constructor(private projectService: ProjectService, private userService: UserService) { }
+  constructor(
+    private projectService: ProjectService,
+    private fileService: FileService,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit(): void {
-    this.userService.listUser().subscribe({
-      next: (v) => {
-        this.users = v;
-      }
-    })
-    // this.projectForm.controls['leader'].patchValue({
-    //   id: 1, username: 'araiva'
-    // })
   }
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['project']?.currentValue) {
+      console.log('Project:', this.project)
+      this.imagePreview = this.project?.imageUrl;
       this.isPatch = true;
       this.projectForm.patchValue(changes['project'].currentValue);
       this.projectForm.controls.key.disable()
@@ -61,20 +69,18 @@ export class ProjectFormComponent implements OnChanges, OnInit {
     }
   }
 
-  showSelectedOption(selected: any) {
-    console.log('Selected:', selected)
-    return 0;
+  onSelectImage(event: FileSelectEvent) {
+    const file = event.currentFiles[0];
+    if (file) {
+      this.coverFile = file;
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        this.imagePreview = event.target?.result as string;
+      }
+    }
   }
 
-  filterUsers(event: AutoCompleteCompleteEvent) {
-    const query = event.query;
-    const fields = ['username', 'firstName', 'lastName'];
-    const filtered = this.users.slice().filter((user: any) => {
-      const str = fields.reduce((prev, cur) => prev + user[cur], '');
-      return str.toLowerCase().includes(query.toLowerCase());
-    });
-    this.filteredUsers = filtered;
-  }
 
   onSave() {
     // Mapping only use fields
@@ -82,37 +88,35 @@ export class ProjectFormComponent implements OnChanges, OnInit {
       this.projectForm.markAllAsTouched();
       return;
     }
-    console.log(this.projectForm.value);
+    console.log('Submitted', this.projectForm.value);
     const body: Partial<Project> | any = {
       name: this.projectForm.value.name!,
-      key: this.projectForm.value.key!.toUpperCase(),
+      key: this.projectForm.getRawValue().key?.toUpperCase(),
       description: this.projectForm.value.description!,
       status: this.projectForm.value.status!,
-      ownerId: this.projectForm.value.leader?.id! || undefined,
+      leaderId: this.projectForm.value.leader?.id! || undefined,
     };
     this.isSubmited = true;
-    console.log('body:', body);
-    if (this.isPatch && this.project) {
-      this.projectService.patch(this.project!.id!, body).subscribe({
-        next: (v: any) => {
-          console.log('patched', v)
-          const updatedProject = {
-            ...this.project,
-            ...body,
-          } as Project
-          this.onCloseEvent.emit(updatedProject)
-          this.visible = false;
-        }
-      })
-    } else {
-      this.projectService.create(body).subscribe({
-        next: (v) => {
-          console.log('Created', v);
-          this.onCloseEvent.emit(v);
-          // this.visible = false;
-        }
-      })
-    }
+    console.log('Body:', body);
+    const saveObservable = this.isPatch && this.project ? this.toUpdate(body) : this.toCreate(body);
+    saveObservable.pipe(
+      switchMap(v => this.toUpload(v))
+    ).subscribe({
+      next: res => {
+        console.log('Saved:', res);
+        this.isSubmited = false;
+        this.onCloseEvent.emit(res)
+        this.visible = false;
+      },
+      error: e => {
+        console.log(e)
+        this.messageService.add({
+          severity: 'error',
+          summary: e.error.error,
+          detail: e.error.message.toString(),
+        });
+      }
+    })
   }
 
   onCancel() {
@@ -134,4 +138,40 @@ export class ProjectFormComponent implements OnChanges, OnInit {
   get description() { return this.projectForm.get('description'); }
   get leader() { return this.projectForm.get('leader'); }
   get status() { return this.projectForm.get('status'); }
+
+  private toUpload(updatedProject: Project) {
+    if (this.project && this.coverFile) {
+      const filepath = `/projects/${this.project.id}/`
+      const filename = 'cover.png';
+      return this.fileService.upload(this.coverFile, filepath, filename).pipe(
+        switchMap(res => {
+          return this.toUpdate({ imageUrl: res.url })
+        })
+      );
+    }
+    return of(updatedProject)
+  }
+
+  private toCreate(body: any): Observable<Project> {
+    return this.projectService.create(body).pipe(
+      map(res => {
+        this.project = res;
+        return res;
+      })
+    )
+  }
+
+  private toUpdate(body: any): Observable<Project> {
+    body.key = undefined;
+    return this.projectService.patch(this.project!.id!, body).pipe(
+      map((v: any) => {
+        this.project = {
+          ...this.project,
+          ...body,
+          key: this.project!.key,
+        } as Project
+        return this.project
+      })
+    )
+  }
 }

@@ -63,12 +63,14 @@
                             <span class="p-column-title">Name</span>
                             {{project?.name}}
                         </td>
-                        <td style="min-width: 7rem;"><span class="p-column-title">Status</span>
+                        <td style="min-width: 7rem;">
+                            <span class="p-column-title">Status</span>
+                            {{project?.status}}
                             <!-- <span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span> -->
                         </td>
                         <td style=" min-width:10rem;">
                             <span class="p-column-title">Leader</span>
-                            {{project?.ownerId}}
+                            {{project?.leaderId || 'Unassigned'}}
                         </td>
                         <td>
                             <div class="flex">
