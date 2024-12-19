@@ -20,11 +20,20 @@ export class ProjectsService {
   }
 
   findAll() {
-    return this.repository.find();
+    return this.repository.find({
+      relations: {
+        leader: true,
+      },
+    });
   }
 
   findOne(id: number) {
-    return this.repository.findOneBy({ id });
+    return this.repository.findOne({
+      where: { id },
+      relations: {
+        leader: true,
+      },
+    });
   }
 
   async create(data: CreateProjectDto) {
@@ -36,8 +45,7 @@ export class ProjectsService {
       }
       project.leaderId = data.leaderId;
     }
-    console.log('save:', project);
-    return project.save();
+    return project.save().then((p: Project) => this.findOne(p.id));
   }
 
   update(id: number, data: UpdateProjectDto) {

@@ -5,6 +5,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
@@ -44,7 +45,7 @@ export class ProjectsController {
     return project;
   }
 
-  @Post(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Update project information' })
   update(@Param('id') id, @Body() body: UpdateProjectDto) {
     this.findOne(id);
