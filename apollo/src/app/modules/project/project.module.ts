@@ -22,6 +22,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ProjectRoutingModule } from './project-routing.module';
 import { ProjectFormComponent } from './project-form/project-form.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { ChipModule } from 'primeng/chip';
+import { ImageModule } from 'primeng/image';
 
 @NgModule({
   imports: [
@@ -47,6 +49,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     InputGroupModule,
     InputGroupAddonModule,
     AutoCompleteModule,
+    ChipModule,
+    ImageModule,
   ],
   declarations: [ProjectComponent, ProjectFormComponent]
 })

@@ -61,7 +61,10 @@ export class ProjectFormComponent implements OnChanges, OnInit {
       console.log('Project:', this.project)
       this.imagePreview = this.project?.imageUrl;
       this.isPatch = true;
-      this.projectForm.patchValue(changes['project'].currentValue);
+      this.projectForm.patchValue({
+        ...changes['project'].currentValue,
+        leader: [changes['project'].currentValue.leader]
+      });
       this.projectForm.controls.key.disable()
     } else {
       this.isPatch = false;
@@ -88,7 +91,7 @@ export class ProjectFormComponent implements OnChanges, OnInit {
       this.projectForm.markAllAsTouched();
       return;
     }
-    console.log('Submitted', this.projectForm.value);
+    // console.log('Submitted', this.projectForm.value);
     const body: Partial<Project> | any = {
       name: this.projectForm.value.name!,
       key: this.projectForm.getRawValue().key?.toUpperCase(),
@@ -97,13 +100,13 @@ export class ProjectFormComponent implements OnChanges, OnInit {
       leaderId: this.projectForm.value.leader[0]?.id! || undefined,
     };
     this.isSubmited = true;
-    console.log('Body:', body);
+    // console.log('Body:', body);
     const saveObservable = this.isPatch && this.project ? this.toUpdate(body) : this.toCreate(body);
     saveObservable.pipe(
       switchMap(v => this.toUpload(v))
     ).subscribe({
       next: res => {
-        console.log('Saved:', res);
+        // console.log('Saved:', res);
         this.isSubmited = false;
         this.onCloseEvent.emit(res)
         this.visible = false;

@@ -36,7 +36,7 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
-                        <th>Avatar</th>
+                        <th>Cover</th>
                         <th pSortableColumn="key">Key <p-sortIcon field="key"></p-sortIcon></th>
                         <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
                         <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
@@ -44,7 +44,7 @@
                         <th></th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-project>
+                <ng-template pTemplate="body" let-project let-i="index">
                     <tr>
                         <td style="min-width:5rem;">
                             <span class="p-column-title">id</span>
@@ -52,7 +52,7 @@
                         </td>
                         <td>
                             <span class="p-column-title">Cover</span>
-                            <img [src]="getImage(project?.imageUrl)" [alt]="project?.key" width="100" class="shadow-4" />
+                            <p-image [src]="getImage(project?.imageUrl)" [alt]="project?.key" width="100" (onImageError)="onImageError(project.id)"/>
                         </td>
                         <td>
                             <span class="p-column-title">Key</span>
@@ -70,7 +70,12 @@
                         </td>
                         <td style=" min-width:10rem;">
                             <span class="p-column-title">Leader</span>
-                            {{project?.leaderId || 'Unassigned'}}
+                            @if (project.leader) {
+                                <p-chip [label]="project.leader.username" [image]="project.leader.imageUrl" alt="leader-image" />
+                            }
+                            @else {
+                                <span>Unassigned</span>
+                            }
                         </td>
                         <td>
                             <div class="flex">
