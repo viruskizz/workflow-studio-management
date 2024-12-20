@@ -46,6 +46,7 @@ import { TagModule } from 'primeng/tag';
     ImageModule,
     ChipModule,
     TagModule,
+    ImageModule,
     SharedModule,
   ],
   declarations: [TeamComponent, TeamFormComponent]

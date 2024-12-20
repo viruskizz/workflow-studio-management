@@ -4,7 +4,6 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { TeamService } from 'src/app/services/team.service';
 import { User } from 'src/app/models/user.model';
-import { UserService } from 'src/app/services/user.service';
 
 @Component({
     templateUrl: './team.component.html',
@@ -12,7 +11,6 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class TeamComponent implements OnInit {
     teams: Team[] = [];
-    users: User[] = [];
     selectedTeam?: Team;
     teamDialog = false;
     deleteTeamDialog = false;
@@ -21,65 +19,42 @@ export class TeamComponent implements OnInit {
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
         private teamService: TeamService,
-        private userService: UserService
     ) {}
 
     ngOnInit() {
         this.loadTeams();
-        this.loadUsers();
     }
 
     loadTeams() {
         this.teamService.listTeams().subscribe({
             next: (teams) => {
                 this.teams = teams;
-                teams.forEach((team) => this.loadTeamMembers(team.id!));
+                teams.forEach((team) => this.loadTeamDetails(team.id!));
             },
             error: (error) => console.error('Error loading teams:', error),
         });
     }
 
-    loadTeamMembers(teamId: number) {
-        this.teamService.getTeamMembers(teamId).subscribe({
-            next: (members) => {
+    loadTeamDetails(teamId: number) {
+        this.teamService.getTeamWithMembers(teamId).subscribe({
+            next: (teamWithDetails) => {
                 const teamIndex = this.teams.findIndex((t) => t.id === teamId);
                 if (teamIndex !== -1) {
-                    this.teams[teamIndex] = {
-                        ...this.teams[teamIndex],
-                        members,
-                    };
+                    this.teams[teamIndex] = teamWithDetails;
+                    this.teams = [...this.teams];
                 }
             },
             error: (error) =>
                 console.error(
-                    `Error loading members for team ${teamId}:`,
+                    `Error loading details for team ${teamId}:`,
                     error
                 ),
         });
     }
 
-    loadUsers() {
-        this.userService.listUser().subscribe({
-            next: (users) => {
-                this.users = users;
-            },
-            error: (error) => console.error('Error loading users:', error),
-        });
-    }
-
     editTeam(team: Team) {
-        this.teamService.getTeamWithMembers(team.id!).subscribe({
-            next: (teamWithMembers) => {
-                this.selectedTeam = teamWithMembers;
-                this.teamDialog = true;
-            },
-            error: (error) =>
-                console.error('Error loading team details:', error),
-        });
-    }
-
-    getUser(id: number): User | undefined {
-        return this.users.find((user) => user.id === id);
+        this.selectedTeam = { ...team };
+        this.teamDialog = true;
     }
 
     openNewTeamDialog() {
@@ -89,29 +64,48 @@ export class TeamComponent implements OnInit {
 
     deleteTeam(team: Team) {
         this.confirmationService.confirm({
-            message: `Are you sure you want to delete ${team.name}?`,
-            header: 'Confirm',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                this.teamService.deleteTeam(team.id!).subscribe({
-                    next: () => {
-                        this.teams = this.teams.filter((t) => t.id !== team.id);
-                        this.messageService.add({
-                            severity: 'success',
-                            summary: 'Successful',
-                            detail: 'Team Deleted',
-                            life: 3000,
-                        });
-                    },
-                    error: (error) =>
-                        console.error('Error deleting team:', error),
+          message: `Are you sure you want to delete ${team.name}?`,
+          header: 'Confirm',
+          icon: 'pi pi-exclamation-triangle',
+          accept: () => {
+            this.teamService.deleteTeam(team.id!).subscribe({
+              next: () => {
+                this.teams = this.teams.filter((t) => t.id !== team.id);
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Successful',
+                  detail: 'Team Deleted',
+                  life: 3000,
                 });
-            },
+              },
+              error: (error) => {
+                console.error('Error deleting team:', error);
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: 'Failed to delete team',
+                  life: 3000,
+                });
+              },
+            });
+          },
         });
-    }
+      }
+      
 
     onTeamSave(team: Team) {
-        this.loadTeams();
+        const index = this.teams.findIndex((t) => t.id === team.id);
+        if (index > -1) {
+            // Update existing team
+            this.teams[index] = { ...this.teams[index], ...team };
+        } else {
+            // Add new team
+            this.teams.push(team);
+        }
+
+        // Force change detection
+        this.teams = [...this.teams];
+
         this.messageService.add({
             severity: 'success',
             summary: 'Successful',
@@ -129,13 +123,14 @@ export class TeamComponent implements OnInit {
         );
     }
 
-    getImage(url: string) {
+    getImage(url: string | undefined) {
         return url || 'assets/images/noimage.jpg';
     }
 
-    onImageError(id: number) {
-        console.log(id);
-        const idx = this.teams.findIndex((p) => p.id === id);
-        this.teams[idx].imageUrl = 'assets/images/noimage.jpg';
+    onImageError(team: Team) {
+        team.imageUrl = 'assets/images/noimage.jpg';
     }
+
+ 
 }
+

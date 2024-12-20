@@ -34,24 +34,27 @@
         </ng-template>
         <ng-template pTemplate="body" let-team>
           <tr>
-            <td class="flex">
+            <td class="flex align-items-center">
               <p-image [src]="getImage(team?.imageUrl)" [alt]="team?.key" width="100"
-                (onImageError)="onImageError(team.id)" />
+                (onImageError)="onImageError(team)" />
               <span class="ml-2">{{team.name}}</span>
             </td>
             <td>{{team.key}}</td>
             <td>{{team.description}}</td>
             <td>
               <div class="flex align-items-center">
-                <p-chip [label]="getUser(team.leaderId)?.username" [image]="getUser(team.leaderId)?.imageUrl"
-                  alt="leader-image" />
+                <p-avatar [image]="getImage(team.leader?.imageUrl)" size="large" shape="circle"
+                  [pTooltip]="team.leader?.username" tooltipPosition="top">
+                </p-avatar>
+                <span class="ml-2">{{team.leader?.username}}</span>
               </div>
             </td>
             <td>
               <div class="flex gap-2">
-                <p-avatar *ngFor="let member of team.members?.slice(0, 5); let i = index" [image]="member.imageUrl"
-                  size="large" shape="circle" [style]="{'z-index': 5 - i, 'margin-left': i > 0 ? '-0.5rem' : '0'}"
-                  [pTooltip]="member.username" tooltipPosition="top">
+                <p-avatar *ngFor="let member of team.members?.slice(0, 5); let i = index"
+                  [image]="getImage(member.imageUrl)" size="large" shape="circle"
+                  [style]="{'z-index': 5 - i, 'margin-left': i > 0 ? '-0.5rem' : '0'}" [pTooltip]="member.username"
+                  tooltipPosition="top">
                 </p-avatar>
                 <span *ngIf="team.members && team.members.length > 5" class="ml-2 flex items-center">
                   +{{ team.members.length - 5 }}
@@ -59,7 +62,7 @@
               </div>
             </td>
             <td>
-              <p-tag [value]="team.projectActive || 'No Project'"
+              <p-tag [value]="team.projectActive || 'not assigned'"
                 [severity]="team.projectActive ? 'success' : 'warning'"></p-tag>
             </td>
             <td>
@@ -71,8 +74,6 @@
           </tr>
         </ng-template>
       </p-table>
-
-
     </div>
 
     <app-team-form [(visible)]="teamDialog" [team]="selectedTeam" (teamChange)="onTeamSave($event)"></app-team-form>

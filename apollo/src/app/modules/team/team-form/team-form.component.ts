@@ -5,14 +5,17 @@ import {
     Output,
     OnChanges,
     SimpleChanges,
-    OnInit,
+    OnInit
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
 import { TeamService } from 'src/app/services/team.service';
 import { UserService } from 'src/app/services/user.service';
-import { finalize } from 'rxjs/operators';
+import { FileSelectEvent } from 'primeng/fileupload';
+import { map, Observable, of, switchMap } from 'rxjs';
+import { FileService } from 'src/app/services/file.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'app-team-form',
@@ -29,10 +32,15 @@ export class TeamFormComponent implements OnChanges, OnInit {
     users: User[] = [];
     loading = false;
 
+    imagePreview?: string;
+    coverFile?: File;
+
     constructor(
         private fb: FormBuilder,
         private teamService: TeamService,
-        private userService: UserService
+        private userService: UserService,
+        private fileService: FileService,
+        private messageService: MessageService
     ) {
         this.teamForm = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
@@ -49,6 +57,7 @@ export class TeamFormComponent implements OnChanges, OnInit {
     ngOnChanges(changes: SimpleChanges) {
         if (changes['team']?.currentValue) {
             const team = changes['team'].currentValue;
+            this.imagePreview = team.imageUrl;
             this.teamForm.patchValue({
                 name: team.name,
                 leader: this.users.find((u) => u.id === team.leaderId),
@@ -67,9 +76,24 @@ export class TeamFormComponent implements OnChanges, OnInit {
         });
     }
 
+    onSelectImage(event: FileSelectEvent) {
+        const file = event.currentFiles[0];
+        if (file) {
+            this.coverFile = file;
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                this.imagePreview = event.target?.result as string;
+            };
+        }
+    }
+
     onSave() {
         this.isSubmitted = true;
-        if (this.teamForm.invalid) return;
+        if (this.teamForm.invalid) {
+            this.teamForm.markAllAsTouched();
+            return;
+        }
 
         const formValue = this.teamForm.value;
         const teamData: Partial<Team> = {
@@ -80,16 +104,26 @@ export class TeamFormComponent implements OnChanges, OnInit {
         };
 
         this.loading = true;
-        const action = this.team?.id
+        const saveObservable = this.team?.id
             ? this.teamService.updateTeam(this.team.id, teamData)
             : this.teamService.createTeam(teamData as Team);
 
-        action.pipe(finalize(() => (this.loading = false))).subscribe({
+        saveObservable.subscribe({
             next: (updatedTeam) => {
                 this.teamChange.emit(updatedTeam);
                 this.closeDialog();
             },
-            error: (error) => console.error('Error saving team:', error),
+            error: (error) => {
+                console.error('Error saving team:', error);
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Failed to save team.',
+                });
+            },
+            complete: () => {
+                this.loading = false;
+            }
         });
     }
 
@@ -102,18 +136,5 @@ export class TeamFormComponent implements OnChanges, OnInit {
 
     get formControls() {
         return this.teamForm.controls;
-    }
-
-    onUpload(event: any) {
-        if (event.files && event.files.length > 0) {
-            const file = event.files[0];
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                this.teamForm.patchValue({
-                    imageUrl: reader.result as string,
-                });
-            };
-        }
     }
 }

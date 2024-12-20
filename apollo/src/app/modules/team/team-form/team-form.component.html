@@ -1,13 +1,21 @@
-<p-dialog [(visible)]="visible" [style]="{ width: '450px', height: '80vh' }" [header]="team ? 'Edit Team' : 'Create Team'"
-  [modal]="true" styleClass="p-fluid team-dialog" (onHide)="closeDialog()" [maximizable]="true" [baseZIndex]="1000">
+<p-dialog
+  [(visible)]="visible"
+  [style]="{ width: '450px', height: '80vh' }"
+  [header]="team ? 'Edit Team' : 'Create Team'"
+  [modal]="true"
+  styleClass="p-fluid team-dialog"
+  (onHide)="closeDialog()"
+  [maximizable]="true"
+  [baseZIndex]="1000"
+>
   <ng-template pTemplate="content">
     <div class="form-container">
       <form [formGroup]="teamForm">
-        <img [src]="teamForm.get('imageUrl')?.value" [alt]="" width="150" class="mt-0 mx-auto mb-5 block shadow-2">
-        
+        <img [src]="imagePreview" [alt]="team?.name" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="imagePreview">
         <div class="field">
           <label for="name">Team Name</label>
           <input id="name" type="text" pInputText formControlName="name" required autofocus />
+
           <small class="p-error" *ngIf="isSubmitted && formControls['name'].errors?.['required']">
             Team name is required.
           </small>
@@ -20,6 +28,7 @@
           [form]="teamForm"
           controlName="leader"
           labelFor="Team Leader"
+          [multiple]="false"
           [dropdown]="true"
           [limit]="1"
         ></app-user-autocomplete>
@@ -46,10 +55,10 @@
             mode="basic"
             name="cover"
             accept="image/*"
-            [maxFileSize]="1000000"
+            [maxFileSize]="3000000"
             styleClass="p-button-outlined p-button-plain"
             chooseLabel="Upload Image"
-            (onSelect)="onUpload($event)"
+            (onSelect)="onSelectImage($event)"
           ></p-fileUpload>
         </div>
       </form>
@@ -58,7 +67,6 @@
 
   <ng-template pTemplate="footer">
     <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="closeDialog()"></button>
-    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="onSave()"></button>
+    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="onSave()" [disabled]="loading"></button>
   </ng-template>
 </p-dialog>
-

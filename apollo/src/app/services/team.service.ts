@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { Team } from '../models/team.model';
 import { User } from '../models/user.model';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -32,15 +32,33 @@ export class TeamService {
     return this.httpClient.delete<void>(`${this.baseUrl}/${id}`);
   }
 
-  createTeam(team: Team): Observable<Team> {
+  createTeam(team: Partial<Team>): Observable<Team> {
     return this.httpClient.post<Team>(this.baseUrl, team).pipe(
-      switchMap(createdTeam => this.updateTeamMembers(createdTeam.id!, team.members || []))
+      switchMap(createdTeam => {
+        if (team.members && team.members.length > 0) {
+          return this.updateTeamMembers(createdTeam.id!, team.members);
+        }
+        return of(createdTeam);
+      }),
+      catchError(error => {
+        console.error('Error creating team:', error);
+        throw error;
+      })
     );
   }
 
   updateTeam(id: number, team: Partial<Team>): Observable<Team> {
     return this.httpClient.patch<Team>(`${this.baseUrl}/${id}`, team).pipe(
-      switchMap(updatedTeam => this.updateTeamMembers(updatedTeam.id!, team.members || []))
+      switchMap(updatedTeam => {
+        if (team.members) {
+          return this.updateTeamMembers(updatedTeam.id!, team.members);
+        }
+        return of(updatedTeam);
+      }),
+      catchError(error => {
+        console.error('Error updating team:', error);
+        throw error;
+      })
     );
   }
 
@@ -57,16 +75,24 @@ export class TeamService {
 
         return forkJoin([...removeMemberRequests, ...addMemberRequests]);
       }),
-      switchMap(() => this.getTeamWithMembers(teamId))
+      switchMap(() => this.getTeamWithMembers(teamId)),
+      catchError(error => {
+        console.error('Error updating team members:', error);
+        throw error;
+      })
     );
   }
 
   getTeamWithMembers(id: number): Observable<Team> {
-    return forkJoin({
-      team: this.getTeam(id),
-      members: this.getTeamMembers(id)
-    }).pipe(
+    return this.getTeam(id).pipe(
+      switchMap(team => 
+        forkJoin({
+          team: of(team),
+          members: this.getTeamMembers(id)
+        })
+      ),
       map(({ team, members }) => ({ ...team, members }))
     );
   }
 }
+
