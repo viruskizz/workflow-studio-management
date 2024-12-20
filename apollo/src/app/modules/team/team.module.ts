@@ -19,6 +19,8 @@ import { AvatarModule } from 'primeng/avatar';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FileUploadModule } from 'primeng/fileupload';
 import { TooltipModule } from 'primeng/tooltip';
+import { ImageModule } from 'primeng/image';
+import { ChipModule } from 'primeng/chip';
 
 @NgModule({
   imports: [
@@ -40,6 +42,8 @@ import { TooltipModule } from 'primeng/tooltip';
     AvatarModule,
     FileUploadModule,
     TooltipModule,
+    ImageModule,
+    ChipModule,
     SharedModule,
   ],
   declarations: [TeamComponent, TeamFormComponent]

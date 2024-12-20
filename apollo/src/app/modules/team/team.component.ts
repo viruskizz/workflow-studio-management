@@ -50,7 +50,11 @@ export class TeamComponent implements OnInit {
                     };
                 }
             },
-            error: (error) => console.error(`Error loading members for team ${teamId}:`, error),
+            error: (error) =>
+                console.error(
+                    `Error loading members for team ${teamId}:`,
+                    error
+                ),
         });
     }
 
@@ -69,7 +73,8 @@ export class TeamComponent implements OnInit {
                 this.selectedTeam = teamWithMembers;
                 this.teamDialog = true;
             },
-            error: (error) => console.error('Error loading team details:', error),
+            error: (error) =>
+                console.error('Error loading team details:', error),
         });
     }
 
@@ -106,7 +111,7 @@ export class TeamComponent implements OnInit {
     }
 
     onTeamSave(team: Team) {
-        this.loadTeams(); 
+        this.loadTeams();
         this.messageService.add({
             severity: 'success',
             summary: 'Successful',
@@ -123,5 +128,14 @@ export class TeamComponent implements OnInit {
             'contains'
         );
     }
-}
 
+    getImage(url: string) {
+        return url || 'assets/images/noimage.jpg';
+    }
+
+    onImageError(id: number) {
+        console.log(id);
+        const idx = this.teams.findIndex((p) => p.id === id);
+        this.teams[idx].imageUrl = 'assets/images/noimage.jpg';
+    }
+}

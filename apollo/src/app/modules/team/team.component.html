@@ -4,7 +4,7 @@
       <p-toast></p-toast>
       <p-toolbar styleClass="mb-4">
         <ng-template pTemplate="right">
-          <button pButton pRipple label="New Team" icon="pi pi-plus" class="p-button-success mr-2"
+          <button pButton pRipple label="New Team" icon="pi pi-plus" class="p-button-primary mr-2"
             (click)="openNewTeamDialog()"></button>
         </ng-template>
       </p-toolbar>
@@ -31,27 +31,21 @@
         </ng-template>
         <ng-template pTemplate="body" let-team>
           <tr>
-            <td>
-              <img [src]="team.imageUrl" [alt]="team.name" width="50"
-                class="shadow-2 rounded-circle">
+            <td class="flex ">
+              <p-image [src]="getImage(team?.imageUrl)" [alt]="team?.key" width="100"
+                (onImageError)="onImageError(team.id)" />
               <span class="ml-2">{{team.name}}</span>
             </td>
             <td>
               <div class="flex align-items-center">
-                <p-avatar [image]="getUser(team.leaderId)?.imageUrl" size="large" shape="circle"
-                  class="mr-2"></p-avatar>
-                <span>{{getUser(team.leaderId)?.username}}</span>
+                <p-chip [label]="getUser(team.leaderId)?.username" [image]="getUser(team.leaderId)?.imageUrl" alt="leader-image" />
               </div>
             </td>
             <td>
               <div class="flex gap-2">
-                <p-avatar *ngFor="let member of team.members?.slice(0, 5); let i = index"
-                  [image]="member.imageUrl"
-                  size="large"
-                  shape="circle"
-                  [style]="{'z-index': 5 - i, 'margin-left': i > 0 ? '-0.5rem' : '0'}"
-                  [pTooltip]="member.username"
-                  tooltipPosition="top">
+                <p-avatar *ngFor="let member of team.members?.slice(0, 5); let i = index" [image]="member.imageUrl"
+                  size="large" shape="circle" [style]="{'z-index': 5 - i, 'margin-left': i > 0 ? '-0.5rem' : '0'}"
+                  [pTooltip]="member.username" tooltipPosition="top">
                 </p-avatar>
                 <span *ngIf="team.members && team.members.length > 5" class="ml-2 flex items-center">
                   +{{ team.members.length - 5 }}
@@ -74,4 +68,3 @@
     <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
   </div>
 </div>
-
