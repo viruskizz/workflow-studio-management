@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TreeNode } from 'primeng/api';
+import { TreeTable } from 'primeng/treetable';
 import { NodeService } from 'src/app/demo/service/node.service';
 
 @Component({
@@ -20,5 +21,9 @@ export class ProjectViewComponent {
       { field: 'size', header: 'Size' },
       { field: 'type', header: 'Type' }
     ];
+  }
+
+  onGlobalFilter(table: TreeTable, event: Event) {
+      table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 }

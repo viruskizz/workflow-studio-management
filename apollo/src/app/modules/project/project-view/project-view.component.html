@@ -1,7 +1,23 @@
-<p>project-view works!</p>
 <div class="card">
     <h5>TreeTable</h5>
-    <p-treeTable [value]="files2" [columns]="cols" selectionMode="checkbox">
+    <p-treeTable #dt [value]="files2" [columns]="cols" selectionMode="checkbox">
+        <ng-template pTemplate="caption">
+            <div class="flex justify-content-between flex-column align-items-center sm:flex-row">
+                <div>
+                    <span class="p-input-icon-left mb-2">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" #filter (input)="onGlobalFilter(dt, $event)" placeholder="Search Keyword" class="w-full"/>
+                    </span>
+                </div>
+                <div class="flex gap-3">
+                    <button
+                        pButton
+                        label="Add Task"
+                        class="p-button-outlined mb-2"
+                        icon="pi pi-plus"></button>
+                </div>
+            </div>
+        </ng-template>
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th *ngFor="let col of columns">
