@@ -24,21 +24,27 @@
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="key">Key <p-sortIcon field="key"></p-sortIcon></th>
+            <th pSortableColumn="description">Description <p-sortIcon field="description"></p-sortIcon></th>
             <th pSortableColumn="leaderId">Lead <p-sortIcon field="leaderId"></p-sortIcon></th>
             <th>Members</th>
+            <th pSortableColumn="projectActive">Project Active <p-sortIcon field="projectActive"></p-sortIcon></th>
             <th>Actions</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-team>
           <tr>
-            <td class="flex ">
+            <td class="flex">
               <p-image [src]="getImage(team?.imageUrl)" [alt]="team?.key" width="100"
                 (onImageError)="onImageError(team.id)" />
               <span class="ml-2">{{team.name}}</span>
             </td>
+            <td>{{team.key}}</td>
+            <td>{{team.description}}</td>
             <td>
               <div class="flex align-items-center">
-                <p-chip [label]="getUser(team.leaderId)?.username" [image]="getUser(team.leaderId)?.imageUrl" alt="leader-image" />
+                <p-chip [label]="getUser(team.leaderId)?.username" [image]="getUser(team.leaderId)?.imageUrl"
+                  alt="leader-image" />
               </div>
             </td>
             <td>
@@ -53,6 +59,10 @@
               </div>
             </td>
             <td>
+              <p-tag [value]="team.projectActive || 'No Project'"
+                [severity]="team.projectActive ? 'success' : 'warning'"></p-tag>
+            </td>
+            <td>
               <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning mr-2"
                 (click)="editTeam(team)"></button>
               <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
@@ -61,6 +71,8 @@
           </tr>
         </ng-template>
       </p-table>
+
+
     </div>
 
     <app-team-form [(visible)]="teamDialog" [team]="selectedTeam" (teamChange)="onTeamSave($event)"></app-team-form>
