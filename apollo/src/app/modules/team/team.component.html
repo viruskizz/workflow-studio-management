@@ -54,7 +54,7 @@
                 <p-avatar *ngFor="let member of team.members?.slice(0, 5); let i = index"
                   [image]="getImage(member.imageUrl)" size="large" shape="circle"
                   [style]="{'z-index': 5 - i, 'margin-left': i > 0 ? '-0.5rem' : '0'}" [pTooltip]="member.username"
-                  tooltipPosition="top">
+                  tooltipPosition="top" (click)="removeMember(team, member)" [style]="{'cursor': 'pointer'}">
                 </p-avatar>
                 <span *ngIf="team.members && team.members.length > 5" class="ml-2 flex items-center">
                   +{{ team.members.length - 5 }}
@@ -81,3 +81,4 @@
     <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
   </div>
 </div>
+

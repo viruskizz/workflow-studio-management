@@ -28,15 +28,15 @@ export class TeamService {
     );
   }
 
-  deleteTeam(id: number): Observable<void> {
-    return this.httpClient.delete<void>(`${this.baseUrl}/${id}`);
+  deleteTeam(id: number): Observable<any> {
+    return this.httpClient.delete<any>(`${this.baseUrl}/${id}`);
   }
 
   createTeam(team: Partial<Team>): Observable<Team> {
     return this.httpClient.post<Team>(this.baseUrl, team).pipe(
       switchMap(createdTeam => {
-        if (team.members && team.members.length > 0) {
-          return this.updateTeamMembers(createdTeam.id!, team.members);
+        if (team.members && team.members.length > 0 && createdTeam.id !== undefined) {
+          return this.updateTeamMembers(createdTeam.id, team.members);
         }
         return of(createdTeam);
       }),
@@ -50,8 +50,8 @@ export class TeamService {
   updateTeam(id: number, team: Partial<Team>): Observable<Team> {
     return this.httpClient.patch<Team>(`${this.baseUrl}/${id}`, team).pipe(
       switchMap(updatedTeam => {
-        if (team.members) {
-          return this.updateTeamMembers(updatedTeam.id!, team.members);
+        if (team.members && updatedTeam.id !== undefined) {
+          return this.updateTeamMembers(updatedTeam.id, team.members);
         }
         return of(updatedTeam);
       }),
@@ -67,11 +67,21 @@ export class TeamService {
       switchMap(currentMembers => {
         const removeMemberRequests = currentMembers
           .filter(currentMember => !newMembers.some(m => m.id === currentMember.id))
-          .map(memberToRemove => this.httpClient.delete(`${this.baseUrl}/${teamId}/members/${memberToRemove.id}`));
+          .map(memberToRemove => {
+            if (memberToRemove.id !== undefined) {
+              return this.removeMemberFromTeam(teamId, memberToRemove.id);
+            }
+            return of(null);
+          });
 
         const addMemberRequests = newMembers
           .filter(member => !currentMembers.some(cm => cm.id === member.id))
-          .map(memberToAdd => this.httpClient.post(`${this.baseUrl}/${teamId}/members`, { userId: memberToAdd.id }));
+          .map(memberToAdd => {
+            if (memberToAdd.id !== undefined) {
+              return this.addMemberToTeam(teamId, memberToAdd.id);
+            }
+            return of(null);
+          });
 
         return forkJoin([...removeMemberRequests, ...addMemberRequests]);
       }),
@@ -93,6 +103,14 @@ export class TeamService {
       ),
       map(({ team, members }) => ({ ...team, members }))
     );
+  }
+
+  addMemberToTeam(teamId: number, userId: number): Observable<any> {
+    return this.httpClient.post(`${this.baseUrl}/${teamId}/members`, { userId });
+  }
+
+  removeMemberFromTeam(teamId: number, userId: number): Observable<any> {
+    return this.httpClient.delete(`${this.baseUrl}/${teamId}/members`, { body: { userId } });
   }
 }
 

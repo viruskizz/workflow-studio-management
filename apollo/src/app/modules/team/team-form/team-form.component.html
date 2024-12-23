@@ -49,6 +49,16 @@
         </small>
 
         <div class="field">
+          <label>Current Members</label>
+          <div *ngFor="let member of teamForm.get('members')?.value" class="flex align-items-center mb-2">
+            <p-avatar [image]="member.imageUrl" size="large" shape="circle"></p-avatar>
+            <span class="ml-2">{{member.username}}</span>
+            <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-danger p-button-text ml-auto"
+                    (click)="removeMember(member)"></button>
+          </div>
+        </div>
+
+        <div class="field">
           <label for="cover">Cover Image</label>
           <p-fileUpload
             id="cover"
@@ -70,3 +80,4 @@
     <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="onSave()" [disabled]="loading"></button>
   </ng-template>
 </p-dialog>
+
