@@ -34,63 +34,65 @@ export class TeamService {
 
   createTeam(team: Partial<Team>): Observable<Team> {
     return this.httpClient.post<Team>(this.baseUrl, team).pipe(
-      switchMap(createdTeam => {
-        if (team.members && team.members.length > 0 && createdTeam.id !== undefined) {
-          return this.updateTeamMembers(createdTeam.id, team.members);
-        }
-        return of(createdTeam);
-      }),
-      catchError(error => {
-        console.error('Error creating team:', error);
-        throw error;
-      })
+      switchMap(createdTeam => this.handleTeamCreation(createdTeam, team)),
+      catchError(this.handleError('Error creating team'))
     );
   }
 
   updateTeam(id: number, team: Partial<Team>): Observable<Team> {
     return this.httpClient.patch<Team>(`${this.baseUrl}/${id}`, team).pipe(
-      switchMap(updatedTeam => {
-        if (team.members && updatedTeam.id !== undefined) {
-          return this.updateTeamMembers(updatedTeam.id, team.members);
-        }
-        return of(updatedTeam);
-      }),
-      catchError(error => {
-        console.error('Error updating team:', error);
-        throw error;
-      })
+      switchMap(updatedTeam => this.handleTeamUpdate(updatedTeam, team)),
+      catchError(this.handleError('Error updating team'))
     );
+  }
+
+  private handleTeamCreation(createdTeam: Team, originalTeam: Partial<Team>): Observable<Team> {
+    if (originalTeam.members && originalTeam.members.length > 0 && createdTeam.id !== undefined) {
+      return this.updateTeamMembers(createdTeam.id, originalTeam.members);
+    }
+    return of(createdTeam);
+  }
+
+  private handleTeamUpdate(updatedTeam: Team, originalTeam: Partial<Team>): Observable<Team> {
+    if (originalTeam.members && updatedTeam.id !== undefined) {
+      return this.updateTeamMembers(updatedTeam.id, originalTeam.members);
+    }
+    return of(updatedTeam);
   }
 
   private updateTeamMembers(teamId: number, newMembers: User[]): Observable<Team> {
     return this.getTeamMembers(teamId).pipe(
-      switchMap(currentMembers => {
-        const removeMemberRequests = currentMembers
-          .filter(currentMember => !newMembers.some(m => m.id === currentMember.id))
-          .map(memberToRemove => {
-            if (memberToRemove.id !== undefined) {
-              return this.removeMemberFromTeam(teamId, memberToRemove.id);
-            }
-            return of(null);
-          });
-
-        const addMemberRequests = newMembers
-          .filter(member => !currentMembers.some(cm => cm.id === member.id))
-          .map(memberToAdd => {
-            if (memberToAdd.id !== undefined) {
-              return this.addMemberToTeam(teamId, memberToAdd.id);
-            }
-            return of(null);
-          });
-
-        return forkJoin([...removeMemberRequests, ...addMemberRequests]);
-      }),
+      switchMap(currentMembers => this.performMemberUpdates(teamId, currentMembers, newMembers)),
       switchMap(() => this.getTeamWithMembers(teamId)),
-      catchError(error => {
-        console.error('Error updating team members:', error);
-        throw error;
-      })
+      catchError(this.handleError('Error updating team members'))
     );
+  }
+
+  private performMemberUpdates(teamId: number, currentMembers: User[], newMembers: User[]): Observable<any> {
+    const removeMemberRequests = this.createRemoveMemberRequests(teamId, currentMembers, newMembers);
+    const addMemberRequests = this.createAddMemberRequests(teamId, currentMembers, newMembers);
+    return forkJoin([...removeMemberRequests, ...addMemberRequests]);
+  }
+
+  private createRemoveMemberRequests(teamId: number, currentMembers: User[], newMembers: User[]): Observable<any>[] {
+    return currentMembers.filter(currentMember => !newMembers.some(m => m.id === currentMember.id))
+      .map(memberToRemove => {
+        if (memberToRemove.id !== undefined) {
+          return this.removeMemberFromTeam(teamId, memberToRemove.id);
+        }
+        return of(null);
+      });
+  }
+
+  private createAddMemberRequests(teamId: number, currentMembers: User[], newMembers: User[]): Observable<any>[] {
+    return newMembers
+      .filter(member => !currentMembers.some(cm => cm.id === member.id))
+      .map(memberToAdd => {
+        if (memberToAdd.id !== undefined) {
+          return this.addMemberToTeam(teamId, memberToAdd.id);
+        }
+        return of(null);
+      });
   }
 
   getTeamWithMembers(id: number): Observable<Team> {
@@ -111,6 +113,13 @@ export class TeamService {
 
   removeMemberFromTeam(teamId: number, userId: number): Observable<any> {
     return this.httpClient.delete(`${this.baseUrl}/${teamId}/members`, { body: { userId } });
+  }
+
+  private handleError(operation = 'operation') {
+    return (error: any): Observable<never> => {
+      console.error(`${operation}:`, error);
+      throw error;
+    };
   }
 }
 

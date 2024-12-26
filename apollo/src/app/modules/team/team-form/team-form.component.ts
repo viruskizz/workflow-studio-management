@@ -31,12 +31,7 @@ export class TeamFormComponent implements OnChanges, OnInit {
     private userService: UserService,
     private messageService: MessageService
   ) {
-    this.teamForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      leader: [null, [Validators.required]],
-      members: [[], [Validators.required]],
-      imageUrl: [''],
-    });
+    this.teamForm = this.createForm();
   }
 
   ngOnInit() {
@@ -45,17 +40,34 @@ export class TeamFormComponent implements OnChanges, OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['team']?.currentValue) {
-      const team = changes['team'].currentValue;
-      this.imagePreview = team.imageUrl;
-      this.teamForm.patchValue({
-        name: team.name,
-        leader: this.users.find((u) => u.id === team.leaderId),
-        members: team.members || [],
-        imageUrl: team.imageUrl || '',
-      });
+      this.updateForm(changes['team'].currentValue);
     } else {
-      this.teamForm.reset();
+      this.resetForm();
     }
+  }
+
+  private createForm(): FormGroup {
+    return this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      leader: [null, [Validators.required]],
+      members: [[], [Validators.required]],
+      imageUrl: [''],
+    });
+  }
+
+  private updateForm(team: Team): void {
+    this.imagePreview = team.imageUrl;
+    this.teamForm.patchValue({
+      name: team.name,
+      leader: this.users.find((u) => u.id === team.leaderId),
+      members: team.members || [],
+      imageUrl: team.imageUrl || '',
+    });
+  }
+
+  private resetForm(): void {
+    this.teamForm.reset();
+    this.imagePreview = undefined;
   }
 
   loadUsers() {
@@ -69,12 +81,14 @@ export class TeamFormComponent implements OnChanges, OnInit {
     const file = event.currentFiles[0];
     if (file) {
       this.coverFile = file;
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        this.imagePreview = event.target?.result as string;
-      };
+      this.readFile(file);
     }
+  }
+
+  private readFile(file: File): void {
+    const reader = new FileReader();
+    reader.onload = (e) => (this.imagePreview = e.target?.result as string);
+    reader.readAsDataURL(file);
   }
 
   onSave() {
@@ -84,47 +98,58 @@ export class TeamFormComponent implements OnChanges, OnInit {
       return;
     }
 
+    const teamData = this.prepareTeamData();
+    this.saveTeam(teamData);
+  }
+
+  private prepareTeamData(): Partial<Team> {
     const formValue = this.teamForm.value;
-    const teamData: Partial<Team> = {
+    return {
       name: formValue.name,
       members: formValue.members,
       imageUrl: formValue.imageUrl,
       leaderId: formValue.leader?.id,
     };
+  }
 
+  private saveTeam(teamData: Partial<Team>): void {
     this.loading = true;
     const saveObservable = this.team?.id
       ? this.teamService.updateTeam(this.team.id, teamData)
       : this.teamService.createTeam(teamData as Team);
 
     saveObservable.subscribe({
-      next: (updatedTeam) => {
-        this.teamChange.emit(updatedTeam);
-        this.closeDialog();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: `Team ${this.team?.id ? 'updated' : 'created'} successfully.`,
-        });
-      },
-      error: (error) => {
-        console.error('Error saving team:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed to save team.',
-        });
-      },
-      complete: () => {
-        this.loading = false;
-      }
+      next: this.handleSaveSuccess.bind(this),
+      error: this.handleSaveError.bind(this),
+      complete: () => (this.loading = false)
+    });
+  }
+
+  private handleSaveSuccess(updatedTeam: Team): void {
+    this.teamChange.emit(updatedTeam);
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: `Team ${this.team?.id ? 'updated' : 'created'} successfully.`,
+      life: 3000,
+    });
+    this.closeDialog();
+  }
+
+  private handleSaveError(error: any): void {
+    console.error('Error saving team:', error);
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Failed to save team.',
+      life: 3000,
     });
   }
 
   closeDialog() {
     this.visible = false;
     this.visibleChange.emit(false);
-    this.teamForm.reset();
+    this.resetForm();
     this.isSubmitted = false;
   }
 
@@ -138,3 +163,4 @@ export class TeamFormComponent implements OnChanges, OnInit {
     this.teamForm.patchValue({ members: updatedMembers });
   }
 }
+

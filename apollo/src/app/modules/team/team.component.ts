@@ -28,23 +28,31 @@ export class TeamComponent implements OnInit {
     this.teamService.listTeams().subscribe({
       next: (teams) => {
         this.teams = teams;
-        teams.forEach((team) => this.loadTeamDetails(team.id!));
+        this.loadTeamDetails();
       },
       error: (error) => console.error('Error loading teams:', error),
     });
   }
 
-  loadTeamDetails(teamId: number) {
+  loadTeamDetails() {
+    this.teams.forEach((team) => {
+      if (team.id) this.fetchTeamDetails(team.id);
+    });
+  }
+
+  fetchTeamDetails(teamId: number) {
     this.teamService.getTeamWithMembers(teamId).subscribe({
-      next: (teamWithDetails) => {
-        const teamIndex = this.teams.findIndex((t) => t.id === teamId);
-        if (teamIndex !== -1) {
-          this.teams[teamIndex] = teamWithDetails;
-          this.teams = [...this.teams];
-        }
-      },
+      next: (teamWithDetails) => this.updateTeamDetails(teamWithDetails),
       error: (error) => console.error(`Error loading details for team ${teamId}:`, error),
     });
+  }
+
+  updateTeamDetails(teamWithDetails: Team) {
+    const index = this.teams.findIndex((t) => t.id === teamWithDetails.id);
+    if (index !== -1) {
+      this.teams[index] = teamWithDetails;
+      this.teams = [...this.teams];
+    }
   }
 
   editTeam(team: Team) {
@@ -62,29 +70,25 @@ export class TeamComponent implements OnInit {
       message: `Are you sure you want to delete ${team.name}?`,
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.teamService.deleteTeam(team.id!).subscribe({
-          next: () => {
-            this.teams = this.teams.filter((t) => t.id !== team.id);
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Successful',
-              detail: 'Team Deleted',
-              life: 3000,
-            });
-          },
-          error: (error) => {
-            console.error('Error deleting team:', error);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Failed to delete team',
-              life: 3000,
-            });
-          },
-        });
-      },
+      accept: () => this.performTeamDeletion(team),
     });
+  }
+
+  performTeamDeletion(team: Team) {
+    this.teamService.deleteTeam(team.id!).subscribe({
+      next: () => this.handleTeamDeletionSuccess(team),
+      error: (error) => this.handleTeamDeletionError(error),
+    });
+  }
+
+  handleTeamDeletionSuccess(team: Team) {
+    this.teams = this.teams.filter((t) => t.id !== team.id);
+    this.showSuccessMessage('Team Deleted');
+  }
+
+  handleTeamDeletionError(error: any) {
+    console.error('Error deleting team:', error);
+    this.showErrorMessage('Failed to delete team');
   }
 
   removeMember(team: Team, member: User) {
@@ -92,59 +96,45 @@ export class TeamComponent implements OnInit {
       message: `Are you sure you want to remove ${member.username} from ${team.name}?`,
       header: 'Confirm Member Removal',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.teamService.removeMemberFromTeam(team.id!, member.id!).subscribe({
-          next: () => {
-            team.members = team.members.filter(m => m.id !== member.id);
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Successful',
-              detail: 'Member Removed',
-              life: 3000,
-            });
-          },
-          error: (error) => {
-            console.error('Error removing member:', error);
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Failed to remove member',
-              life: 3000,
-            });
-          },
-        });
-      },
+      accept: () => this.performMemberRemoval(team, member),
     });
+  }
+
+  performMemberRemoval(team: Team, member: User) {
+    this.teamService.removeMemberFromTeam(team.id!, member.id!).subscribe({
+      next: () => this.handleMemberRemovalSuccess(team, member),
+      error: (error) => this.handleMemberRemovalError(error),
+    });
+  }
+
+  handleMemberRemovalSuccess(team: Team, member: User) {
+    team.members = team.members.filter(m => m.id !== member.id);
+    this.showSuccessMessage('Member Removed');
+  }
+
+  handleMemberRemovalError(error: any) {
+    console.error('Error removing member:', error);
+    this.showErrorMessage('Failed to remove member');
   }
 
   onTeamSave(team: Team) {
     const index = this.teams.findIndex((t) => t.id === team.id);
     if (index > -1) {
-      // Update existing team
-      this.teams[index] = { ...this.teams[index], ...team };
+      this.teams[index] = { ...team };
+      this.fetchTeamDetails(team.id!);
     } else {
-      // Add new team
       this.teams.push(team);
+      this.fetchTeamDetails(team.id!);
     }
 
-    // Force change detection
     this.teams = [...this.teams];
-
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Successful',
-      detail: team.id ? 'Team Updated' : 'Team Created',
-      life: 3000,
-    });
     this.teamDialog = false;
     this.selectedTeam = undefined;
+    this.showSuccessMessage(`Team ${team.id ? 'updated' : 'created'} successfully`);
   }
 
   onGlobalFilter(table: Table, event: Event) {
-    table.filterGlobal(
-      (event.target as HTMLInputElement).value,
-      'contains'
-    );
+    table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 
   getImage(url: string | undefined) {
@@ -154,4 +144,23 @@ export class TeamComponent implements OnInit {
   onImageError(team: Team) {
     team.imageUrl = 'assets/images/noimage.jpg';
   }
+
+  private showSuccessMessage(detail: string) {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail,
+      life: 3000,
+    });
+  }
+
+  private showErrorMessage(detail: string) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail,
+      life: 3000,
+    });
+  }
 }
+
