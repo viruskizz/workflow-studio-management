@@ -16,6 +16,10 @@ export class TasksService {
     private projectService: ProjectsService,
   ) {}
 
+  getRepository() {
+    return this.repo;
+  }
+
   findAll() {
     return this.repo.find();
     return this.repo.find({ relations: { assignee: true, project: true } });

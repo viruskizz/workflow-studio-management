@@ -18,10 +18,7 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 @ApiTags('Projects')
 @Controller('projects')
 export class ProjectsController {
-  constructor(
-    private service: ProjectsService,
-    private usersService: UsersService,
-  ) {}
+  constructor(private service: ProjectsService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create new project' })

@@ -3,7 +3,9 @@ import {
   Body,
   Controller,
   Delete,
+  forwardRef,
   Get,
+  Inject,
   NotFoundException,
   Param,
   Patch,
@@ -21,6 +23,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 export class TasksController {
   constructor(
     private tasksservice: TasksService,
+    @Inject(forwardRef(() => ProjectsService))
     private projectsSerivce: ProjectsService,
   ) {}
 
