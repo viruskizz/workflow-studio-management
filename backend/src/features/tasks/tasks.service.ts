@@ -71,11 +71,15 @@ export class TasksService {
     if (!body.parentId) {
       return undefined;
     }
-    const typeOrder = Object.keys(TaskType);
-    console.log(typeOrder);
+    const taskTypes = Object.keys(TaskType);
     const parent = await this.repo.findOneBy({ id: body.parentId });
     if (!parent) {
       throw new BadRequestException('Task does not existed');
+    }
+    const parentTypeIdx = taskTypes.findIndex((t) => t === parent.type);
+    const childTypeIdx = taskTypes.findIndex((t) => t === body.type);
+    if (childTypeIdx - parentTypeIdx !== 1) {
+      throw new BadRequestException('Child type is not sequence');
     }
     return parent;
   }
