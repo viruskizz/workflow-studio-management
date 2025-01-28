@@ -33,4 +33,9 @@ export class CreateTaskDto extends PartialType(Task) {
   @IsOptional()
   @ApiProperty({ example: 2 })
   assigneeId: number;
+
+  @IsNumber()
+  @IsOptional()
+  @ApiProperty({ example: 1 })
+  parentId: number;
 }

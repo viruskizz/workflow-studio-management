@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Task } from '@backend/typeorm/task.entity';
+import { Task, TaskType } from '@backend/typeorm/task.entity';
 import { User } from '@backend/typeorm/user.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { ProjectsService } from '../projects/projects.service';
@@ -43,10 +43,11 @@ export class TasksService {
 
   async create(body: CreateTaskDto) {
     const task = Task.create(body);
-    const project = await this.projectService.findOne(body.projectId);
-    const code = project.key + '-' + (project.metadata.last + 1);
-    task.code = code;
-    task.project = Project.create({ id: body.projectId });
+    const project = await this.getValidProject(body.projectId);
+    const parent = await this.getValidParentTask(body);
+    task.code = project.key + '-' + (project.metadata.last + 1);
+    task.project = project;
+    task.parent = parent;
     if (body.assigneeId) {
       task.assignee = User.create({ id: body.assigneeId });
     }
@@ -57,5 +58,25 @@ export class TasksService {
         return project.save();
       })
       .then(() => task);
+  }
+
+  private async getValidProject(projectId: number) {
+    const project = await this.projectService.findOne(projectId);
+    if (!project) {
+      throw new BadRequestException('Project does not existed');
+    }
+    return project;
+  }
+  private async getValidParentTask(body: CreateTaskDto) {
+    if (!body.parentId) {
+      return undefined;
+    }
+    const typeOrder = Object.keys(TaskType);
+    console.log(typeOrder);
+    const parent = await this.repo.findOneBy({ id: body.parentId });
+    if (!parent) {
+      throw new BadRequestException('Task does not existed');
+    }
+    return parent;
   }
 }
