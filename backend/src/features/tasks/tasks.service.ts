@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Param } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Task, TaskType } from '@backend/typeorm/task.entity';
@@ -7,6 +7,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { ProjectsService } from '../projects/projects.service';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Project } from '@backend/typeorm';
+import { QueryOptionInterface } from '@backend/shared/decorators/query-option.decorator';
 
 @Injectable()
 export class TasksService {
@@ -23,9 +24,16 @@ export class TasksService {
     return this.repo;
   }
 
-  findAll() {
-    return this.repo.find();
-    return this.repo.find({ relations: { assignee: true, project: true } });
+  findAll(options?: QueryOptionInterface) {
+    const opt = {
+      where: options.where,
+      select: options.select,
+      skip: options.offset,
+      take: options.limit,
+    };
+    return this.repo.find(opt).catch((e) => {
+      throw new HttpException(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+    });
   }
 
   findOne(id: number) {
