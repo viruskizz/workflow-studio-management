@@ -1,4 +1,10 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, Param } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Param,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Task, TaskType } from '@backend/typeorm/task.entity';
@@ -26,7 +32,7 @@ export class TasksService {
 
   findAll(options?: QueryOptionInterface) {
     const opt = {
-      where: options.where,
+      where: options.filter,
       select: options.select,
       skip: options.offset,
       take: options.limit,

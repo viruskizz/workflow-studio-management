@@ -4,12 +4,18 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ProjectTasksService } from './project-tasks.service';
 import { ProjectValidateInterceptor } from '../project-validate.interceptor';
 import { CreateProjectTaskDto } from './dto/create-project-task.dto';
+import {
+  QueryOption,
+  QueryOptionInterface,
+} from '@backend/shared/decorators/query-option.decorator';
+import { QueryTreeOptionInterface } from '@backend/features/tasks/dto/query-tree-option.interface';
 
 @ApiBearerAuth()
 @ApiTags('Projects')
@@ -20,8 +26,8 @@ export class ProjectTasksController {
 
   @Get('tree')
   @ApiOperation({ summary: 'List all tasks' })
-  async findByTree() {
-    return this.service.tree();
+  async findByTree(@Param('id') id, @Query() query?: QueryTreeOptionInterface) {
+    return this.service.tree(+id, query);
   }
 
   @Post()
@@ -33,7 +39,11 @@ export class ProjectTasksController {
 
   @Get()
   @ApiOperation({ summary: 'List all tasks' })
-  async findAll(@Param('id') id) {
-    return this.service.list(id);
+  async findAll(@Param('id') id, @QueryOption() query?: QueryOptionInterface) {
+    query.filter = {
+      ...query.filter,
+      projectId: id,
+    };
+    return this.service.list(query);
   }
 }
