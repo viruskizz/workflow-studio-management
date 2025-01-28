@@ -1,10 +1,10 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import * as _ from 'lodash';
 
 export interface QueryOptionInterface {
   fields?: string[];
   select?: { [k: string]: boolean };
-  filter?: string;
-  where?: { [k: string]: any };
+  filter?: { [k: string]: any };
   limit?: number;
   offset?: number;
 }
@@ -30,6 +30,7 @@ export const QueryOption = createParamDecorator(
     }
     return {
       fields,
+      filter: query.filter,
       select: fieldsToSelects(fields),
       limit: query.limit,
       offset: query.offset,
