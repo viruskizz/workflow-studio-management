@@ -18,6 +18,12 @@ import { CreateProjectTaskDto } from './dto/create-project-task.dto';
 export class ProjectTasksController {
   constructor(private service: ProjectTasksService) {}
 
+  @Get('tree')
+  @ApiOperation({ summary: 'List all tasks' })
+  async findByTree() {
+    return this.service.tree();
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create new project task' })
   async create(@Param('id') id, @Body() body: CreateProjectTaskDto) {

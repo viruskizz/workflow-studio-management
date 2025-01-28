@@ -16,6 +16,9 @@ export class TasksService {
     private projectService: ProjectsService,
   ) {}
 
+  getTreeRepository() {
+    return this.repo.manager.getTreeRepository(Task);
+  }
   getRepository() {
     return this.repo;
   }
@@ -42,15 +45,21 @@ export class TasksService {
   }
 
   async create(body: CreateTaskDto) {
-    const task = Task.create(body);
+    const task = new Task();
     const project = await this.getValidProject(body.projectId);
     const parent = await this.getValidParentTask(body);
+    task.description = body.description;
+    task.summary = body.summary;
     task.code = project.key + '-' + (project.metadata.last + 1);
     task.project = project;
     task.parent = parent;
+    task.type = body.type;
+    task.status = body.status;
     if (body.assigneeId) {
       task.assignee = User.create({ id: body.assigneeId });
     }
+    console.log(task);
+    // return;
     return task
       .save()
       .then(() => {
@@ -69,11 +78,13 @@ export class TasksService {
   }
   private async getValidParentTask(body: CreateTaskDto) {
     if (!body.parentId) {
+      console.log('No parent');
       return undefined;
     }
     const taskTypes = Object.keys(TaskType);
     const parent = await this.repo.findOneBy({ id: body.parentId });
     if (!parent) {
+      console.error('Task does not existed');
       throw new BadRequestException('Task does not existed');
     }
     const parentTypeIdx = taskTypes.findIndex((t) => t === parent.type);

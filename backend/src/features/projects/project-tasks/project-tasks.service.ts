@@ -13,4 +13,10 @@ export class ProjectTasksService {
   create(body: CreateTaskDto) {
     return this.tasksService.create(body);
   }
+
+  tree() {
+    return this.tasksService.getTreeRepository().findTrees({
+      // relations: ['project'],
+    });
+  }
 }

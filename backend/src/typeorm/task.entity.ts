@@ -8,6 +8,9 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Tree,
+  TreeChildren,
+  TreeParent,
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
@@ -28,6 +31,7 @@ export enum TaskType {
 }
 
 @Entity({ name: 'tasks' })
+@Tree('closure-table')
 export class Task extends BaseEntity {
   @PrimaryGeneratedColumn()
   @ApiProperty({ example: 1 })
@@ -71,11 +75,12 @@ export class Task extends BaseEntity {
   @ManyToOne(() => User, (u) => u.id)
   assignee: User;
 
-  @ManyToOne(() => Task, (t) => t.children)
+  // @ManyToOne(() => Task, (t) => t.children)
+  @TreeParent()
   parent: Task;
 
-  @OneToMany(() => Task, (t) => t.parent)
-  @JoinTable()
+  // @OneToMany(() => Task, (t) => t.parent)
+  @TreeChildren()
   children: Task[];
 
   @CreateDateColumn({ name: 'created_at' })
