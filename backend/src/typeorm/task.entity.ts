@@ -75,6 +75,9 @@ export class Task extends BaseEntity {
   @ManyToOne(() => User, (u) => u.id)
   assignee: User;
 
+  @Column({ nullable: true })
+  parentId?: number;
+
   // @ManyToOne(() => Task, (t) => t.children)
   @TreeParent()
   parent: Task;

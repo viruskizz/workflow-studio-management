@@ -45,21 +45,15 @@ export class TasksService {
   }
 
   async create(body: CreateTaskDto) {
-    const task = new Task();
+    const task = Task.create(body);
     const project = await this.getValidProject(body.projectId);
     const parent = await this.getValidParentTask(body);
-    task.description = body.description;
-    task.summary = body.summary;
-    task.code = project.key + '-' + (project.metadata.last + 1);
     task.project = project;
     task.parent = parent;
-    task.type = body.type;
-    task.status = body.status;
+    task.code = project.key + '-' + (project.metadata.last + 1);
     if (body.assigneeId) {
       task.assignee = User.create({ id: body.assigneeId });
     }
-    console.log(task);
-    // return;
     return task
       .save()
       .then(() => {
@@ -78,17 +72,16 @@ export class TasksService {
   }
   private async getValidParentTask(body: CreateTaskDto) {
     if (!body.parentId) {
-      console.log('No parent');
       return undefined;
     }
     const taskTypes = Object.keys(TaskType);
     const parent = await this.repo.findOneBy({ id: body.parentId });
     if (!parent) {
-      console.error('Task does not existed');
       throw new BadRequestException('Task does not existed');
     }
     const parentTypeIdx = taskTypes.findIndex((t) => t === parent.type);
     const childTypeIdx = taskTypes.findIndex((t) => t === body.type);
+    console.log(parent.type, body.type);
     if (childTypeIdx - parentTypeIdx !== 1) {
       throw new BadRequestException('Child type is not sequence');
     }
