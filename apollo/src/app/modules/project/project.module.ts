@@ -24,6 +24,9 @@ import { ProjectFormComponent } from './project-form/project-form.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ChipModule } from 'primeng/chip';
 import { ImageModule } from 'primeng/image';
+import { ProjectViewComponent } from './project-view/project-view.component';
+import { TreeModule } from 'primeng/tree';
+import { TreeTableModule } from 'primeng/treetable';
 
 @NgModule({
   imports: [
@@ -51,7 +54,9 @@ import { ImageModule } from 'primeng/image';
     AutoCompleteModule,
     ChipModule,
     ImageModule,
+    TreeModule,
+    TreeTableModule,
   ],
-  declarations: [ProjectComponent, ProjectFormComponent]
+  declarations: [ProjectComponent, ProjectFormComponent, ProjectViewComponent]
 })
 export class ProjectModule { }

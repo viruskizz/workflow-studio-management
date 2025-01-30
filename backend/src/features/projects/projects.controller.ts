@@ -7,21 +7,20 @@ import {
   Param,
   Patch,
   Post,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
-import { UsersService } from '../users/users.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { ProjectValidateInterceptor } from './project-validate.interceptor';
 
 @ApiBearerAuth()
+@UseInterceptors(ProjectValidateInterceptor)
 @ApiTags('Projects')
 @Controller('projects')
 export class ProjectsController {
-  constructor(
-    private service: ProjectsService,
-    private usersService: UsersService,
-  ) {}
+  constructor(private service: ProjectsService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create new project' })

@@ -16,7 +16,9 @@ AppDataSource.initialize().then(async () => {
   await setupProjects();
 }).catch(e => console.log(e));
 
-
+/**
+ * User
+ */
 export async function setupUsers() {
   const userRepo = AppDataSource.manager.getRepository(User);
   for (const user of await getUserSeeds()) {
@@ -25,6 +27,9 @@ export async function setupUsers() {
   }
 }
 
+/**
+ * Project
+ */
 export async function setupProjects() {
   const projectRepo = AppDataSource.manager.getRepository(Project);
   for (const project of getProjectSeeds()) {
@@ -33,6 +38,9 @@ export async function setupProjects() {
   }
 }
 
+/**
+ * Teams
+ */
 export async function setupTeams() {
   const teamRepo = AppDataSource.manager.getRepository(Team);
   for (const team of getTeamSeeds()) {
@@ -41,6 +49,9 @@ export async function setupTeams() {
   }
 }
 
+/**
+ * Team Stages
+ */
 export async function setupTeamStages() {
   const stageRepo = AppDataSource.manager.getRepository(TeamStage);
   for (const stage of getTeamStagesSeeds()) {
@@ -49,6 +60,9 @@ export async function setupTeamStages() {
   }
 }
 
+/**
+ * Team Member
+ */
 export async function setupTeamMembers() {
   const memberRepo = AppDataSource.manager.getRepository(TeamMember);
   for (const member of getTeamMembersSeeds()) {
