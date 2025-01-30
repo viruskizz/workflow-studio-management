@@ -19,7 +19,7 @@ export class UserAutocompleteComponent implements OnInit {
   @Input() optionLabel = 'username'
   @Input() optionValue = 'id'
   @Input() multiple: boolean = false
-  @Input() limit = 1;
+  @Input() limit: number | null = null;  // Changed to allow null for no limit
   @Input() unique = true;
   @Input() dropdown: boolean = false
 
@@ -61,9 +61,9 @@ export class UserAutocompleteComponent implements OnInit {
         ]
         this.form.controls[this.controlName].patchValue(values)
       }
-      if (values.length > this.limit) {
+      if (this.limit !== null && values.length > this.limit) {
         this.form.controls[this.controlName].patchValue(
-          values.slice(1)
+          values.slice(-this.limit) 
         )
       }
     }

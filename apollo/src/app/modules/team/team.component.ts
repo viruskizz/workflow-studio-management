@@ -1,64 +1,67 @@
 import { Component, OnInit } from '@angular/core';
 import { Team } from 'src/app/models/team.model';
+import { User } from 'src/app/models/user.model';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { TeamService } from 'src/app/services/team.service';
-import { User } from 'src/app/models/user.model';
-import { UserService } from 'src/app/services/user.service';
 
 @Component({
   templateUrl: './team.component.html',
-  providers: [MessageService, ConfirmationService]
+  providers: [MessageService, ConfirmationService],
 })
 export class TeamComponent implements OnInit {
   teams: Team[] = [];
-  users: User[] = [];
   selectedTeam?: Team;
   teamDialog = false;
-  deleteTeamDialog = false;
 
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private teamService: TeamService,
-    private userService: UserService,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.loadTeams();
-    this.loadUsers();
   }
 
   loadTeams() {
     this.teamService.listTeams().subscribe({
       next: (teams) => {
         this.teams = teams;
-        // console.log('Teams loaded:', teams);
+        this.loadTeamDetails();
       },
-      error: (error) => console.error('Error loading teams:', error)
+      error: (error) => console.error('Error loading teams:', error),
     });
   }
 
-  loadUsers() {
-    this.userService.listUser().subscribe({
-      next: (users) => {
-        this.users = users;
-        // console.log('Users loaded:', users);
-      },
-      error: (error) => console.error('Error loading users:', error)
+  loadTeamDetails() {
+    this.teams.forEach((team) => {
+      if (team.id) this.fetchTeamDetails(team.id);
     });
   }
 
-  getUser(id: number): User | undefined {
-    return this.users.find(user => user.id === id);
+  fetchTeamDetails(teamId: number) {
+    this.teamService.getTeamWithMembers(teamId).subscribe({
+      next: (teamWithDetails) => this.updateTeamDetails(teamWithDetails),
+      error: (error) => console.error(`Error loading details for team ${teamId}:`, error),
+    });
   }
-  openNewTeamDialog() {
-    this.selectedTeam = undefined;
-    this.teamDialog = true;
+
+  updateTeamDetails(teamWithDetails: Team) {
+    const index = this.teams.findIndex((t) => t.id === teamWithDetails.id);
+    if (index !== -1) {
+      this.teams[index] = teamWithDetails;
+      this.teams = [...this.teams];
+    }
   }
 
   editTeam(team: Team) {
     this.selectedTeam = { ...team };
+    this.teamDialog = true;
+  }
+
+  openNewTeamDialog() {
+    this.selectedTeam = undefined;
     this.teamDialog = true;
   }
 
@@ -67,36 +70,97 @@ export class TeamComponent implements OnInit {
       message: `Are you sure you want to delete ${team.name}?`,
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.teamService.deleteTeam(team.id!).subscribe({
-          next: () => {
-            this.teams = this.teams.filter(t => t.id !== team.id);
-            console.log('Team deleted:', team);
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Team Deleted', life: 3000 });
-          },
-          error: (error) => console.error('Error deleting team:', error)
-        });
-      }
+      accept: () => this.performTeamDeletion(team),
     });
   }
 
+  performTeamDeletion(team: Team) {
+    this.teamService.deleteTeam(team.id!).subscribe({
+      next: () => this.handleTeamDeletionSuccess(team),
+      error: (error) => this.handleTeamDeletionError(error),
+    });
+  }
+
+  handleTeamDeletionSuccess(team: Team) {
+    this.teams = this.teams.filter((t) => t.id !== team.id);
+    this.showSuccessMessage('Team Deleted');
+  }
+
+  handleTeamDeletionError(error: any) {
+    console.error('Error deleting team:', error);
+    this.showErrorMessage('Failed to delete team');
+  }
+
+  removeMember(team: Team, member: User) {
+    this.confirmationService.confirm({
+      message: `Are you sure you want to remove ${member.username} from ${team.name}?`,
+      header: 'Confirm Member Removal',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => this.performMemberRemoval(team, member),
+    });
+  }
+
+  performMemberRemoval(team: Team, member: User) {
+    this.teamService.removeMemberFromTeam(team.id!, member.id!).subscribe({
+      next: () => this.handleMemberRemovalSuccess(team, member),
+      error: (error) => this.handleMemberRemovalError(error),
+    });
+  }
+
+  handleMemberRemovalSuccess(team: Team, member: User) {
+    team.members = team.members.filter(m => m.id !== member.id);
+    this.showSuccessMessage('Member Removed');
+  }
+
+  handleMemberRemovalError(error: any) {
+    console.error('Error removing member:', error);
+    this.showErrorMessage('Failed to remove member');
+  }
+
   onTeamSave(team: Team) {
-    const index = this.teams.findIndex(t => t.id === team.id);
+    const index = this.teams.findIndex((t) => t.id === team.id);
     if (index > -1) {
-      this.teams[index] = team;
-      console.log('Team saved:', team);
-      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Team Updated', life: 3000 });
+      this.teams[index] = { ...team };
+      this.fetchTeamDetails(team.id!);
     } else {
       this.teams.push(team);
-      console.log('Team saved:', team);
-      this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Team Created', life: 3000 });
+      this.fetchTeamDetails(team.id!);
     }
+
+    this.teams = [...this.teams];
     this.teamDialog = false;
     this.selectedTeam = undefined;
+    this.showSuccessMessage(`Team ${team.id ? 'updated' : 'created'} successfully`);
   }
 
   onGlobalFilter(table: Table, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 
+  getImage(url: string | undefined) {
+    return url || 'assets/images/noimage.jpg';
+  }
+
+  onImageError(team: Team) {
+    team.imageUrl = 'assets/images/noimage.jpg';
+  }
+
+  private showSuccessMessage(detail: string) {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail,
+      life: 3000,
+    });
+  }
+
+  private showErrorMessage(detail: string) {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail,
+      life: 3000,
+    });
+  }
 }
+

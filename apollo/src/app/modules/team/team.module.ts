@@ -14,6 +14,14 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TeamComponent } from './team.component';
 import { TeamFormComponent } from './team-form/team-form.component';
 import { TeamRoutingModule } from './team-routing.module';
+import { CheckboxModule } from 'primeng/checkbox';
+import { AvatarModule } from 'primeng/avatar';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { FileUploadModule } from 'primeng/fileupload';
+import { TooltipModule } from 'primeng/tooltip';
+import { ImageModule } from 'primeng/image';
+import { ChipModule } from 'primeng/chip';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   imports: [
@@ -31,6 +39,15 @@ import { TeamRoutingModule } from './team-routing.module';
     ConfirmDialogModule,
     DropdownModule,
     MultiSelectModule,
+    CheckboxModule,
+    AvatarModule,
+    FileUploadModule,
+    TooltipModule,
+    ImageModule,
+    ChipModule,
+    TagModule,
+    ImageModule,
+    SharedModule,
   ],
   declarations: [TeamComponent, TeamFormComponent]
 })

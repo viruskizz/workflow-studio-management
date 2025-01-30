@@ -4,6 +4,8 @@ import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
 import { TeamService } from 'src/app/services/team.service';
 import { UserService } from 'src/app/services/user.service';
+import { FileSelectEvent } from 'primeng/fileupload';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-team-form',
@@ -18,89 +20,147 @@ export class TeamFormComponent implements OnChanges, OnInit {
   teamForm: FormGroup;
   isSubmitted = false;
   users: User[] = [];
-  filteredUsers: User[] = [];
+  loading = false;
 
-  get selectedLeader(): User | undefined {
-    const leaderId = this.teamForm.get('leaderId')?.value;
-    return this.users.find(user => user.id === leaderId);
-  }
+  imagePreview?: string;
+  coverFile?: File;
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private teamService: TeamService,
-    private userService: UserService
+    private userService: UserService,
+    private messageService: MessageService
   ) {
-    this.teamForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      leaderId: [null, [Validators.required]],
-      members: [[], [Validators.required]],
-    });
+    this.teamForm = this.createForm();
   }
 
   ngOnInit() {
     this.loadUsers();
   }
 
-  loadUsers() {
-    this.userService.listUser().subscribe({
-      next: (users) => {
-        this.users = users;
-        this.filteredUsers = [...this.users];
-      },
-      error: (error) => console.error('Error loading users:', error)
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['team']?.currentValue) {
+      this.updateForm(changes['team'].currentValue);
+    } else {
+      this.resetForm();
+    }
+  }
+
+  private createForm(): FormGroup {
+    return this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      leader: [null, [Validators.required]],
+      members: [[], [Validators.required]],
+      imageUrl: [''],
     });
   }
 
-  getUser(id: number): User | undefined {
-    return this.users.find(user => user.id === id);
+  private updateForm(team: Team): void {
+    this.imagePreview = team.imageUrl;
+    this.teamForm.patchValue({
+      name: team.name,
+      leader: this.users.find((u) => u.id === team.leaderId),
+      members: team.members || [],
+      imageUrl: team.imageUrl || '',
+    });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['team']?.currentValue) {
-      this.teamForm.patchValue({
-        ...changes['team'].currentValue,
-        members: changes['team'].currentValue.members,
-      });
-    } else {
-      this.teamForm.reset();
+  private resetForm(): void {
+    this.teamForm.reset();
+    this.imagePreview = undefined;
+  }
+
+  loadUsers() {
+    this.userService.listUser().subscribe({
+      next: (users) => (this.users = users),
+      error: (error) => console.error('Error loading users:', error),
+    });
+  }
+
+  onSelectImage(event: FileSelectEvent) {
+    const file = event.currentFiles[0];
+    if (file) {
+      this.coverFile = file;
+      this.readFile(file);
     }
+  }
+
+  private readFile(file: File): void {
+    const reader = new FileReader();
+    reader.onload = (e) => (this.imagePreview = e.target?.result as string);
+    reader.readAsDataURL(file);
   }
 
   onSave() {
     this.isSubmitted = true;
     if (this.teamForm.invalid) {
+      this.teamForm.markAllAsTouched();
       return;
     }
 
-    const formData = this.teamForm.value;
-    const teamData: Partial<Team> = {
-      name: formData.name,
-      leaderId: formData.leaderId,
-      members: formData.members,
-    };
+    const teamData = this.prepareTeamData();
+    this.saveTeam(teamData);
+  }
 
-    const action = this.team?.id
+  private prepareTeamData(): Partial<Team> {
+    const formValue = this.teamForm.value;
+    return {
+      name: formValue.name,
+      members: formValue.members,
+      imageUrl: formValue.imageUrl,
+      leaderId: formValue.leader?.id,
+    };
+  }
+
+  private saveTeam(teamData: Partial<Team>): void {
+    this.loading = true;
+    const saveObservable = this.team?.id
       ? this.teamService.updateTeam(this.team.id, teamData)
       : this.teamService.createTeam(teamData as Team);
 
-    action.subscribe({
-      next: (updatedTeam) => {
-        this.teamChange.emit(updatedTeam);
-        this.closeDialog();
-      },
-      error: (error) => console.error('Error saving team:', error),
+    saveObservable.subscribe({
+      next: this.handleSaveSuccess.bind(this),
+      error: this.handleSaveError.bind(this),
+      complete: () => (this.loading = false)
+    });
+  }
+
+  private handleSaveSuccess(updatedTeam: Team): void {
+    this.teamChange.emit(updatedTeam);
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: `Team ${this.team?.id ? 'updated' : 'created'} successfully.`,
+      life: 3000,
+    });
+    this.closeDialog();
+  }
+
+  private handleSaveError(error: any): void {
+    console.error('Error saving team:', error);
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Failed to save team.',
+      life: 3000,
     });
   }
 
   closeDialog() {
     this.visible = false;
     this.visibleChange.emit(false);
-    this.teamForm.reset();
+    this.resetForm();
     this.isSubmitted = false;
   }
 
   get formControls() {
     return this.teamForm.controls;
+  }
+
+  removeMember(member: User) {
+    const currentMembers = this.teamForm.get('members')?.value as User[];
+    const updatedMembers = currentMembers.filter(m => m.id !== undefined && m.id !== member.id);
+    this.teamForm.patchValue({ members: updatedMembers });
   }
 }
 
