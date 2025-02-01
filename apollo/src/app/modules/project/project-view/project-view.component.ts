@@ -27,7 +27,9 @@ export class ProjectViewComponent {
     this.cols = [
       { field: 'id', header: 'ID' },
       { field: 'summary', header: 'Summary' },
-      { field: 'type', header: 'Type' }
+      { field: 'type', header: 'Type' },
+      { field: 'status', header: 'Status' },
+      { field: 'assignee', header: 'Assignee' },
     ];
     this.projectService.listTaskTrees(this.projectId!).subscribe(
       res => {

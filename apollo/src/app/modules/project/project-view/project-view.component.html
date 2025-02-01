@@ -26,11 +26,21 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
-            <tr>
-                <td *ngFor="let col of columns; let i = index">
-                    <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0"></p-treeTableToggler>
-                    <p-treeTableCheckbox [value]="rowNode" *ngIf="i === 0"></p-treeTableCheckbox>
-                    {{rowData[col.field]}}
+            <tr [ttRow]="rowNode">
+                <td>
+                    <p-treeTableToggler [rowNode]="rowNode" />
+                    {{ rowData.id }}
+                </td>
+                <td>{{ rowData.summary }}</td>
+                <td>{{ rowData.type }}</td>
+                <td>{{ rowData.status }}</td>
+                <td>
+                    @if (rowData.assignee) {
+                        <p-chip [label]="rowData.assignee.username" [image]="rowData.assignee.imageUrl" alt="assignee-image" />
+                    }
+                    @else {
+                        <span>Unassigned</span>
+                    }
                 </td>
             </tr>
         </ng-template>
