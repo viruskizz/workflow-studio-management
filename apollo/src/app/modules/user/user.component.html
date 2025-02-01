@@ -32,7 +32,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-user>
-                    <tr>
+                    <tr [routerLink]="['/users', user.id]">
                         <td style="min-width:5rem;"><span class="p-column-title">ID</span>
                             {{ user?.id }}
                         </td>

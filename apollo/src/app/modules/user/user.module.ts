@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
@@ -14,11 +15,15 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
-import { UserRoutingModule } from './user-routing.module';
-import { UserComponent } from './user.component';
-import { UserFormComponent } from './user-form/user-form.component';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { FieldsetModule } from 'primeng/fieldset';
+import { CardModule } from 'primeng/card';
+
+import { UserComponent } from './user.component';
+import { UserRoutingModule } from './user-routing.module';
+import { UserFormComponent } from './user-form/user-form.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 @NgModule({
   imports: [
@@ -42,7 +47,9 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     DialogModule,
     InputGroupModule,
     InputGroupAddonModule,
+    FieldsetModule,
+    CardModule
   ],
-  declarations: [UserComponent, UserFormComponent]
+  declarations: [UserComponent, UserFormComponent, UserProfileComponent]
 })
 export class UserModule { }
