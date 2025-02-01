@@ -11,8 +11,9 @@
                 </div>
                 <div class="flex gap-3">
                     <button
+                        (click)="createTask()"
                         pButton
-                        label="Add Task"
+                        label="Add Epic"
                         class="p-button-outlined mb-2"
                         icon="pi pi-plus"></button>
                 </div>
@@ -45,4 +46,12 @@
             </tr>
         </ng-template>
     </p-treeTable>
+</div>
+
+<app-project-task-form [(visible)]="taskDialog" [(task)]="task" (onCloseEvent)="hideDialog($event)" />
+
+
+<div>
+    <h3>Prime Editor</h3>
+    <p-editor [style]="{'height':'250px'}"></p-editor>
 </div>

@@ -1,0 +1,10 @@
+<p>task-form works!</p>
+
+<p-dialog
+    [(visible)]="visible"
+    (onHide)="onHide()"
+    [style]="{width: '450px'}"
+    [header]="task ? 'Edit' : 'Create' + ' Task'"
+    [modal]="true"
+    class="p-fluid">
+</p-dialog>

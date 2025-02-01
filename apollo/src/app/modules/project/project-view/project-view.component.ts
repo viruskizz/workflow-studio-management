@@ -16,6 +16,9 @@ export class ProjectViewComponent {
   cols: any[] = [];
   projectId?: number;
 
+  taskDialog = false;
+  task?: Task;
+
   constructor(
     private route: ActivatedRoute,
     private projectService: ProjectService
@@ -42,6 +45,14 @@ export class ProjectViewComponent {
 
   onGlobalFilter(table: TreeTable, event: Event) {
       table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+  }
+
+  createTask() {
+    this.taskDialog = true;
+  }
+
+  hideDialog(event: any) {
+    this.taskDialog = false;
   }
 
   private mapTreesToNodes(tasks: TaskTree[]): TreeNode<Task>[] {
