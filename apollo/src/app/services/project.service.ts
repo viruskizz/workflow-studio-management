@@ -40,6 +40,8 @@ export class ProjectService {
     let params = new HttpParams();
     if (parentId) {
       params = params.set('parentId', parentId);
+    } else {
+      params = params.set('all', true);
     }
     if (depth) {
       params = params.set('depth', depth);

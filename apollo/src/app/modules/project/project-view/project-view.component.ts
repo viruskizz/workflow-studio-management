@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TreeNode } from 'primeng/api';
 import { TreeTable } from 'primeng/treetable';
-import { NodeService } from 'src/app/demo/service/node.service';
+import { Task, TaskTree } from 'src/app/models/task.model';
 import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
@@ -12,32 +12,45 @@ import { ProjectService } from 'src/app/services/project.service';
 export class ProjectViewComponent {
 
   files2: TreeNode<any> | TreeNode<any>[] | any[] | any;
+  tasks: TreeNode<Task> | TreeNode<Task>[] | Task[] | any = [];
   cols: any[] = [];
   projectId?: number;
 
   constructor(
     private route: ActivatedRoute,
-    private nodeService: NodeService,
     private projectService: ProjectService
   ) {}
 
   ngOnInit() {
     const params = this.route.snapshot.params;
     this.projectId = params['id'];
-    this.nodeService.getFilesystem().then(files => this.files2 = files);
     this.cols = [
-      { field: 'name', header: 'Name' },
-      { field: 'size', header: 'Size' },
+      { field: 'id', header: 'ID' },
+      { field: 'summary', header: 'Summary' },
       { field: 'type', header: 'Type' }
     ];
     this.projectService.listTaskTrees(this.projectId!).subscribe(
       res => {
         console.log('Tasks:', res);
+        this.tasks = this.mapTreesToNodes(res);
+        console.log('TreeNodes:', this.tasks);
       }
     )
   }
 
   onGlobalFilter(table: TreeTable, event: Event) {
       table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+  }
+
+  private mapTreesToNodes(tasks: TaskTree[]): TreeNode<Task>[] {
+    const nodes: TreeNode<Task>[] = [];
+    tasks.forEach(task => {
+      nodes.push({
+        data: task,
+        key: task.id.toString(),
+        children: this.mapTreesToNodes(task.children)
+      });
+    });
+    return nodes;
   }
 }
