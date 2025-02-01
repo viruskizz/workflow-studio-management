@@ -45,7 +45,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-project let-i="index">
-                    <tr>
+                    <tr (click)="onRowClick(project)" class="cursor-pointer">
                         <td style="min-width:5rem;">
                             <span class="p-column-title">id</span>
                             {{ project?.id }}
