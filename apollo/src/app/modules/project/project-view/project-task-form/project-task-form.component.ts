@@ -25,4 +25,8 @@ export class ProjectTaskFormComponent {
     this.visible = false;
     this.onCloseEvent.emit(null)
   }
+
+  onUpload() {
+    console.log('Uploading')
+  }
 }

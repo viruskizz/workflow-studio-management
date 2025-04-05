@@ -1,10 +1,121 @@
 <p>task-form works!</p>
 
-<p-dialog
-    [(visible)]="visible"
-    (onHide)="onHide()"
-    [style]="{width: '450px'}"
-    [header]="task ? 'Edit' : 'Create' + ' Task'"
-    [modal]="true"
-    class="p-fluid">
+<p-dialog [(visible)]="visible" (onHide)="onHide()" [style]="{width: '450px'}"
+    [header]="task ? 'Edit' : 'Create' + ' Task'" [modal]="true" class="p-fluid">
 </p-dialog>
+
+<!-- <ng-template pTemplate="content"> -->
+<div>
+    <div class="card p-fluid">
+        <div>
+            <h5>Create Task</h5>
+            <div class="field">
+                <input pInputText id="title" placeholder="Title" type="text" />
+            </div>
+            <div class="field">
+                <input pInputText id="link" placeholder="Link: d://example.autocad" type="text" />
+            </div>
+            <div class="field">
+                <img src="assets/images/noimage.jpg" alt="" class=" w-2 block mb-3">
+                <p-fileUpload mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" name="file" url="/upload"
+                    accept="image/*" [maxFileSize]="1000000" (onUpload)="onUpload()" />
+            </div>
+        </div>
+        <hr>
+        <h5>Properties</h5>
+        <div class="field grid">
+            <label htmlFor="status" class="col-12 mb-2 md:col-2 md:mb-0 gap-2">
+                <i class="pi pi-hourglass"></i>
+                <span>
+                    Status
+                </span>
+            </label>
+            <div class="col-12 md:col-10">
+                <input pInputText id="status" type="text" />
+            </div>
+        </div>
+        <div class="field grid">
+            <label htmlFor="start" class="col-12 mb-2 md:col-2 md:mb-0 gap-2">
+                <i class="pi pi-calendar"></i>
+                <span>
+                    Start Date
+                </span>
+            </label>
+            <div class="col-12 md:col-10">
+                <input pInputText id="start" type="text" />
+            </div>
+        </div>
+        <div class="field grid">
+            <label htmlFor="team" class="col-12 mb-2 md:col-2 md:mb-0 gap-2">
+                <i class="pi pi-users"></i>
+                <span>
+                    Team
+                </span>
+            </label>
+            <div class="col-12 md:col-10">
+                <input pInputText id="assignee" type="text" />
+            </div>
+        </div>
+        <div class="field grid">
+            <label htmlFor="assignee" class="col-12 mb-2 md:col-2 md:mb-0 gap-2">
+                <i class="pi pi-user"></i>
+                <span>
+                    Assignee
+                </span>
+            </label>
+            <div class="col-12 md:col-10">
+                <input pInputText id="assignee" type="text" />
+            </div>
+        </div>
+        <div class="field grid">
+            <label htmlFor="state" class="col-12 mb-2 md:col-2 md:mb-0 gap-2">
+                <i class="pi pi-compass"></i>
+                <span>
+                    State
+                </span>
+            </label>
+            <div class="col-12 md:col-10">
+                <input pInputText id="assignee" type="text" />
+            </div>
+        </div>
+        <div class="field grid">
+            <label htmlFor="flow" class="col-12 mb-2 md:col-2 md:mb-0 gap-2">
+                <i class="pi pi-bolt"></i>
+                <span>
+                    Task Flow
+                </span>
+            </label>
+            <div class="col-12 md:col-10">
+                <input pInputText id="flow" type="text" />
+            </div>
+        </div>
+        <div class="field grid">
+            <label htmlFor="parent" class="col-12 mb-2 md:col-2 md:mb-0 gap-2">
+                <i class="pi pi-folder"></i>
+                <span>
+                    Add Parent
+                </span>
+            </label>
+            <div class="col-12 md:col-10">
+                <input pInputText id="parent" type="text" />
+            </div>
+        </div>
+        <div class="field grid">
+            <label htmlFor="parent" class="col-12 mb-2 md:col-2 md:mb-0 gap-2">
+                <i class="pi pi-sitemap"></i>
+                <span>
+                    Sub Task
+                </span>
+            </label>
+            <div class="col-12 md:col-10">
+                <input pInputText id="parent" type="text" />
+            </div>
+        </div>
+        <hr>
+        <div>
+            <h5>Description</h5>
+            <p-editor [style]="{'height':'250px'}"></p-editor>
+        </div>
+    </div>
+</div>
+<!-- </ng-template> -->
