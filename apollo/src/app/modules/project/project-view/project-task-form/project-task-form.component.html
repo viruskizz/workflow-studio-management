@@ -1,11 +1,9 @@
-<p>task-form works!</p>
-
 <p-dialog [(visible)]="visible" (onHide)="onHide()" [style]="{width: '450px'}"
     [header]="task ? 'Edit' : 'Create' + ' Task'" [modal]="true" class="p-fluid">
 </p-dialog>
 
 <!-- <ng-template pTemplate="content"> -->
-<div>
+<form [formGroup]="projectTaskForm">
     <div class="card p-fluid">
         <div>
             <h5>Create Task</h5>
@@ -42,7 +40,11 @@
                 </span>
             </label>
             <div class="col-12 md:col-10">
-                <input pInputText id="start" type="text" />
+                <p-calendar 
+                    formControlName="date" 
+                    [iconDisplay]="'input'" 
+                    [showIcon]="true" 
+                    inputId="icondisplay" />
             </div>
         </div>
         <div class="field grid">
@@ -64,7 +66,15 @@
                 </span>
             </label>
             <div class="col-12 md:col-10">
-                <input pInputText id="assignee" type="text" />
+                <!-- <input pInputText id="assignee" type="text" /> -->
+                <app-user-autocomplete
+                    [form]="projectTaskForm"
+                    controlName="leader"
+                    [isShowLabel]="false"
+                    [multiple]="true"
+                    [dropdown]="true"
+                    [limit]=1
+            ></app-user-autocomplete>
             </div>
         </div>
         <div class="field grid">
@@ -117,5 +127,5 @@
             <p-editor [style]="{'height':'250px'}"></p-editor>
         </div>
     </div>
-</div>
+</form>
 <!-- </ng-template> -->

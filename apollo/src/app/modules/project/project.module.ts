@@ -30,6 +30,7 @@ import { ProjectRoutingModule } from './project-routing.module';
 import { ProjectFormComponent } from './project-form/project-form.component';
 import { ProjectViewComponent } from './project-view/project-view.component';
 import { ProjectTaskFormComponent } from './project-view/project-task-form/project-task-form.component';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   imports: [
@@ -60,6 +61,7 @@ import { ProjectTaskFormComponent } from './project-view/project-task-form/proje
     TreeModule,
     TreeTableModule,
     EditorModule,
+    CalendarModule,
   ],
   declarations: [
     ProjectComponent,

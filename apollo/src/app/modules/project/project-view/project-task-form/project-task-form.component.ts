@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Task } from 'src/app/models/task.model';
 
 @Component({
@@ -13,6 +14,12 @@ export class ProjectTaskFormComponent {
 
   @Input() visible: boolean = false;
   @Output() visibleChange = new EventEmitter<boolean>();
+
+  projectTaskForm = new FormGroup({
+    team: new FormControl('', [Validators.required]),
+    assignee: new FormControl('', []),
+    date: new FormControl('', []),
+  })
 
   constructor() {}
 
