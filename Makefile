@@ -13,7 +13,7 @@ up-dev:
 	docker compose --file ${DEV_FILE} up --build --detach
 
 dev:
-	npm install --prefix frontend
+	npm install --prefix apollo
 	npm install --prefix backend
 	docker compose --file ${DEV_FILE} up --build --detach
 
