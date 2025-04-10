@@ -14,9 +14,16 @@
                 <input pInputText id="link" placeholder="Link: d://example.autocad" type="text" />
             </div>
             <div class="field">
-                <img src="assets/images/noimage.jpg" alt="" class=" w-2 block mb-3">
-                <p-fileUpload mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" name="file" url="/upload"
-                    accept="image/*" [maxFileSize]="1000000" (onUpload)="onUpload()" />
+                <img [src]="imagePreview" [alt]="'example'" width="150" class="w-2 block mb-3 shadow-2" *ngIf="imagePreview">
+                <p-fileUpload
+                    mode="basic"
+                    chooseLabel="Choose"
+                    chooseIcon="pi pi-upload"
+                    name="file"
+                    url="/upload"
+                    accept="image/*"
+                    [maxFileSize]="1000000"
+                    (onSelect)="onSelectImage($event)" />
             </div>
         </div>
         <hr>
@@ -29,7 +36,9 @@
                 </span>
             </label>
             <div class="col-12 md:col-10">
-                <input pInputText id="status" type="text" />
+                <!-- <input pInputText id="status" type="text" /> -->
+                 <!-- <app-task-status [(ngModel)]="projectTaskForm.status" /> -->
+                 <app-task-status [form]="projectTaskForm" controlName="status"/>
             </div>
         </div>
         <div class="field grid">
@@ -69,7 +78,7 @@
                 <!-- <input pInputText id="assignee" type="text" /> -->
                 <app-user-autocomplete
                     [form]="projectTaskForm"
-                    controlName="leader"
+                    controlName="assignee"
                     [isShowLabel]="false"
                     [multiple]="true"
                     [dropdown]="true"
@@ -126,6 +135,7 @@
             <h5>Description</h5>
             <p-editor [style]="{'height':'250px'}"></p-editor>
         </div>
+        <button pButton class="mt-4" label="Submit" (click)="onSave()"></button>
     </div>
 </form>
 <!-- </ng-template> -->
