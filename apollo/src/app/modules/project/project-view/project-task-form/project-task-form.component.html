@@ -36,8 +36,6 @@
                 </span>
             </label>
             <div class="col-12 md:col-10">
-                <!-- <input pInputText id="status" type="text" /> -->
-                 <!-- <app-task-status [(ngModel)]="projectTaskForm.status" /> -->
                  <app-task-status [form]="projectTaskForm" controlName="status"/>
             </div>
         </div>
@@ -64,7 +62,8 @@
                 </span>
             </label>
             <div class="col-12 md:col-10">
-                <input pInputText id="assignee" type="text" />
+                <!-- <input pInputText id="assignee" type="text" /> -->
+                <app-team-autocomplete [form]="projectTaskForm" controlName="team" [isShowLabel]="false"/>
             </div>
         </div>
         <div class="field grid">
