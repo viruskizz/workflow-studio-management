@@ -18,10 +18,17 @@ export class ProjectTaskFormComponent {
   coverFile?: File;
 
   projectTaskForm = new FormGroup({
+    title: new FormControl('', [Validators.required]),
+    link: new FormControl('', []),
+    files: new FormControl([], []),
     status: new FormControl('', [Validators.required]),
+    date: new FormControl('', []),
     team: new FormControl('', [Validators.required]),
     assignee: new FormControl('', []),
-    date: new FormControl('', []),
+    state: new FormControl('', []),
+    flow: new FormControl('', []),
+    parent: new FormControl('', []),
+    description: new FormControl('', []),
   })
 
   constructor() { }

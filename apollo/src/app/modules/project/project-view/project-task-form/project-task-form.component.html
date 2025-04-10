@@ -8,10 +8,10 @@
         <div>
             <h5>Create Task</h5>
             <div class="field">
-                <input pInputText id="title" placeholder="Title" type="text" />
+                <input pInputText id="title" placeholder="Title" type="text" formControlName="title"/>
             </div>
             <div class="field">
-                <input pInputText id="link" placeholder="Link: d://example.autocad" type="text" />
+                <input pInputText id="link" placeholder="Link: d://example.autocad" type="text" formControlName="link" />
             </div>
             <div class="field">
                 <img [src]="imagePreview" [alt]="'example'" width="150" class="w-2 block mb-3 shadow-2" *ngIf="imagePreview">
@@ -22,7 +22,7 @@
                     name="file"
                     url="/upload"
                     accept="image/*"
-                    [maxFileSize]="1000000"
+                    [maxFileSize]="10000000"
                     (onSelect)="onSelectImage($event)" />
             </div>
         </div>
@@ -62,7 +62,10 @@
                 </span>
             </label>
             <div class="col-12 md:col-9">
-                <app-team-dropdown [form]="projectTaskForm" controlName="team" [isShowLabel]="false"/>
+                <app-team-dropdown
+                    [form]="projectTaskForm"
+                    controlName="team"
+                    [isShowLabel]="false"/>
             </div>
         </div>
         <div class="field grid">
@@ -73,7 +76,6 @@
                 </span>
             </label>
             <div class="col-12 md:col-9">
-                <!-- <input pInputText id="assignee" type="text" /> -->
                 <app-user-autocomplete
                     [form]="projectTaskForm"
                     controlName="assignee"
@@ -92,7 +94,7 @@
                 </span>
             </label>
             <div class="col-12 md:col-9">
-                <input pInputText id="assignee" type="text" />
+                <input pInputText id="state" type="text" formControlName="state" />
             </div>
         </div>
         <div class="field grid">
@@ -103,7 +105,7 @@
                 </span>
             </label>
             <div class="col-12 md:col-9">
-                <input pInputText id="flow" type="text" />
+                <input pInputText id="flow" type="text" formControlName="flow" />
             </div>
         </div>
         <div class="field grid">
@@ -114,13 +116,13 @@
                 </span>
             </label>
             <div class="col-12 md:col-9">
-                <input pInputText id="parent" type="text" />
+                <input pInputText id="parent" type="text" formControlName="parent" />
             </div>
         </div>
         <hr>
         <div>
             <h5>Description</h5>
-            <p-editor [style]="{'height':'250px'}"></p-editor>
+            <p-editor [style]="{'height':'250px'}" formControlName="description"></p-editor>
         </div>
         <button pButton class="mt-4" label="Submit" (click)="onSave()"></button>
     </div>
