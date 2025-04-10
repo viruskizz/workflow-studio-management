@@ -3,6 +3,7 @@
 <p-dropdown
     [options]="options"
     [(ngModel)]="selectedTeam"
+    [loading]="true"
     (onChange)="onSelect($event)"
     optionLabel="name"
     placeholder="Select a Team">

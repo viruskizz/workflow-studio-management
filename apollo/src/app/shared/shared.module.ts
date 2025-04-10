@@ -8,13 +8,13 @@ import { AvatarModule } from 'primeng/avatar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { TaskStatusComponent } from './components/task-status/task-status.component';
-import { TeamAutocompleteComponent } from './components/team-autocomplete/team-autocomplete.component';
+import { TeamDropdownComponent } from './components/team-dropdown/team-dropdown.component';
 
 const sharedComponents: any[] = [
   UserAutocompleteComponent,
   TestComponent,
   TaskStatusComponent,
-  TeamAutocompleteComponent,
+  TeamDropdownComponent,
 ];
 
 @NgModule({
