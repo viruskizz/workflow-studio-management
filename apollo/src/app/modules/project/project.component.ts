@@ -3,6 +3,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { ProjectService } from 'src/app/services/project.service';
 import { Project } from 'src/app/models/project.model';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: './project.component.html',
@@ -24,6 +25,7 @@ export class ProjectComponent implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private projectService: ProjectService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -62,6 +64,10 @@ export class ProjectComponent implements OnInit {
   deleteProject(project: Project) {
     this.deleteProjectDialog = true;
     this.project = { ...project };
+  }
+
+  onRowClick(project: Project) {
+    this.router.navigate(['projects', project.id])
   }
 
   confirmDelete() {

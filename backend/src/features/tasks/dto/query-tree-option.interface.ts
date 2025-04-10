@@ -1,6 +1,10 @@
-import { IsNumberString, IsOptional } from 'class-validator';
+import { IsBooleanString, IsNumberString, IsOptional } from 'class-validator';
 
 export class QueryTreeOptionInterface {
+  @IsOptional()
+  @IsBooleanString()
+  all?: boolean;
+
   @IsOptional()
   @IsNumberString()
   parentId?: number;

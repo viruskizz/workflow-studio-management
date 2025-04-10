@@ -1,0 +1,22 @@
+
+<label *ngIf="isShowLabel" for="team-autocomplete">{{labelFor}}</label>
+<p-dropdown
+    [options]="options"
+    [(ngModel)]="selectedTeam"
+    [loading]="true"
+    (onChange)="onSelect($event)"
+    optionLabel="name"
+    placeholder="Select a Team">
+    <ng-template let-team let-i="index" pTemplate="item">
+        <div class="flex items-center gap-2">
+            <p-avatar [image]="team?.imageUrl" size="normal" styleClass="mr-2" shape="circle" (onImageError)="onImageError($event, i)"/>
+            <div>{{ team.name }}</div>
+        </div>
+    </ng-template>
+    <ng-template let-team pTemplate="selectedItem">
+        <div class="flex align-items-center gap-2" *ngIf="selectedTeam">
+            <p-avatar [image]="team?.imageUrl" size="normal" styleClass="mr-2" shape="circle"/>
+            <div>{{ team.name }}</div>
+        </div>
+    </ng-template>
+</p-dropdown>

@@ -5,6 +5,7 @@ import { QueryOptionInterface } from '@backend/shared/decorators/query-option.de
 import { Task } from '@backend/typeorm';
 import { TaskType } from '@backend/typeorm/task.entity';
 import { Injectable } from '@nestjs/common';
+import { IsNull } from 'typeorm';
 
 @Injectable()
 export class ProjectTasksService {
@@ -19,24 +20,38 @@ export class ProjectTasksService {
   }
 
   async tree(projectId: number, options: QueryTreeOptionInterface) {
-    if (!options.parentId) {
-      return this.tasksService.getRepository().find({
-        where: {
-          projectId,
-          type: TaskType.EPIC,
-        },
-        relations: ['assignee'],
-      });
-    }
-    const parentTask = await this.tasksService.getRepository().findOneBy({
-      id: options.parentId,
-      projectId,
+    const treeRepo = this.tasksService.getTreeRepository();
+    const repo = this.tasksService.getRepository();
+    const root = repo.find({
+      where: {
+        projectId,
+        parentId: IsNull(),
+      },
+      relations: ['assignee'],
     });
-    return this.tasksService
-      .getTreeRepository()
-      .findDescendantsTree(parentTask, {
-        depth: options.depth,
-        relations: ['assignee'],
-      });
+    if (options.all) {
+      return root.then((parents) =>
+        Promise.all(
+          parents.map((parent) =>
+            treeRepo.findDescendantsTree(parent, { relations: ['assignee'] }),
+          ),
+        ),
+      );
+    }
+    if (!options.parentId) {
+      return root;
+    } else {
+      return repo
+        .findOneBy({
+          id: options.parentId,
+          projectId,
+        })
+        .then((parentTask) =>
+          treeRepo.findDescendantsTree(parentTask, {
+            depth: options.depth,
+            relations: ['assignee'],
+          }),
+        );
+    }
   }
 }

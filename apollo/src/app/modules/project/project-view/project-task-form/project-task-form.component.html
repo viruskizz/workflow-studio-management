@@ -1,0 +1,130 @@
+<p-dialog [(visible)]="visible" (onHide)="onHide()" [style]="{width: '450px'}"
+    [header]="task ? 'Edit' : 'Create' + ' Task'" [modal]="true" class="p-fluid">
+</p-dialog>
+
+<!-- <ng-template pTemplate="content"> -->
+<form [formGroup]="projectTaskForm">
+    <div class="card p-fluid">
+        <div>
+            <h5>Create Task</h5>
+            <div class="field">
+                <input pInputText id="title" placeholder="Title" type="text" formControlName="title"/>
+            </div>
+            <div class="field">
+                <input pInputText id="link" placeholder="Link: d://example.autocad" type="text" formControlName="link" />
+            </div>
+            <div class="field">
+                <img [src]="imagePreview" [alt]="'example'" width="150" class="w-2 block mb-3 shadow-2" *ngIf="imagePreview">
+                <p-fileUpload
+                    mode="basic"
+                    chooseLabel="Choose"
+                    chooseIcon="pi pi-upload"
+                    name="file"
+                    url="/upload"
+                    accept="image/*"
+                    [maxFileSize]="10000000"
+                    (onSelect)="onSelectImage($event)" />
+            </div>
+        </div>
+        <hr>
+        <h5>Properties</h5>
+        <div class="field grid">
+            <label htmlFor="status" class="col-12 mb-2 md:col-3 md:mb-0 gap-2">
+                <i class="pi pi-hourglass"></i>
+                <span>
+                    Status
+                </span>
+            </label>
+            <div class="col-12 md:col-9">
+                 <app-task-status [form]="projectTaskForm" controlName="status"/>
+            </div>
+        </div>
+        <div class="field grid">
+            <label htmlFor="start" class="col-12 mb-2 md:col-3 md:mb-0 gap-2">
+                <i class="pi pi-calendar"></i>
+                <span>
+                    Start Date
+                </span>
+            </label>
+            <div class="col-12 md:col-9">
+                <p-calendar 
+                    formControlName="date" 
+                    [iconDisplay]="'input'" 
+                    [showIcon]="true" 
+                    inputId="icondisplay" />
+            </div>
+        </div>
+        <div class="field grid">
+            <label htmlFor="team" class="col-12 mb-2 md:col-3 md:mb-0 gap-2">
+                <i class="pi pi-users"></i>
+                <span>
+                    Team
+                </span>
+            </label>
+            <div class="col-12 md:col-9">
+                <app-team-dropdown
+                    [form]="projectTaskForm"
+                    controlName="team"
+                    [isShowLabel]="false"/>
+            </div>
+        </div>
+        <div class="field grid">
+            <label htmlFor="assignee" class="col-12 mb-2 md:col-3 md:mb-0 gap-2">
+                <i class="pi pi-user"></i>
+                <span>
+                    Assignee
+                </span>
+            </label>
+            <div class="col-12 md:col-9">
+                <app-user-autocomplete
+                    [form]="projectTaskForm"
+                    controlName="assignee"
+                    [isShowLabel]="false"
+                    [multiple]="true"
+                    [dropdown]="true"
+                    [limit]=1
+            ></app-user-autocomplete>
+            </div>
+        </div>
+        <div class="field grid">
+            <label htmlFor="state" class="col-12 mb-2 md:col-3 md:mb-0 gap-2">
+                <i class="pi pi-compass"></i>
+                <span>
+                    State
+                </span>
+            </label>
+            <div class="col-12 md:col-9">
+                <input pInputText id="state" type="text" formControlName="state" />
+            </div>
+        </div>
+        <div class="field grid">
+            <label htmlFor="flow" class="col-12 mb-2 md:col-3 md:mb-0 gap-2">
+                <i class="pi pi-bolt"></i>
+                <span>
+                    Task Flow
+                </span>
+            </label>
+            <div class="col-12 md:col-9">
+                <input pInputText id="flow" type="text" formControlName="flow" />
+            </div>
+        </div>
+        <div class="field grid">
+            <label htmlFor="parent" class="col-12 mb-2 md:col-3 md:mb-0 gap-2">
+                <i class="pi pi-folder"></i>
+                <span>
+                    Change Parent
+                </span>
+            </label>
+            <div class="col-12 md:col-9">
+                <input pInputText id="parent" type="text" formControlName="parent" />
+            </div>
+        </div>
+        <hr>
+        <div>
+            <h5>Description</h5>
+            <p-editor [style]="{'height':'250px'}" formControlName="description"></p-editor>
+        </div>
+        <button pButton class="mt-4" label="Submit" (click)="onSave()"></button>
+    </div>
+</form>
+<!-- </ng-template> -->

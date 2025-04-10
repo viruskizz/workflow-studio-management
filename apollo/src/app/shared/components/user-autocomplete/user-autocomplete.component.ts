@@ -15,6 +15,7 @@ export class UserAutocompleteComponent implements OnInit {
 
   @Input({ required: true }) form: FormGroup = new FormGroup({});
   @Input({ required: true }) controlName: string = 'user';
+  @Input() isShowLabel: boolean = true
   @Input() labelFor = 'User'
   @Input() optionLabel = 'username'
   @Input() optionValue = 'id'
