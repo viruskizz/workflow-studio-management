@@ -6,10 +6,10 @@ files:
     destination: /home/admin/workflow-studio-management
 
 hooks:
-  ApplicationStop:
-    - location: scripts/codedeploy/application_stop.sh
-      timeout: 300
-      runas: root
+  # ApplicationStop:
+  #   - location: scripts/codedeploy/application_stop.sh
+  #     timeout: 300
+  #     runas: root
   BeforeInstall:
     - location: scripts/codedeploy/before_install.sh
       timeout: 300
