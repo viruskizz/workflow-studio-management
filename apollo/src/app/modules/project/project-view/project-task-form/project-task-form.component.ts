@@ -11,7 +11,7 @@ export class ProjectTaskFormComponent {
   @Input() task?: Task;
   @Output() taskChange = new EventEmitter<Task>();
   @Output() onCloseEvent = new EventEmitter<Task | null>();
-  @Input() visible: boolean = false;
+  @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
 
   imagePreview?: string = 'assets/images/noimage.jpg';

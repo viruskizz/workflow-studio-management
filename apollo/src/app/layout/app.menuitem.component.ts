@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, SimpleChanges, ViewChild, AfterViewChecked } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { animate, state, style, transition, trigger,AnimationEvent } from '@angular/animations';
 import { Subscription } from 'rxjs';
@@ -81,7 +81,7 @@ import {DomHandler} from 'primeng/dom';
         ])
     ]
 })
-export class AppMenuitemComponent implements OnInit, OnDestroy {
+export class AppMenuitemComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     @Input() item: any;
 
@@ -99,7 +99,7 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
 
     menuResetSubscription: Subscription;
 
-    key: string = "";
+    key = "";
 
     constructor(public layoutService: LayoutService, private cd: ChangeDetectorRef, public router: Router,private appSidebar: AppSidebarComponent, private menuService: MenuService) {
         this.menuSourceSubscription = this.menuService.menuSource$.subscribe(value => {
@@ -147,7 +147,7 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
     }
 
     updateActiveStateFromRoute() {
-        let activeRoute = this.router.isActive(this.item.routerLink[0], { paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' });
+        const activeRoute = this.router.isActive(this.item.routerLink[0], { paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' });
 
         if (activeRoute) {
             this.menuService.onMenuStateChange({key: this.key, routeEvent: true});
@@ -156,8 +156,8 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
     
     onSubmenuAnimated(event: AnimationEvent) {
         if (event.toState === 'visible' && this.layoutService.isDesktop() && (this.layoutService.isHorizontal() || this.layoutService.isSlim()|| this.layoutService.isSlimPlus())) {
-            const el = <HTMLUListElement> event.element;
-            const elParent = <HTMLUListElement> el.parentElement;
+            const el = event.element as HTMLUListElement;
+            const elParent = el.parentElement as HTMLUListElement;
             this.calculatePosition(el, elParent);
         }
     }

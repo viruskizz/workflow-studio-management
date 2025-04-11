@@ -9,21 +9,21 @@ export class ContactComponent {
 
     overlays: any[] = [];
 
-    dialogVisible: boolean = false;
+    dialogVisible = false;
 
-    markerTitle: string = '';
+    markerTitle = '';
 
     selectedPosition: any;
 
     infoWindow: any;
 
-    draggable: boolean = false;
+    draggable = false;
 
-    name: string = '';
+    name = '';
 
-    email: string = '';
+    email = '';
 
-    message: string = '';
+    message = '';
 
     content: any[] = [
         { icon: 'pi pi-fw pi-phone', title: 'Phone', info: '1 (833) 597-7538' },

@@ -9,7 +9,7 @@ import { Table } from 'primeng/table';
     templateUrl: './ecommerce.dashboard.component.html',
 })
 export class EcommerceDashboardComponent implements OnInit, OnDestroy {
-    knobValue: number = 90;
+    knobValue = 90;
 
     selectedWeek: any;
 
@@ -187,7 +187,7 @@ export class EcommerceDashboardComponent implements OnInit, OnDestroy {
     }
 
     onWeekChange() {
-        let newBarData = { ...this.barData };
+        const newBarData = { ...this.barData };
         newBarData.datasets[0].data = this.selectedWeek.data[0];
         newBarData.datasets[1].data = this.selectedWeek.data[1];
         this.barData = newBarData;

@@ -19,6 +19,7 @@ import { UserComponent } from './user.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { ImageModule } from 'primeng/image';
 
 @NgModule({
   imports: [
@@ -42,6 +43,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     DialogModule,
     InputGroupModule,
     InputGroupAddonModule,
+    ImageModule,
   ],
   declarations: [UserComponent, UserFormComponent]
 })

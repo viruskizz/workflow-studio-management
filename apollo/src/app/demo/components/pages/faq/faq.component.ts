@@ -7,7 +7,7 @@ export class FaqComponent implements OnInit {
 
     items: any[] = [];
 
-    activeIndex: number = 0;
+    activeIndex = 0;
 
     constructor() { }
 

@@ -6,9 +6,7 @@ import { ProductService } from 'src/app/demo/service/product.service';
 import { Table } from 'primeng/table';
 import { MessageService, ConfirmationService } from 'primeng/api';
 
-interface expandedRows {
-    [key: string]: boolean;
-}
+type expandedRows = Record<string, boolean>;
 
 @Component({
     templateUrl: './tabledemo.component.html',
@@ -38,11 +36,11 @@ export class TableDemoComponent implements OnInit {
 
     activityValues: number[] = [0, 100];
 
-    isExpanded: boolean = false;
+    isExpanded = false;
 
-    idFrozen: boolean = false;
+    idFrozen = false;
 
-    loading: boolean = true;
+    loading = true;
 
     @ViewChild('filter') filter!: ElementRef;
 

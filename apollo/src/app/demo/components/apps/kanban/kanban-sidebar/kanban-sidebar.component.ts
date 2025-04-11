@@ -18,7 +18,7 @@ export class KanbanSidebarComponent implements OnDestroy {
 
     formValue!: KanbanCard;
 
-    listId: string = '';
+    listId = '';
 
     filteredAssignees: Member[] = [];
 
@@ -28,13 +28,13 @@ export class KanbanSidebarComponent implements OnDestroy {
 
     newTask: Task = { text: '', completed: false };
 
-    comment: string = '';
+    comment = '';
 
-    taskContent: string = '';
+    taskContent = '';
 
     timeout: any = null;
 
-    showTaskContainer: boolean = false;
+    showTaskContainer = false;
 
     menuItems: MenuItem[] = [];
 
@@ -75,11 +75,11 @@ export class KanbanSidebarComponent implements OnDestroy {
     }
 
     filterAssignees(event: any) {
-        let filtered: Member[] = [];
-        let query = event.query;
+        const filtered: Member[] = [];
+        const query = event.query;
 
         for (let i = 0; i < this.assignees.length; i++) {
-            let assignee = this.assignees[i];
+            const assignee = this.assignees[i];
             if (assignee.name && assignee.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
                 filtered.push(assignee);
             }
@@ -125,7 +125,7 @@ export class KanbanSidebarComponent implements OnDestroy {
             return;
         }
         else if (!this.formValue.taskList) {
-            let id = this.kanbanService.generateId();
+            const id = this.kanbanService.generateId();
             this.formValue = { ...this.formValue, taskList: { id: id, title: 'Untitled Task List', tasks: []  } };
         }
     }
@@ -151,7 +151,7 @@ export class KanbanSidebarComponent implements OnDestroy {
 
     calculateProgress() {
         if(this.formValue.taskList) {
-            let completed = this.formValue.taskList.tasks.filter(t => t.completed).length;
+            const completed = this.formValue.taskList.tasks.filter(t => t.completed).length;
             this.formValue.progress = Math.round(100 * (completed / this.formValue.taskList.tasks.length));
         }
     }

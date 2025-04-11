@@ -15,7 +15,7 @@
         <img [src]="imagePreview" [alt]="team?.name" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="imagePreview">
         <div class="field">
           <label for="name">Team Name</label>
-          <input id="name" type="text" pInputText formControlName="name" required autofocus />
+          <input id="name" type="text" pInputText formControlName="name" required />
 
           <small class="p-error" *ngIf="isSubmitted && formControls['name'].errors?.['required']">
             Team name is required.

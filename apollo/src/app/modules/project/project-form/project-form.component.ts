@@ -20,7 +20,7 @@ export class ProjectFormComponent implements OnChanges, OnInit {
 
   @Output() onCloseEvent = new EventEmitter<Project | null>()
 
-  @Input() visible: boolean = false;
+  @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
 
   imagePreview?: string;

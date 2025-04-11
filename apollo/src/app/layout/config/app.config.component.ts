@@ -12,7 +12,7 @@ import {
     templateUrl: './app.config.component.html',
 })
 export class AppConfigComponent implements OnInit {
-    @Input() minimal: boolean = false;
+    @Input() minimal = false;
 
     componentThemes: any[] = [];
 

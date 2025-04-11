@@ -54,23 +54,23 @@ export class FileAppComponent implements OnInit {
 
         this.chartPlugins = [{
             beforeDraw: function (chart: any) {
-                let ctx = chart.ctx;
-                let width = chart.width;
-                let height = chart.height;
-                let fontSize = 1.50;
-                let oldFill = ctx.fillStyle;
+                const ctx = chart.ctx;
+                const width = chart.width;
+                const height = chart.height;
+                const fontSize = 1.50;
+                const oldFill = ctx.fillStyle;
 
                 ctx.restore();
                 ctx.font = fontSize + "rem sans-serif";
                 ctx.textBaseline = "middle";
 
-                let text = "Free Space";
-                let text2 = 50 + "GB / " + 80 + "GB";
-                let textX = Math.round((width - ctx.measureText(text).width) / 2);
-                let textY = (height + chart.chartArea.top) / 2.25;
+                const text = "Free Space";
+                const text2 = 50 + "GB / " + 80 + "GB";
+                const textX = Math.round((width - ctx.measureText(text).width) / 2);
+                const textY = (height + chart.chartArea.top) / 2.25;
 
-                let text2X = Math.round((width - ctx.measureText(text).width) / 2.10);
-                let text2Y = (height + chart.chartArea.top) / 1.75;
+                const text2X = Math.round((width - ctx.measureText(text).width) / 2.10);
+                const text2Y = (height + chart.chartArea.top) / 1.75;
 
                 ctx.fillStyle = chart.config.data.datasets[0].backgroundColor[0];
                 ctx.fillText(text, textX, textY);
