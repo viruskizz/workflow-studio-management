@@ -1,5 +1,5 @@
 #!/bin/bash
-source variable.sh
+source $(dirname $0)/variable.sh
 
 # Start Backend
 BACKEND_DIR=$CODEDEPLOY_PROJECT_DIR/$BACKEND_DIR
