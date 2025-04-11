@@ -1,5 +1,5 @@
 #!/bin/bash
-source variable.sh
+source $(dirname $0)/variable.sh
 
 # Configure .env
 cd $CODEDEPLOY_PROJECT_DIR
