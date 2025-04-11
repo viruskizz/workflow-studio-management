@@ -40,7 +40,7 @@ export class FileEntity extends BaseEntity {
   @ApiProperty({ example: 2000 })
   size: number;
 
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'json', nullable: true })
   @ApiProperty({ example: {} })
   metadata: any;
 

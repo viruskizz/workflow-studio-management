@@ -3,7 +3,7 @@ os: linux
 
 files:
   - source: backend
-    destination: /home/admin/workflow-backend
+    destination: /home/admin/workflow-studio-management
 
 hooks:
   ApplicationStop:
