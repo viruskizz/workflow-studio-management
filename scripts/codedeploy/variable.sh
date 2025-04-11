@@ -1,5 +1,6 @@
 #!/bin/bash
-CODEDEPLOY_PROJECT_DIR=/home/admin/workflow-studio-management
+WORKING_DIR=/home/admin/
+PROJECT_DIR=$WORKING_DIR/workflow-studio-management
 FRONTEND_DIR=apollo
 BACKEND_DIR=backend
 
