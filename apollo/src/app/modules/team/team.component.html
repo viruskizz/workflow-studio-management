@@ -4,8 +4,12 @@
       <p-toast></p-toast>
       <p-toolbar styleClass="mb-4">
         <ng-template pTemplate="right">
-          <button pButton pRipple label="New Team" icon="pi pi-plus" class="p-button-primary mr-2"
-            (click)="openNewTeamDialog()"></button>
+          <p-button
+            pRipple
+            label="New Team"
+            icon="pi pi-plus"
+            class="p-button-primary mr-2"
+            (click)="openNewTeamDialog()"/>
         </ng-template>
       </p-toolbar>
 
@@ -66,10 +70,16 @@
                 [severity]="team.projectActive ? 'success' : 'warning'"></p-tag>
             </td>
             <td>
-              <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning mr-2"
-                (click)="editTeam(team)"></button>
-              <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
-                (click)="deleteTeam(team)"></button>
+              <p-button
+                pRipple
+                icon="pi pi-pencil"
+                class="p-button-rounded p-button-warning mr-2"
+                (click)="editTeam(team)"/>
+              <p-button
+                pRipple
+                icon="pi pi-trash"
+                class="p-button-rounded p-button-danger"
+                (click)="deleteTeam(team)"/>
             </td>
           </tr>
         </ng-template>

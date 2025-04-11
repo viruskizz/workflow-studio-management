@@ -43,7 +43,7 @@
                 [multiple]="true"
                 [dropdown]="true"
                 [limit]=1
-            ></app-user-autocomplete>
+            />
             <div class="field">
                 <label for="cover">Cover</label>
                 <p-fileUpload
@@ -62,8 +62,18 @@
     </ng-template>
 
     <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="onCancel()"></button>
-        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="onSave()"></button>
+        <p-button
+            pRipple
+            label="Cancel"
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="onCancel()"/>
+        <p-button
+            pRipple
+            label="Save"
+            icon="pi pi-check"
+            class="p-button-text"
+            (click)="onSave()"/>
     </ng-template>
 
 </p-dialog>
