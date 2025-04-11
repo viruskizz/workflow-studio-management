@@ -31,7 +31,7 @@ jobs:
       - uses: actions/download-artifact@master
         with:
           name: dist-apollo-${{ github.sha }}
-          path: apollo/dist
+          path: apollo/dist/apollo-ng
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
