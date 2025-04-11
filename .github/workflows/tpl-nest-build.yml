@@ -29,10 +29,3 @@ jobs:
           echo '${{ secrets.NEST_ENVIRONMENT }}' > .env
       - name: Build
         run: npm run build
-      - name: Upload artifacts
-        uses: actions/upload-artifact@master
-        with:
-          name: dist-backend-${{ github.sha }}
-          path: |
-            backend/dist
-            backend/public
