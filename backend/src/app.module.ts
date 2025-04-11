@@ -16,11 +16,6 @@ import entities from './typeorm';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'mysql',
-        // host: configService.get('DB_HOST') || 'localhost',
-        // port: +configService.get<number>('DB_PORT') || 5432,
-        // username: configService.get('DB_USERNAME') || 'admin',
-        // password: configService.get('DB_PASSWORD') || '424242',
-        // database: configService.get('DB_NAME') || 'workflow',
         host: configService.get('MYSQL_HOST'),
         port: +configService.get<number>('MYSQL_PORT'),
         username: configService.get('MYSQL_USER'),
