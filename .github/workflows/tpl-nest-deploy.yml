@@ -6,7 +6,7 @@ on:
         type: string
 env:
   APP_NAME: workflow
-  APP_GROUP: backend
+  APP_GROUP: on-premise
   REPO: viruskizz/workflow-studio-management
 jobs:
   Deploy-NestJS:

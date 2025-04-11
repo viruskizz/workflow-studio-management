@@ -1,18 +1,15 @@
 #!/bin/bash
-source variable.sh
-
-# Configure .env
-cd $CODEDEPLOY_PROJECT_DIR
-cp /home/admin/.env.workflow .env
+source $(dirname $0)/variable.sh
 
 # Backend Configuration
-cd $CODEDEPLOY_PROJECT_DIR/$BACKEND_DIR
-cp ../.env .env
+cd $PROJECT_DIR/$BACKEND_DIR
+cp $WORKING_DIR/.env.workflow .env
 npm install
 npm run build
 
 # Frontend Configuration
-# cd $CODEDEPLOY_PROJECT_DIR/$BACKEND_DIR
-# cp ../.env .env
+# cd $PROJECT_DIR/$FRONTEND_DIR
 # npm install
-# npm run build
+# ng g environments
+# cp  $WORKING_DIR/.environment.workflow.ts src/environments/environment.development.ts
+# cp  $WORKING_DIR/.environment.workflow.ts src/environments/environment.ts
