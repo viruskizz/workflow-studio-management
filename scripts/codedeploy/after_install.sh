@@ -9,10 +9,10 @@ cp /home/admin/.env.workflow .env
 cd $CODEDEPLOY_PROJECT_DIR/$BACKEND_DIR
 cp ../.env .env
 npm install
-npm run build
+# npm run build
 
 # Frontend Configuration
-# cd $CODEDEPLOY_PROJECT_DIR/$BACKEND_DIR
-# cp ../.env .env
-# npm install
+cd $CODEDEPLOY_PROJECT_DIR/$FRONTEND_DIR
+cp ../.env .env
+npm install
 # npm run build

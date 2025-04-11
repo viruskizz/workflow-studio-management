@@ -1,7 +1,7 @@
 #!/bin/bash
 source $(dirname $0)/variable.sh
 
-set -e
+# set -e
 
 echo "PM2_FRONTEND_NAME=$PM2_FRONTEND_NAME"
 if [ ! -z "$(pm2 pid $PM2_FRONTEND_NAME)" ]; then
