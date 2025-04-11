@@ -1,7 +1,18 @@
 #!/bin/bash
-DIR=/home/admin/workflow-backend
+source variable.sh
 
-cd $DIR
-sudo npm install
+# Configure .env
+cd $CODEDEPLOY_PROJECT_DIR
 cp /home/admin/.env.workflow .env
+
+# Backend Configuration
+cd $CODEDEPLOY_PROJECT_DIR/$BACKEND_DIR
+cp ../.env .env
+npm install
 npm run build
+
+# Frontend Configuration
+# cd $CODEDEPLOY_PROJECT_DIR/$BACKEND_DIR
+# cp ../.env .env
+# npm install
+# npm run build

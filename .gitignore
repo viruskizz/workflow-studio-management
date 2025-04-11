@@ -13,3 +13,4 @@ journal.md
 /journal-asset
 
 .env
+.env.prod
