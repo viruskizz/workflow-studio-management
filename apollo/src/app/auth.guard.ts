@@ -37,6 +37,7 @@ export class AuthGuard implements CanActivate {
     return this.canActivate(next, state);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   checkAccess(route: ActivatedRouteSnapshot, url: any) {
     const accessRoles: string[] = route.data['roles'];
     const authRedirect: string[] = route.data['authRedirect'] || '/';

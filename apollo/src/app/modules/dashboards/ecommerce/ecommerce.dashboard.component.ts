@@ -35,7 +35,7 @@ export class EcommerceDashboardComponent implements OnInit, OnDestroy {
     ) {
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
-            .subscribe((config) => {
+            .subscribe(() => {
                 this.initCharts();
             });
     }

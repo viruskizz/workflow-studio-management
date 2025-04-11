@@ -97,7 +97,7 @@
     <app-project-form
       [(visible)]="projectDialog"
       [(project)]="project"
-      (onCloseEvent)="hideDialog($event)"/>
+      (closeEvent)="hideDialog($event)"/>
 
     <!-- Confirm Delete Dialog -->
     <p-dialog [(visible)]="deleteProjectDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">

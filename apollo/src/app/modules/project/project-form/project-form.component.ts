@@ -1,24 +1,22 @@
 import { FileService } from './../../../services/file.service';
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { FileSelectEvent, UploadEvent } from 'primeng/fileupload';
-import { EMPTY, map, Observable, of, switchMap, catchError } from 'rxjs';
-import { FileResponse } from 'src/app/models/file.model';
+import { FileSelectEvent } from 'primeng/fileupload';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { Project } from 'src/app/models/project.model';
 import { User } from 'src/app/models/user.model';
 import { ProjectService } from 'src/app/services/project.service';
-import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-project-form',
   templateUrl: './project-form.component.html',
 })
-export class ProjectFormComponent implements OnChanges, OnInit {
+export class ProjectFormComponent implements OnChanges {
   @Input() project?: Project;
   @Output() projectChange = new EventEmitter<Project>();
 
-  @Output() onCloseEvent = new EventEmitter<Project | null>()
+  @Output() closeEvent = new EventEmitter<Project | null>()
 
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
@@ -52,9 +50,6 @@ export class ProjectFormComponent implements OnChanges, OnInit {
     private fileService: FileService,
     private messageService: MessageService
   ) { }
-
-  ngOnInit(): void {
-  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['project']?.currentValue) {
@@ -97,7 +92,7 @@ export class ProjectFormComponent implements OnChanges, OnInit {
       key: this.projectForm.getRawValue().key?.toUpperCase(),
       description: this.projectForm.value.description!,
       status: this.projectForm.value.status!,
-      leaderId: this.projectForm.value.leader[0]?.id! || undefined,
+      leaderId: this.projectForm.value.leader[0]?.id || undefined,
     };
     this.isSubmited = true;
     // console.log('Body:', body);
@@ -108,7 +103,7 @@ export class ProjectFormComponent implements OnChanges, OnInit {
       next: res => {
         // console.log('Saved:', res);
         this.isSubmited = false;
-        this.onCloseEvent.emit(res)
+        this.closeEvent.emit(res)
         this.visible = false;
       },
       error: e => {
@@ -128,7 +123,7 @@ export class ProjectFormComponent implements OnChanges, OnInit {
 
   onHide() {
     if (!this.isSubmited) {
-      this.onCloseEvent.emit(null)
+      this.closeEvent.emit(null)
     }
     // Reset Everything
     this.visible = false;
@@ -167,7 +162,7 @@ export class ProjectFormComponent implements OnChanges, OnInit {
   private toUpdate(body: any): Observable<Project> {
     body.key = undefined;
     return this.projectService.patch(this.project!.id!, body).pipe(
-      map((v: any) => {
+      map(() => {
         this.project = {
           ...this.project,
           ...body,

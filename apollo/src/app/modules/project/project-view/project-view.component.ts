@@ -22,7 +22,7 @@ export class ProjectViewComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private projectService: ProjectService
-  ) {}
+  ){}
 
   ngOnInit() {
     const params = this.route.snapshot.params;
@@ -51,7 +51,7 @@ export class ProjectViewComponent implements OnInit {
     this.taskDialog = true;
   }
 
-  hideDialog(event: any) {
+  hideDialog() {
     this.taskDialog = false;
   }
 

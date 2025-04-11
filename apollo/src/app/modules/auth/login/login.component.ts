@@ -28,7 +28,7 @@ export class LoginComponent {
     const password = this.loginForm.value.password!;
     this.authService.signIn(username, password).subscribe({
       next: (v) => {
-        this.authService.saveLogin(v.access_token).subscribe(v => {
+        this.authService.saveLogin(v.access_token).subscribe(() => {
           this.router.navigate([''])
         });
       },

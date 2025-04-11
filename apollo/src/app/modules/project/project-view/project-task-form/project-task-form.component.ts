@@ -10,7 +10,7 @@ import { Task } from 'src/app/models/task.model';
 export class ProjectTaskFormComponent {
   @Input() task?: Task;
   @Output() taskChange = new EventEmitter<Task>();
-  @Output() onCloseEvent = new EventEmitter<Task | null>();
+  @Output() closeEvent = new EventEmitter<Task | null>();
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
 
@@ -31,16 +31,13 @@ export class ProjectTaskFormComponent {
     description: new FormControl('', []),
   })
 
-  constructor() { }
-
-
   onCancel() {
     this.visible = false;
   }
 
   onHide() {
     this.visible = false;
-    this.onCloseEvent.emit(null)
+    this.closeEvent.emit(null)
   }
 
   onUpload() {

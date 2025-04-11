@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, SimpleChanges, ViewChild, AfterViewChecked } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, ViewChild, AfterViewChecked } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { animate, state, style, transition, trigger,AnimationEvent } from '@angular/animations';
 import { Subscription } from 'rxjs';
@@ -120,7 +120,7 @@ export class AppMenuitemComponent implements OnInit, OnDestroy, AfterViewChecked
         });
 
         this.router.events.pipe(filter(event => event instanceof NavigationEnd))
-            .subscribe(params => {
+            .subscribe(() => {
                 if (this.isSlimPlus || this.isSlim || this.isHorizontal) {
                     this.active = false;
                 }
