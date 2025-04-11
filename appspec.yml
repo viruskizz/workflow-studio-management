@@ -12,16 +12,16 @@ hooks:
   ApplicationStop:
     - location: scripts/codedeploy/application_stop.sh
       timeout: 300
-      # runas: root
+      runas: root
   BeforeInstall:
     - location: scripts/codedeploy/before_install.sh
       timeout: 30
-      # runas: root
+      runas: root
   AfterInstall:
     - location: scripts/codedeploy/after_install.sh
       timeout: 300
-      # runas: root
+      runas: root
   ApplicationStart:
     - location: scripts/codedeploy/application_start.sh
       timeout: 300
-      # runas: root
+      runas: root
