@@ -41,8 +41,9 @@ clean: down
 	-docker rmi -f $$(docker images "workflow-studio-management*" | awk 'NR!=1 {print}' | awk '{print $$1}')
 
 fclean: clean
-	-sudo rm -rf frontend/.angular
-	-sudo rm -rf frontend/node_modules
+	-sudo rm -rf apollo/dist
+	-sudo rm -rf apollo/.angular
+	-sudo rm -rf apollo/node_modules
 	-sudo rm -rf backend/data
 	-sudo rm -rf backend/dist
 	-sudo rm -rf backend/node_modules
