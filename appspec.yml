@@ -1,4 +1,4 @@
-version: 0.1
+version: 0.0
 os: linux
 
 files:
@@ -12,7 +12,7 @@ hooks:
       # runas: root
   BeforeInstall:
     - location: scripts/codedeploy/before_install.sh
-      timeout: 300
+      timeout: 30
       # runas: root
   AfterInstall:
     - location: scripts/codedeploy/after_install.sh
