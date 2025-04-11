@@ -1,5 +1,5 @@
 APP_NAME=workflow
-APP_GROUP=backend
+APP_GROUP=onpremise
 REPO=viruskizz/workflow-studio-management
 COMMIT_ID=$1
 aws deploy create-deployment \
