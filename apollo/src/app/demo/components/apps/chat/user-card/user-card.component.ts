@@ -16,7 +16,7 @@ export class UserCardComponent implements OnInit {
     constructor(private chatService: ChatService) { }
 
     ngOnInit(): void {
-        let filtered = this.user.messages.filter(m => m.ownerId !== 123)
+        const filtered = this.user.messages.filter(m => m.ownerId !== 123)
         this.lastMessage = filtered[filtered.length - 1];
     }
 

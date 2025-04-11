@@ -5,7 +5,12 @@
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="right">
                     <div class="my-2">
-                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="createUser()"></button>
+                        <p-button
+                            pRipple
+                            label="New"
+                            icon="pi pi-plus"
+                            class="p-button-success mr-2"
+                            (click)="createUser()"/>
                     </div>
                 </ng-template>
             </p-toolbar>
@@ -31,13 +36,13 @@
                         <th></th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-user>
+                <ng-template pTemplate="body" let-user let-idx="rowIndex">
                     <tr>
                         <td style="min-width:5rem;"><span class="p-column-title">ID</span>
                             {{ user?.id }}
                         </td>
                         <td><span class="p-column-title">Avatar</span>
-                            <img [src]="user?.imageUrl" [alt]="user?.username" width="100" class="shadow-4" />
+                            <p-image [src]="user?.imageUrl" [alt]="user?.username" width="100" (onImageError)="onImageError(idx)" />
                         </td>
 
                         <td style=" min-width:10rem;">
@@ -53,8 +58,16 @@
                         </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editUser(user)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteUser(user)"></button>
+                                <p-button
+                                    pRipple
+                                    icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mr-2"
+                                    (click)="editUser(user)"/>
+                                <p-button
+                                    pRipple
+                                    icon="pi pi-trash"
+                                    class="p-button-rounded p-button-warning"
+                                    (click)="deleteUser(user)"/>
                             </div>
                         </td>
                     </tr>
@@ -71,8 +84,18 @@
                 <span *ngIf="user">Are you sure you want to delete <b>{{user.username}}</b>?</span>
             </div>
             <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteUserDialog = false"></button>
-                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+                <p-button
+                    pRipple
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    label="No"
+                    (click)="deleteUserDialog = false"/>
+                <p-button
+                    pRipple
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    label="Yes"
+                    (click)="confirmDelete()"/>
             </ng-template>
         </p-dialog>
     </div>

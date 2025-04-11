@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TreeNode } from 'primeng/api';
 import { TreeTable } from 'primeng/treetable';
@@ -9,7 +9,7 @@ import { ProjectService } from 'src/app/services/project.service';
   selector: 'app-project-view',
   templateUrl: './project-view.component.html',
 })
-export class ProjectViewComponent {
+export class ProjectViewComponent implements OnInit {
 
   files2: TreeNode<any> | TreeNode<any>[] | any[] | any;
   tasks: TreeNode<Task> | TreeNode<Task>[] | Task[] | any = [];
@@ -22,7 +22,7 @@ export class ProjectViewComponent {
   constructor(
     private route: ActivatedRoute,
     private projectService: ProjectService
-  ) {}
+  ){}
 
   ngOnInit() {
     const params = this.route.snapshot.params;
@@ -51,7 +51,7 @@ export class ProjectViewComponent {
     this.taskDialog = true;
   }
 
-  hideDialog(event: any) {
+  hideDialog() {
     this.taskDialog = false;
   }
 

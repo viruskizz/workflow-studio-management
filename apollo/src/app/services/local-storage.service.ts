@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class LocalStorageService {
-  constructor() { }
 
   static list(): any {
     return { ...localStorage };
@@ -17,6 +16,7 @@ export class LocalStorageService {
       const data = JSON.parse(value);
       return data;
     } catch (e) {
+      console.error(e);
       return value;
     }
   }
@@ -27,6 +27,7 @@ export class LocalStorageService {
       const data = JSON.stringify(value);
       localStorage.setItem(key, data);
     } catch (e) {
+      console.error(e);
       localStorage.setItem(key, value);
     }
   }

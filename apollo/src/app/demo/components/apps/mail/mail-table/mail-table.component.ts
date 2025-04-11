@@ -19,7 +19,7 @@ export class MailTableComponent implements OnInit {
 
     mail: Mail = {};
 
-    dialogVisible: boolean = false;
+    dialogVisible = false;
 
     constructor(private router: Router, private mailService: MailService, private messageService: MessageService) { }
 

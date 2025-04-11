@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { User } from 'src/app/models/user.model';
@@ -14,15 +14,15 @@ export class UserAutocompleteComponent implements OnInit {
   filteredUsers: Partial<User>[] = []
 
   @Input({ required: true }) form: FormGroup = new FormGroup({});
-  @Input({ required: true }) controlName: string = 'user';
-  @Input() isShowLabel: boolean = true
+  @Input({ required: true }) controlName = 'user';
+  @Input() isShowLabel = true
   @Input() labelFor = 'User'
   @Input() optionLabel = 'username'
   @Input() optionValue = 'id'
-  @Input() multiple: boolean = false
+  @Input() multiple = false
   @Input() limit: number | null = null;  // Changed to allow null for no limit
   @Input() unique = true;
-  @Input() dropdown: boolean = false
+  @Input() dropdown = false
 
   constructor(private userService: UserService) {}
 

@@ -35,7 +35,7 @@ export class KanbanService {
 
     private updateLists(data: any[]) {
         this._lists = data;
-        let small = data.map(l => ({listId: l.listId, title: l.title}));
+        const small = data.map(l => ({listId: l.listId, title: l.title}));
 
         this.listNames.next(small)
         this.lists.next(data);
@@ -65,7 +65,7 @@ export class KanbanService {
     }
 
     updateCard(card: KanbanCard, listId: string) {
-        let lists = this._lists.map(l => l.listId === listId ? ({...l, cards: l.cards.map(c => c.id === card.id ? {...card} : c)}) : l);
+        const lists = this._lists.map(l => l.listId === listId ? ({...l, cards: l.cards.map(c => c.id === card.id ? {...card} : c)}) : l);
         this.updateLists(lists);
     }
 
@@ -75,18 +75,18 @@ export class KanbanService {
     }
 
     copyList(list: KanbanList) {
-        let newId = this.generateId();
-        let newList = {...list, listId: newId};
+        const newId = this.generateId();
+        const newList = {...list, listId: newId};
 
         this._lists.push(newList);
         this.lists.next(this._lists);
     }
 
     deleteCard(cardId: string, listId: string) {
-        let lists = [];
+        const lists = [];
 
         for (let i = 0; i < this._lists.length; i++) {
-            let list = this._lists[i];
+            const list = this._lists[i];
 
             if (list.listId === listId && list.cards) {
                 list.cards = list.cards.filter(c => c.id !== cardId);
@@ -99,15 +99,15 @@ export class KanbanService {
     }
 
     copyCard(card: KanbanCard, listId: string) {
-        let lists = [];
+        const lists = [];
 
         for (let i = 0; i < this._lists.length; i++) {
-            let list = this._lists[i];
+            const list = this._lists[i];
 
             if (list.listId === listId && list.cards) {
-                let cardIndex = list.cards.indexOf(card);
-                let newId = this.generateId();
-                let newCard = {...card, id: newId};
+                const cardIndex = list.cards.indexOf(card);
+                const newId = this.generateId();
+                const newCard = {...card, id: newId};
                 list.cards.splice(cardIndex, 0, newCard);
             }
 
@@ -120,7 +120,7 @@ export class KanbanService {
     moveCard(card: KanbanCard, targetListId: string, sourceListId: string) {
         if (card.id) {
             this.deleteCard(card.id, sourceListId);
-            let lists = this._lists.map(l => l.listId === targetListId ? ({...l, cards: [...l.cards || [], card]}) : l);
+            const lists = this._lists.map(l => l.listId === targetListId ? ({...l, cards: [...l.cards || [], card]}) : l);
             this.updateLists(lists);
         }
     }
@@ -132,9 +132,9 @@ export class KanbanService {
 
     generateId() {
         let text = "";
-        let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-        for (var i = 0; i < 5; i++) {
+        for (let i = 0; i < 5; i++) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
 

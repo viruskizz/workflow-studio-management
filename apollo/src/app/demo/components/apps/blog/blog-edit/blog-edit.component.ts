@@ -11,12 +11,12 @@ export class BlogEditComponent {
 
     image: any;
 
-    objectURL: string = '';
+    objectURL = '';
 
     tags: string[] = ['Software', 'Web'];
 
     onUpload(event: any) {
-        let file = event.files[0];
+        const file = event.files[0];
         file.objectURL = file.objectURL ? file.objectURL : this.objectURL;
 
         if (!file.objectURL) {

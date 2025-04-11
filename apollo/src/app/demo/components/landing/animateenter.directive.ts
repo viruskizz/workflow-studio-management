@@ -12,9 +12,9 @@ export class AnimateEnterDirective implements OnInit, AfterViewInit, OnDestroy {
 
     loadListener: Function = () => { };
 
-    entered: boolean = false;
+    entered = false;
 
-    @HostBinding('class.visibility-hidden') visibilityHidden: boolean = true;
+    @HostBinding('class.visibility-hidden') visibilityHidden = true;
 
     constructor(public el: ElementRef, public renderer: Renderer2) { }
 
@@ -53,9 +53,9 @@ export class AnimateEnterDirective implements OnInit, AfterViewInit, OnDestroy {
     }
 
     isInViewPort() {
-        let rect = this.el.nativeElement.parentElement.parentElement.parentElement.getBoundingClientRect();
-        let docElement = document.documentElement;
-        let winHeight = docElement.clientHeight;
+        const rect = this.el.nativeElement.parentElement.parentElement.parentElement.getBoundingClientRect();
+        const docElement = document.documentElement;
+        const winHeight = docElement.clientHeight;
 
         if (rect.top > 0) {
             return (rect.top >= 0 && winHeight >= rect.top);

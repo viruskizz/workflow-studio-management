@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
 })
 export class ProductListComponent {
 
-    color1: string = 'Bluegray';
+    color1 = 'Bluegray';
 
     products =  [
         {

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Team } from 'src/app/models/team.model';
 import { TeamService } from 'src/app/services/team.service';
@@ -8,13 +8,13 @@ import { getDefaultAvatar } from 'src/app/utils';
   selector: 'app-team-dropdown',
   templateUrl: './team-dropdown.component.html',
 })
-export class TeamDropdownComponent {
+export class TeamDropdownComponent implements OnInit {
   options: Partial<Team>[] = []
   selectedTeam: Team | undefined;
 
   @Input({ required: true }) form!: FormGroup;
   @Input({ required: true }) controlName!: string;
-  @Input() isShowLabel: boolean = true
+  @Input() isShowLabel = true
   @Input() labelFor = 'Team'
   loading = false
 

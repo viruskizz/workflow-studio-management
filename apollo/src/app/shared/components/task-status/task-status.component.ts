@@ -1,5 +1,5 @@
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
-import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR, NgModel } from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-task-status',
@@ -8,11 +8,9 @@ import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR, NgModel } from '@an
 export class TaskStatusComponent {
   @Input() label = 'title'
   @Input() selectedStatus!: TaskStatus
-  @Output() onSelectedStatusChanged = new EventEmitter<TaskStatus>()
+  @Output() selectedStatusChanged = new EventEmitter<TaskStatus>()
   @Input({ required: true }) form!: FormGroup;
   @Input({ required: true }) controlName!: string;
-
-  propagateChange = (_: any) => {};
 
   statuses: TaskStatusDropdownItem[] = [
     {id: 1, title: 'TODO', value: 'TODO'},
@@ -27,7 +25,7 @@ export class TaskStatusComponent {
 
 export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
 
-export type TaskStatusDropdownItem = {
+export interface TaskStatusDropdownItem {
   id: number;
   title: TaskStatus;
   value: string;

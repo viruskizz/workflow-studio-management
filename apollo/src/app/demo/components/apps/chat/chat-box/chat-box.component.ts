@@ -10,11 +10,11 @@ import { ChatService } from '../service/chat.service';
 })
 export class ChatBoxComponent implements OnInit {
 
-    defaultUserId: number = 123;
+    defaultUserId = 123;
 
     message!: Message;
 
-    textContent: string = '';
+    textContent = '';
 
     uploadedFiles: any[] = [];
 
@@ -30,7 +30,7 @@ export class ChatBoxComponent implements OnInit {
 
     setMessage() {
         if (this.user) {
-            let filteredMessages = this.user.messages.filter(m => m.ownerId !== this.defaultUserId);
+            const filteredMessages = this.user.messages.filter(m => m.ownerId !== this.defaultUserId);
             this.message = filteredMessages[filteredMessages.length - 1];
         }
     }
@@ -44,7 +44,7 @@ export class ChatBoxComponent implements OnInit {
             return;
         }
         else {
-            let message = {
+            const message = {
                 text: this.textContent,
                 ownerId: 123,
                 createdAt: new Date().getTime(),

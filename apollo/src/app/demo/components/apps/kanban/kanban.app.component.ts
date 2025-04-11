@@ -10,7 +10,7 @@ import { KanbanService } from './service/kanban.service';
 })
 export class KanbanAppComponent implements OnInit, OnDestroy {
 
-    sidebarVisible: boolean = false;
+    sidebarVisible = false;
 
     lists: KanbanList[] = [];
 
@@ -20,7 +20,7 @@ export class KanbanAppComponent implements OnInit, OnDestroy {
 
     style!: HTMLStyleElement;
 
-    isMobileDevice: boolean = false;
+    isMobileDevice = false;
 
     constructor(private kanbanService: KanbanService) {
         this.subscription = this.kanbanService.lists$.subscribe(data => {
