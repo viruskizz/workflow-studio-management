@@ -1,5 +1,5 @@
 #!/bin/bash
-WORKING_DIR=/home/admin
+WORKING_DIR=/usr/src/app
 PROJECT_DIR=$WORKING_DIR/workflow-studio-management
 FRONTEND_DIR=apollo
 BACKEND_DIR=backend

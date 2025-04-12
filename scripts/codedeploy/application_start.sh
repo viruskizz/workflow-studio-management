@@ -7,6 +7,6 @@ pm2 start $BACKEND_DIR/dist/main.js -n $PM2_BACKEND_NAME
 
 
 # Start Frontend
-# FRONTEND_DIR=$PROJECT_DIR/$FRONTEND_DIR
-# cd $FRONTEND_DIR
-# pm2 start "ng serve --host 0.0.0.0 --port 4200" -n $PM2_FRONTEND_NAME
+FRONTEND_DIR=$PROJECT_DIR/$FRONTEND_DIR
+cd $FRONTEND_DIR
+pm2 start "ng serve --host 0.0.0.0 --port 4200" -n $PM2_FRONTEND_NAME

@@ -3,9 +3,9 @@ os: linux
 
 files:
   - source: apollo
-    destination: /home/admin/workflow-studio-management/apollo
+    destination: /usr/src/app/workflow-studio-management/apollo
   - source: backend
-    destination: /home/admin/workflow-studio-management/backend
+    destination: /usr/src/app/workflow-studio-management/backend
 file_exists_behavior: OVERWRITE
 
 hooks:

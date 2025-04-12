@@ -8,8 +8,8 @@ npm install
 npm run build
 
 # Frontend Configuration
-# cd $PROJECT_DIR/$FRONTEND_DIR
-# npm install
-# ng g environments
-# cp  $WORKING_DIR/.environment.workflow.ts src/environments/environment.development.ts
-# cp  $WORKING_DIR/.environment.workflow.ts src/environments/environment.ts
+cd $PROJECT_DIR/$FRONTEND_DIR
+npm install
+ng g environments
+cp  $WORKING_DIR/.environment.workflow.ts src/environments/environment.development.ts
+cp  $WORKING_DIR/.environment.workflow.ts src/environments/environment.ts

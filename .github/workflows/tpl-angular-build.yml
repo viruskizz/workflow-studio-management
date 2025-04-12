@@ -34,7 +34,7 @@ jobs:
           echo "${{ secrets.ANGULAR_ENVIRONMENT }}" > src/environments/environment.development.ts
       - name: Build
         run: npm run build
-      - uses: actions/upload-artifact@master
-        with:
-          name: dist-apollo-${{ github.sha }}
-          path: apollo/dist/apollo-ng
+      # - uses: actions/upload-artifact@master
+      #   with:
+      #     name: dist-apollo-${{ github.sha }}
+      #     path: apollo/dist/apollo-ng
