@@ -11,5 +11,5 @@ npm run build
 cd $PROJECT_DIR/$FRONTEND_DIR
 npm install
 ng g environments
-cp  $WORKING_DIR/.environment.workflow.ts src/environments/environment.development.ts
 cp  $WORKING_DIR/.environment.workflow.ts src/environments/environment.ts
+npm run build:prod
