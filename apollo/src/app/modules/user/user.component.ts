@@ -12,8 +12,8 @@ import { Router } from '@angular/router';
 })
 export class UserComponent implements OnInit {
   // Table config
-  cols: any[] = [];
-  statuses: any[] = [];
+  cols: { field: string; header: string }[] = [];
+  statuses: { label: string; value: string }[] = [];
   rowsPerPageOptions = [5, 10, 20];
 
   // Data config
@@ -82,7 +82,7 @@ export class UserComponent implements OnInit {
 
   // }
 
-  hideDialog(event: any) {
+  hideDialog(event: User | null) {
     this.userDialog = false;
     if (event && this.user?.id) {
       // Edited 

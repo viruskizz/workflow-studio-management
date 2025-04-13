@@ -59,7 +59,7 @@
                             <span>{{user?.role || 'Role Not Assigned'}}</span>
                         </td>
                         <td>
-                            <div class="flex" (click)="$event.stopPropagation()">
+                            <div class="flex" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="0">
                                 <p-button pRipple icon="pi pi-eye" class="p-button-rounded p-button-info mr-2"
                                     (click)="navigateToUserProfile(user)" />
                                 <p-button pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
@@ -71,7 +71,7 @@
             </p-table>
         </div>
 
-        <app-user-form [(visible)]="userDialog" [(user)]="user" (onCloseEvent)="hideDialog($event)"></app-user-form>
+        <app-user-form [(visible)]="userDialog" [(user)]="user" (closeEvent)="hideDialog($event)"></app-user-form>
 
         <!-- Confirm Delete Dialog -->
         <!-- <p-dialog [(visible)]="deleteUserDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">

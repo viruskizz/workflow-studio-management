@@ -23,13 +23,13 @@ export class TeamService {
   }
 
   getTeamMembers(id: number): Observable<User[]> {
-    return this.httpClient.get<any[]>(`${this.baseUrl}/${id}/members`).pipe(
+    return this.httpClient.get<{user: User}[]>(`${this.baseUrl}/${id}/members`).pipe(
       map(members => members.map(member => member.user))
     );
   }
 
-  deleteTeam(id: number): Observable<any> {
-    return this.httpClient.delete<any>(`${this.baseUrl}/${id}`);
+  deleteTeam(id: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.baseUrl}/${id}`);
   }
 
   createTeam(team: Partial<Team>): Observable<Team> {
@@ -68,13 +68,13 @@ export class TeamService {
     );
   }
 
-  private performMemberUpdates(teamId: number, currentMembers: User[], newMembers: User[]): Observable<any> {
+  private performMemberUpdates(teamId: number, currentMembers: User[], newMembers: User[]): Observable<unknown> {
     const removeMemberRequests = this.createRemoveMemberRequests(teamId, currentMembers, newMembers);
     const addMemberRequests = this.createAddMemberRequests(teamId, currentMembers, newMembers);
     return forkJoin([...removeMemberRequests, ...addMemberRequests]);
   }
 
-  private createRemoveMemberRequests(teamId: number, currentMembers: User[], newMembers: User[]): Observable<any>[] {
+  private createRemoveMemberRequests(teamId: number, currentMembers: User[], newMembers: User[]): Observable<unknown>[] {
     return currentMembers.filter(currentMember => !newMembers.some(m => m.id === currentMember.id))
       .map(memberToRemove => {
         if (memberToRemove.id !== undefined) {
@@ -84,7 +84,7 @@ export class TeamService {
       });
   }
 
-  private createAddMemberRequests(teamId: number, currentMembers: User[], newMembers: User[]): Observable<any>[] {
+  private createAddMemberRequests(teamId: number, currentMembers: User[], newMembers: User[]): Observable<unknown>[] {
     return newMembers
       .filter(member => !currentMembers.some(cm => cm.id === member.id))
       .map(memberToAdd => {
@@ -107,16 +107,16 @@ export class TeamService {
     );
   }
 
-  addMemberToTeam(teamId: number, userId: number): Observable<any> {
+  addMemberToTeam(teamId: number, userId: number): Observable<unknown> {
     return this.httpClient.post(`${this.baseUrl}/${teamId}/members`, { userId });
   }
 
-  removeMemberFromTeam(teamId: number, userId: number): Observable<any> {
+  removeMemberFromTeam(teamId: number, userId: number): Observable<unknown> {
     return this.httpClient.delete(`${this.baseUrl}/${teamId}/members`, { body: { userId } });
   }
 
   private handleError(operation = 'operation') {
-    return (error: any): Observable<never> => {
+    return (error: unknown): Observable<never> => {
       console.error(`${operation}:`, error);
       throw error;
     };
