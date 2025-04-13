@@ -1,4 +1,4 @@
-version: "3.x"
+version: "3.8"
 
 services:
   frontend:
@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     command: ng serve --host 0.0.0.0
     volumes:
-      - ./frontend:/usr/src/app  # for dev
+      - ./apollo:/usr/src/app  # for dev
       - .env:/usr/src/app/.env
     restart: unless-stopped
     ports:
@@ -32,6 +32,24 @@ services:
       - .env:/usr/src/app/.env
       - ./backend:/usr/src/app
     restart: unless-stopped
+    depends_on:
+      - database
 
+  # mysql
+  database:
+    container_name: mysql
+    image: mysql:8.4.4
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+    ports:
+      - "3306:3306"
+    networks:
+      - main
+    volumes:
+      - ./database/data:/var/lib/mysql
+    restart: always
 networks:
   main:
