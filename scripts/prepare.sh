@@ -8,7 +8,7 @@ git clone \
     -b main \
     https://github.com/viruskizz/workflow-studio-management.git
 
-# Install MySQL
+# Install MySQL version 8.4.4
 wget https://dev.mysql.com/get/mysql-apt-config_0.8.33-1_all.deb
 sudo dpkg -i mysql-apt-config_0.8.33-1_all.deb
 sudo apt update
