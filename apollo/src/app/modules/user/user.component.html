@@ -38,7 +38,7 @@
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-user let-idx="rowIndex">
-                    <tr [routerLink]="['/users', user.id]">
+                    <tr >
                         <td style="min-width:5rem;"><span class="p-column-title">ID</span>
                             {{ user?.id }}
                         </td>
@@ -56,14 +56,14 @@
                             {{user?.firstName + ' ' + user?.lastName}}
                         </td>
                         <td style="min-width: 7rem;"><span class="p-column-title">Role</span>
-                            <!-- <span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span> -->
+                            <span>{{user?.role || 'Role Not Assigned'}}</span>
                         </td>
                         <td>
-                            <div class="flex">
+                            <div class="flex" (click)="$event.stopPropagation()">
+                                <p-button pRipple icon="pi pi-eye" class="p-button-rounded p-button-info mr-2"
+                                    (click)="navigateToUserProfile(user)" />
                                 <p-button pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
                                     (click)="editUser(user)" />
-                                <p-button pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-                                    (click)="deleteUser(user)" />
                             </div>
                         </td>
                     </tr>
@@ -74,7 +74,7 @@
         <app-user-form [(visible)]="userDialog" [(user)]="user" (onCloseEvent)="hideDialog($event)"></app-user-form>
 
         <!-- Confirm Delete Dialog -->
-        <p-dialog [(visible)]="deleteUserDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+        <!-- <p-dialog [(visible)]="deleteUserDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
                 <span *ngIf="user">Are you sure you want to delete <b>{{user.username}}</b>?</span>
@@ -84,6 +84,6 @@
                     (click)="deleteUserDialog = false" />
                 <p-button pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()" />
             </ng-template>
-        </p-dialog>
+        </p-dialog> -->
     </div>
 </div>

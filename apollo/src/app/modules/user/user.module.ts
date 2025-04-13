@@ -19,12 +19,15 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { FieldsetModule } from 'primeng/fieldset';
 import { CardModule } from 'primeng/card';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { UserComponent } from './user.component';
 import { UserRoutingModule } from './user-routing.module';
 import { UserFormComponent } from './user-form/user-form.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ImageModule } from 'primeng/image';
+import { TagModule } from 'primeng/tag';
+import { AvatarModule } from 'primeng/avatar';
 
 @NgModule({
   imports: [
@@ -51,6 +54,10 @@ import { ImageModule } from 'primeng/image';
     FieldsetModule,
     CardModule,
     ImageModule,
+    ProgressSpinnerModule,
+    TagModule,
+    AvatarModule
+
   ],
   declarations: [UserComponent, UserFormComponent, UserProfileComponent]
 })

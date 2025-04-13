@@ -1,3 +1,5 @@
+import { User } from "./user.model";
+
 export interface ProjectMetadata {
   last: number;
 }
@@ -11,6 +13,8 @@ export interface Project {
   category: string;
   key: string;
   metadata: ProjectMetadata;
+  leaderId: number;
+  leader?: User;
   createdAt: string; 
   updatedAt: string;
 }
