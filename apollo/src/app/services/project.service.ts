@@ -2,7 +2,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Project } from '../models/project.model';
-import { Task } from '../models/task.model';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +32,7 @@ export class ProjectService {
 
   listTasks(id: number) {
     const url = `${this.baseUrl}/${id}/tasks/tree`;
-    return this.httpClient.get<Task[]>(url);
+    return this.httpClient.get<any>(url);
   }
 
   listTaskTrees(id: number, parentId?: number, depth?: number) {
@@ -47,7 +46,7 @@ export class ProjectService {
     if (depth) {
       params = params.set('depth', depth);
     }
-    return this.httpClient.get<Task[]>(url, {
+    return this.httpClient.get<any>(url, {
       params
     });
   }
