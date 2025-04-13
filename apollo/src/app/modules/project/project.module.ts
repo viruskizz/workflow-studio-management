@@ -33,6 +33,8 @@ import { ProjectTaskFormComponent } from './project-view/project-task-form/proje
 import { CalendarModule } from 'primeng/calendar';
 import { ProjectTreeTableViewComponent } from './project-view/project-tree-table-view/project-tree-table-view.component';
 import { TabMenuModule } from 'primeng/tabmenu';
+import { SidebarModule } from 'primeng/sidebar';
+import { InplaceModule } from 'primeng/inplace';
 
 @NgModule({
   imports: [
@@ -65,6 +67,8 @@ import { TabMenuModule } from 'primeng/tabmenu';
     EditorModule,
     TabMenuModule,
     CalendarModule,
+    SidebarModule,
+    InplaceModule,
   ],
   declarations: [
     ProjectComponent,

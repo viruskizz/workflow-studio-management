@@ -1,5 +1,8 @@
 <div class="card">
   <p-tabMenu [model]="items" [activeItem]="activeItem" (activeItemChange)="onActivePageChange($event)"/>
-  <app-project-tree-table-view *ngIf="activeItem?.id === 'table'" />
+  <app-project-tree-table-view
+    *ngIf="activeItem?.id === 'table'"
+    [(tasking)]="tasking"
+  />
 </div>
-<app-project-task-form [(visible)]="taskDialog" [(task)]="task" (closeEvent)="hideDialog()" />
+<app-project-task-form [(task)]="tasking" />

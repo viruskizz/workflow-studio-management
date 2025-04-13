@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TreeNode } from 'primeng/api';
 import { TreeTable } from 'primeng/treetable';
@@ -16,8 +16,8 @@ export class ProjectTreeTableViewComponent implements OnInit {
   cols: any[] = [];
   projectId?: number;
 
-  taskDialog = false;
-  task?: Task;
+  @Input() tasking: Partial<Task> | undefined;
+  @Output() taskingChange = new EventEmitter<Partial<Task>>();
 
   constructor(
     private route: ActivatedRoute,
@@ -47,14 +47,6 @@ export class ProjectTreeTableViewComponent implements OnInit {
       table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 
-  createTask() {
-    this.taskDialog = true;
-  }
-
-  hideDialog() {
-    this.taskDialog = false;
-  }
-
   private mapTreesToNodes(tasks: TaskTree[]): TreeNode<Task>[] {
     const nodes: TreeNode<Task>[] = [];
     tasks.forEach(task => {
@@ -65,5 +57,10 @@ export class ProjectTreeTableViewComponent implements OnInit {
       });
     });
     return nodes;
+  }
+
+  onAddTask(task: Partial<Task>) {
+    this.tasking = task;
+    this.taskingChange.emit(task)
   }
 }

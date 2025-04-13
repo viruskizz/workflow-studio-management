@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FileSelectEvent } from 'primeng/fileupload';
 import { Task } from 'src/app/models/task.model';
@@ -7,12 +7,14 @@ import { Task } from 'src/app/models/task.model';
   selector: 'app-project-task-form',
   templateUrl: './project-task-form.component.html',
 })
-export class ProjectTaskFormComponent {
-  @Input() task?: Task;
+export class ProjectTaskFormComponent implements OnChanges {
+  @Input() task?: Partial<Task>;
   @Output() taskChange = new EventEmitter<Task>();
   @Output() closeEvent = new EventEmitter<Task | null>();
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
+
+  @ViewChild('inputTitle') inputTitle!: ElementRef;
 
   imagePreview?: string = 'assets/images/noimage.jpg';
   coverFile?: File;
@@ -29,15 +31,31 @@ export class ProjectTaskFormComponent {
     flow: new FormControl('', []),
     parent: new FormControl('', []),
     description: new FormControl('', []),
-  })
+  });
 
-  onCancel() {
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes)
+    if (changes['task'].currentValue) {
+      this.visible = true;
+    }
+  }
+
+  focus(field: string) {
+    if (field === 'inputTitle') {
+      setTimeout(() => this.inputTitle.nativeElement.focus(), 1);
+    }
+  }
+
+  close() {
+    this.task = undefined;
+    this.taskChange.emit(undefined);
     this.visible = false;
   }
 
   onHide() {
+    this.task = undefined;
+    this.taskChange.emit(undefined);
     this.visible = false;
-    this.closeEvent.emit(null)
   }
 
   onUpload() {
@@ -59,5 +77,6 @@ export class ProjectTaskFormComponent {
   onSave() {
     console.log(this.projectTaskForm)
     console.log(this.projectTaskForm.value)
+    this.visible = false;
   }
 }

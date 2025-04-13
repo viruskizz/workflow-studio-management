@@ -1,4 +1,4 @@
-<div class="field" [formGroup]="form">
+<form [formGroup]="form">
     <label *ngIf="isShowLabel" for="user-autocomplete">{{labelFor}}</label>
     <p-autoComplete
         #pAutocomplete
@@ -26,4 +26,4 @@
             <div>{{ user.username }}</div>
         </ng-template>
     </p-autoComplete>
-</div>
+</form>

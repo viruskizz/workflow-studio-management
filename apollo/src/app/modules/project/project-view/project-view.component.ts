@@ -7,9 +7,8 @@ import { Task } from 'src/app/models/task.model';
   templateUrl: './project-view.component.html',
 })
 export class ProjectViewComponent implements OnInit {
-  
-  taskDialog = false;
-  task?: Task;
+
+  tasking: Partial<Task> | undefined;
   items: MenuItem[] | undefined;
   activeItem: MenuItem | undefined;
 
@@ -19,10 +18,6 @@ export class ProjectViewComponent implements OnInit {
       { label: 'Board', icon: 'pi pi-chart-line', id: 'board' },
     ];
     this.activeItem = this.items[0]
-  }
-
-  hideDialog() {
-    this.taskDialog = false;
   }
   
   onActivePageChange(menuItem: MenuItem) {
