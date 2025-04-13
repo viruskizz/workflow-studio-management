@@ -1,32 +1,22 @@
-
 PWD := $(shell pwd)
 
-DEV_FILE="docker-compose.dev.yml"
-PROD_FILE="docker-compose.yml"
+FILE="docker-compose.yml"
 
-all: prod
+all: dev
 
-prod:
-	docker compose up --build --detach
-
-up-dev:
-	docker compose --file ${DEV_FILE} up --build --detach
+up: dev
 
 dev:
 	npm install --prefix apollo
 	npm install --prefix backend
-	docker compose --file ${DEV_FILE} up --build --detach
+	docker compose up --build --detach
 
-dev-backend:
+backend:
 	npm install --prefix backend
-	docker compose --file ${DEV_FILE} up --build --detach backend
+	docker compose up --build --detach backend
 
-seed-database:
+database:
 	cd database && npm install && npm run start
-
-re: clean prod
-
-re-dev: clean dev
 
 kill:
 	docker compose kill
@@ -50,4 +40,6 @@ fclean: clean
 	-sudo rm -rf database/data
 	-sudo rm -rf database/node_modules
 
-.PHONY: prod dev dev-frontend dev-backend dev-kill run-backend re-backend run-frontend all stop down re clean
+re: clean dev
+
+.PHONY: all up dev backend database kill stop down clean re
