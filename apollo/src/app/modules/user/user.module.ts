@@ -24,6 +24,7 @@ import { UserComponent } from './user.component';
 import { UserRoutingModule } from './user-routing.module';
 import { UserFormComponent } from './user-form/user-form.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { ImageModule } from 'primeng/image';
 
 @NgModule({
   imports: [
@@ -48,7 +49,8 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
     InputGroupModule,
     InputGroupAddonModule,
     FieldsetModule,
-    CardModule
+    CardModule,
+    ImageModule,
   ],
   declarations: [UserComponent, UserFormComponent, UserProfileComponent]
 })

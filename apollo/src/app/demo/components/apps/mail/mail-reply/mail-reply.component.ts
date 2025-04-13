@@ -25,16 +25,16 @@ export class MailReplyComponent {
         sent: true
     }
 
-    displayMessage: boolean = false;
+    displayMessage = false;
 
     @Input() content: Mail = {};
 
-    @Output() hide: EventEmitter<any> = new EventEmitter();
+    @Output() hide = new EventEmitter<any>();
 
     constructor(private messageService: MessageService, private mailService: MailService) { }
 
     sendMail() {
-        let { image, from, title } = this.content
+        const { image, from, title } = this.content
         this.newMail = { ...this.newMail, to: from, title: title, image: image };
         this.mailService.onSend(this.newMail);
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Mail sent' });

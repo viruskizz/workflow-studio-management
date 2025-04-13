@@ -45,7 +45,7 @@ export class Project extends BaseEntity {
   @ApiProperty({ example: 'TODO' })
   status: ProjectStatus;
 
-  @Column({ type: 'jsonb', default: { last: 0 } })
+  @Column({ type: 'json' })
   @ApiProperty({ example: '{last: 0}' })
   metadata: {
     last: number;

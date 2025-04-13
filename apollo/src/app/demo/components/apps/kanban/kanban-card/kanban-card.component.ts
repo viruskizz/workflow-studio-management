@@ -20,7 +20,7 @@ export class KanbanCardComponent implements OnDestroy {
 
     constructor(private kanbanService: KanbanService) {
         this.subscription = this.kanbanService.lists$.subscribe(data => {
-            let subMenu = data.map(d => ({ id: d.listId, label: d.title, command: () => this.onMove(d.listId) }));
+            const subMenu = data.map(d => ({ id: d.listId, label: d.title, command: () => this.onMove(d.listId) }));
             this.generateMenu(subMenu);
         })
     }
@@ -50,8 +50,8 @@ export class KanbanCardComponent implements OnDestroy {
     }
 
     generateTaskInfo() {
-        let total = this.card.taskList.tasks.length;
-        let completed = this.card.taskList.tasks.filter(t => t.completed).length;
+        const total = this.card.taskList.tasks.length;
+        const completed = this.card.taskList.tasks.filter(t => t.completed).length;
         return `${completed} / ${total}`;
     }
 

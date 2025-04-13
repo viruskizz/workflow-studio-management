@@ -67,8 +67,16 @@
     </ng-template>
 
     <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="onCancel()"></button>
-        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="onSave()"></button>
+        <p-button
+            label="Cancel"
+            icon="pi pi-times"
+            class="p-button-text"
+            (click)="onCancel()"/>
+        <p-button
+            label="Save"
+            icon="pi pi-check"
+            class="p-button-text"
+            (click)="onSave()"/>
     </ng-template>
 
 </p-dialog>

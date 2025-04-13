@@ -47,16 +47,16 @@ export class MailService {
     }
 
     onDeleteMultiple(mails: Mail[]) {
-        let idArray = mails.map(m => Number(m.id));
+        const idArray = mails.map(m => Number(m.id));
         this._mails = this._mails.filter(m => idArray.indexOf(m.id) == -1);
         this.mails.next(this._mails);
     }
 
     onArchiveMultiple(mails: Mail[]) {
-        let idArray = mails.map(m => m.id);
+        const idArray = mails.map(m => m.id);
 
         for (let i = 0; i < this._mails.length; i++) {
-            let mail = this._mails[i];
+            const mail = this._mails[i];
 
             if (idArray.indexOf(mail.id) !== -1) {
                 mail.archived = true;
@@ -68,7 +68,7 @@ export class MailService {
     }
 
     onSpamMultiple(mails: Mail[]) {
-        let idArray = mails.map(m => m.id);
+        const idArray = mails.map(m => m.id);
 
         for (let i = 0; i < this._mails.length; i++) {
             let mail = this._mails[i];
@@ -103,9 +103,9 @@ export class MailService {
 
     generateId() {
         let text = "";
-        let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-        for (var i = 0; i < 5; i++) {
+        for (let i = 0; i < 5; i++) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
 

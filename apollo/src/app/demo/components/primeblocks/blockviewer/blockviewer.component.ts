@@ -48,9 +48,9 @@ export class BlockViewerComponent {
 
 	@Input() previewStyle!: object;
 
-	@Input() free: boolean = true;
+	@Input() free = true;
 
-	@Input() new: boolean = false;
+	@Input() new = false;
 
 	BlockView = BlockView;
 

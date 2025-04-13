@@ -31,7 +31,7 @@ export class MenusComponent implements OnInit {
 
     plainMenuItems: MenuItem[] = [];
 
-    pageIndex: number = 0;
+    pageIndex = 0;
 
     ngOnInit() {
         this.tieredItems = [

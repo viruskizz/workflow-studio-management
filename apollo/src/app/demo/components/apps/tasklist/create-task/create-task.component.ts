@@ -42,11 +42,11 @@ export class CreateTaskComponent implements OnInit, OnDestroy {
     }
 
     filterMembers(event: any) {
-        let filtered: Member[] = [];
-        let query = event.query;
+        const filtered: Member[] = [];
+        const query = event.query;
 
         for (let i = 0; i < this.members.length; i++) {
-            let member = this.members[i];
+            const member = this.members[i];
             if (member.name?.toLowerCase().indexOf(query.toLowerCase()) == 0) {
                 filtered.push(member);
             }

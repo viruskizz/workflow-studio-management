@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { LayoutService } from './service/app.layout.service';
 import { AuthService } from '../services/auth.service';
 import { User } from '../models/user.model';
-import { AuthUser } from '../models/auth.model';
 
 @Component({
     selector: 'app-profilemenu',

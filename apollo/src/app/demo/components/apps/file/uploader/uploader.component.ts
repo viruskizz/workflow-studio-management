@@ -20,7 +20,7 @@ export class UploaderComponent {
     constructor(private messageService: MessageService) { }
 
     onUpload(event: any) {
-        for (let file of event.files) {
+        for (const file of event.files) {
             this.uploadedFiles.push(file);
         }
 

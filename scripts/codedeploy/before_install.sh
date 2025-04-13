@@ -1,4 +1,5 @@
 #!/bin/bash
-DIR=/home/admin/workflow-backend
-rm -rf $DIR
-mkdir -p $DIR
+source $(dirname $0)/variable.sh
+
+rm -rf $PROJECT_DIR
+mkdir -p $PROJECT_DIR

@@ -1,105 +1,124 @@
 <div class="grid">
-    <div class="col-12">
-        <div class="card px-6 py-6">
-            <p-toast></p-toast>
-            <p-toolbar styleClass="mb-4">
-                <ng-template pTemplate="right">
-                    <div class="my-2">
-                        <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="createProject()"></button>
-                    </div>
-                </ng-template>
-            </p-toolbar>
+  <div class="col-12">
+    <div class="card px-6 py-6">
+      <p-toast></p-toast>
+      <p-toolbar styleClass="mb-4">
+        <ng-template pTemplate="right">
+          <div class="my-2">
+            <p-button
+              pRipple
+              label="New"
+              icon="pi pi-plus"
+              class="p-button-success mr-2"
+              (click)="createProject()"/>
+          </div>
+        </ng-template>
+      </p-toolbar>
 
-            <!-- Table -->
-            <p-table
-                #dt
-                [value]="projects"
-                [columns]="cols"
-                responsiveLayout="scroll"
-                [rows]="10"
-                [rowHover]="true"
-                [paginator]="true"
-                [rowsPerPageOptions]="[10,20,30]"
-                [globalFilterFields]="['name','description','status']"
-                [showCurrentPageReport]="true"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                dataKey="id">
-                <ng-template pTemplate="caption">
-                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                        <h5 class="m-0">Manage Projects</h5>
-                        <span class="block mt-2 md:mt-0 p-input-icon-left">
-                            <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."  class="w-full sm:w-auto"/>
-                        </span>
-                    </div>
-                </ng-template>
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
-                        <th>Cover</th>
-                        <th pSortableColumn="key">Key <p-sortIcon field="key"></p-sortIcon></th>
-                        <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
-                        <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
-                        <th pSortableColumn="leader">Leader <p-sortIcon field="leader"></p-sortIcon></th>
-                        <th></th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-project let-i="index">
-                    <tr>
-                        <td style="min-width:5rem;">
-                            <span class="p-column-title">id</span>
-                            {{ project?.id }}
-                        </td>
-                        <td>
-                            <span class="p-column-title">Cover</span>
-                            <p-image [src]="getImage(project?.imageUrl)" [alt]="project?.key" width="100" (onImageError)="onImageError(project.id)"/>
-                        </td>
-                        <td>
-                            <span class="p-column-title">Key</span>
-                            {{project?.key}}
-                        </td>
+      <!-- Table -->
+      <p-table #dt [value]="projects" [columns]="cols" responsiveLayout="scroll" [rows]="10" [rowHover]="true"
+        [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [globalFilterFields]="['name','description','status']"
+        [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        dataKey="id">
+        <ng-template pTemplate="caption">
+          <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+            <h5 class="m-0">Manage Projects</h5>
+            <span class="block mt-2 md:mt-0 p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
+                class="w-full sm:w-auto" />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+            <th>Cover</th>
+            <th pSortableColumn="key">Key <p-sortIcon field="key"></p-sortIcon></th>
+            <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+            <th pSortableColumn="leader">Leader <p-sortIcon field="leader"></p-sortIcon></th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-project let-i="index">
+          <tr (click)="onRowClick(project)" class="cursor-pointer">
+            <td style="min-width:5rem;">
+              <span class="p-column-title">id</span>
+              {{ project?.id }}
+            </td>
+            <td>
+              <span class="p-column-title">Cover</span>
+              <p-image [src]="getImage(project?.imageUrl)" [alt]="project?.key" width="100"
+                (onImageError)="onImageError(project.id)" />
+            </td>
+            <td>
+              <span class="p-column-title">Key</span>
+              {{project?.key}}
+            </td>
 
-                        <td style=" min-width:10rem;">
-                            <span class="p-column-title">Name</span>
-                            {{project?.name}}
-                        </td>
-                        <td style="min-width: 7rem;">
-                            <span class="p-column-title">Status</span>
-                            {{project?.status}}
-                            <!-- <span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span> -->
-                        </td>
-                        <td style=" min-width:10rem;">
-                            <span class="p-column-title">Leader</span>
-                            @if (project.leader) {
-                                <p-chip [label]="project.leader.username" [image]="project.leader.imageUrl" alt="leader-image" />
-                            }
-                            @else {
-                                <span>Unassigned</span>
-                            }
-                        </td>
-                        <td>
-                            <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning mr-2" (click)="editProject(project)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProject(project)"></button>
-                            </div>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div>
-
-        <app-project-form [(visible)]="projectDialog" [(project)]="project" (onCloseEvent)="hideDialog($event)"></app-project-form>
-
-        <!-- Confirm Delete Dialog -->
-        <p-dialog [(visible)]="deleteProjectDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
-            <div class="flex align-items-center justify-content-center">
-                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-                <span *ngIf="project">Are you sure you want to delete <b>{{project.name}}</b>?</span>
-            </div>
-            <ng-template pTemplate="footer">
-                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteProjectDialog = false"></button>
-                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
-            </ng-template>
-        </p-dialog>
+            <td style=" min-width:10rem;">
+              <span class="p-column-title">Name</span>
+              {{project?.name}}
+            </td>
+            <td style="min-width: 7rem;">
+              <span class="p-column-title">Status</span>
+              {{project?.status}}
+              <!-- <span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span> -->
+            </td>
+            <td style=" min-width:10rem;">
+              <span class="p-column-title">Leader</span>
+              @if (project.leader) {
+              <p-chip [label]="project.leader.username" [image]="project.leader.imageUrl" alt="leader-image" />
+              }
+              @else {
+              <span>Unassigned</span>
+              }
+            </td>
+            <td>
+              <div class="flex">
+                <p-button
+                  pRipple
+                  icon="pi pi-pencil"
+                  class="p-button-rounded p-button-warning mr-2"
+                  (click)="editProject(project)" />
+                <p-button
+                  pRipple
+                  icon="pi pi-trash"
+                  class="p-button-rounded p-button-danger"
+                  (click)="deleteProject(project)" />
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
     </div>
+
+    <app-project-form
+      [(visible)]="projectDialog"
+      [(project)]="project"
+      (closeEvent)="hideDialog($event)"/>
+
+    <!-- Confirm Delete Dialog -->
+    <p-dialog [(visible)]="deleteProjectDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+      <div class="flex align-items-center justify-content-center">
+        <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+        <span *ngIf="project">Are you sure you want to delete <b>{{project.name}}</b>?</span>
+      </div>
+      <ng-template pTemplate="footer">
+        <p-button
+          pRipple
+          icon="pi pi-times"
+          class="p-button-text"
+          label="No"
+          (click)="deleteProjectDialog = false"/>
+        <p-button
+          pRipple
+          icon="pi pi-check"
+          class="p-button-text"
+          label="Yes"
+          (click)="confirmDelete()"/>
+      </ng-template>
+    </p-dialog>
+  </div>
 </div>

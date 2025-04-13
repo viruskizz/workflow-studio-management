@@ -13,23 +13,23 @@ export class CalendarAppComponent implements OnInit {
 
     events: any[] = [];
 
-    today: string = '';
+    today = '';
 
     calendarOptions: any = {
         initialView: 'dayGridMonth'
     };
 
-    showDialog: boolean = false;
+    showDialog = false;
 
     clickedEvent: any = null;
 
-    dateClicked: boolean = false;
+    dateClicked = false;
 
-    edit: boolean = false;
+    edit = false;
 
     tags: any[] = [];
 
-    view: string = '';
+    view = '';
 
     changedEvent: any;
 
@@ -64,7 +64,7 @@ export class CalendarAppComponent implements OnInit {
 
     onEventClick(e: any) {
         this.clickedEvent = e.event;
-        let plainEvent = e.event.toPlainObject({ collapseExtendedProps: true, collapseColor: true });
+        const plainEvent = e.event.toPlainObject({ collapseExtendedProps: true, collapseColor: true });
         this.view = 'display';
         this.showDialog = true;
 
@@ -109,7 +109,7 @@ export class CalendarAppComponent implements OnInit {
     }
 
     validate() {
-        let { start, end } = this.changedEvent;
+        const { start, end } = this.changedEvent;
         return start && end;
     }
 

@@ -18,11 +18,11 @@ export class KanbanListComponent implements OnInit {
 
     menuItems: MenuItem[] = [];
 
-    title: string = '';
+    title = '';
 
     timeout: any = null;
 
-    isMobileDevice: boolean = false;
+    isMobileDevice = false;
 
     @ViewChild('inputEl') inputEl!: ElementRef;
 

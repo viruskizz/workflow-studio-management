@@ -7,11 +7,11 @@ export class CheckoutFormComponent {
 
     quantities: number[] = [1, 1, 1];
 
-    value: string = '';
+    value = '';
 
-    checked: boolean = true;
+    checked = true;
 
-    checked2: boolean = true;
+    checked2 = true;
 
     cities = [
         { name: 'USA / New York', code: 'NY' },
@@ -21,6 +21,6 @@ export class CheckoutFormComponent {
         { name: 'France / Paris', code: 'PRS' }
     ];
 
-    selectedCity: string = '';
+    selectedCity = '';
 
 }

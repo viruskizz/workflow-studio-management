@@ -19,7 +19,7 @@ export class MailSidebarComponent implements OnDestroy {
 
     routeSubscription: Subscription;
 
-    url: string = '';
+    url = '';
 
     constructor(private router: Router, private mailService: MailService) {
         this.mailSubscription = this.mailService.mails$.subscribe(data => this.getBadgeValues(data));
@@ -36,7 +36,7 @@ export class MailSidebarComponent implements OnDestroy {
     }
 
     getBadgeValues(data: Mail[]) {
-        let inbox = [],
+        const inbox = [],
             starred = [],
             spam = [],
             important = [],
@@ -45,7 +45,7 @@ export class MailSidebarComponent implements OnDestroy {
             sent = []
 
         for (let i = 0; i < data.length; i++) {
-            let mail = data[i];
+            const mail = data[i];
 
             if (!mail.archived && !mail.trash && !mail.spam && !mail.hasOwnProperty('sent')) {
                 inbox.push(mail);

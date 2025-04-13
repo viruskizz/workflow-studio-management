@@ -28,7 +28,7 @@ export class NewProductComponent {
 
     @ViewChildren('buttonEl') buttonEl!: QueryList<ElementRef>;
 
-    text: string = '';
+    text = '';
 
     categoryOptions = ['Sneakers', 'Apparel', 'Socks'];
 
@@ -55,7 +55,7 @@ export class NewProductComponent {
 
     uploadedFiles: any[] = [];
 
-    showRemove: boolean = false;
+    showRemove = false;
 
     onChipRemove(item: string) {
         this.product.tags = this.product.tags.filter(i => i !== item);
@@ -66,7 +66,7 @@ export class NewProductComponent {
     }
 
     onUpload(event: any) {
-        for (let file of event.files) {
+        for (const file of event.files) {
             this.product.images.push(file);
         }
     }

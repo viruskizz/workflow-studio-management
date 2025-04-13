@@ -5,17 +5,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProductOverviewComponent implements OnInit {
     
-    color: string = 'bluegray';
+    color = 'bluegray';
 
-    size: string = 'M';
+    size = 'M';
 
-    liked: boolean = false;
+    liked = false;
 
     images: string[] = [];
 
-    selectedImageIndex: number = 0;
+    selectedImageIndex = 0;
 
-    quantity: number = 1;
+    quantity = 1;
           
     ngOnInit(): void {
       this.images = [

@@ -11,24 +11,16 @@ jobs:
     with:
       environment: dev
     secrets: inherit
-  ng-deploy:
-    name: Angular Deploy on Development
-    needs: ["ng-build"]
-    uses: ./.github/workflows/tpl-angular-deploy.yml
-    with:
-      environment: dev
-      refreshCached: true
-    secrets: inherit
   nest-build:
     name: NestJS Framework Build on Dev
     uses: ./.github/workflows/tpl-nest-build.yml
     with:
       environment: dev
     secrets: inherit
-  nest-deploy:
-    name: NestJS Framework Deploy on Dev
-    needs: ["nest-build"]
-    uses: ./.github/workflows/tpl-nest-deploy.yml
+  full-deploy:
+    name: Deploy Angular and NestJS
+    needs: ["nest-build", "ng-build"]
+    uses: ./.github/workflows/tpl-fullstack-deploy.yml
     with:
       environment: dev
     secrets: inherit

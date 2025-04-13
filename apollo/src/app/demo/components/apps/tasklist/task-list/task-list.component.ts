@@ -31,7 +31,7 @@ export class TaskListComponent implements OnInit {
     }
 
     parseDate(date: Date) {
-        let d = new Date(date);
+        const d = new Date(date);
         return d.toUTCString().split(' ').slice(1, 3).join(' ');
     }
 

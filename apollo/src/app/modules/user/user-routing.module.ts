@@ -7,7 +7,7 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
     imports: [
         RouterModule.forChild([
             { path: '', component: UserComponent },
-            { path: ':id', component: UserProfileComponent }, // Add this route
+            { path: ':id', component: UserProfileComponent },
         ]),
     ],
     exports: [RouterModule],

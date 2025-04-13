@@ -24,14 +24,14 @@ jobs:
     environment: ${{ inputs.environment }}
     defaults:
       run:
-        working-directory: ./frontend
+        working-directory: ./apollo
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - uses: actions/download-artifact@master
         with:
-          name: dist-frontend-${{ github.sha }}
-          path: frontend/dist
+          name: dist-apollo-${{ github.sha }}
+          path: apollo/dist/apollo-ng
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:

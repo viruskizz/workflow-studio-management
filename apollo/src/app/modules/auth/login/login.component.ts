@@ -8,7 +8,7 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
-  rememberMe: boolean = false;
+  rememberMe = false;
   loginForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
@@ -28,7 +28,7 @@ export class LoginComponent {
     const password = this.loginForm.value.password!;
     this.authService.signIn(username, password).subscribe({
       next: (v) => {
-        this.authService.saveLogin(v.access_token).subscribe(v => {
+        this.authService.saveLogin(v.access_token).subscribe(() => {
           this.router.navigate([''])
         });
       },

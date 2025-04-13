@@ -2,19 +2,26 @@ version: 0.0
 os: linux
 
 files:
+  - source: apollo
+    destination: /usr/src/app/workflow-studio-management/apollo
   - source: backend
-    destination: /home/admin/workflow-backend
+    destination: /usr/src/app/workflow-studio-management/backend
+file_exists_behavior: OVERWRITE
 
 hooks:
   ApplicationStop:
     - location: scripts/codedeploy/application_stop.sh
       timeout: 300
+      runas: root
   BeforeInstall:
     - location: scripts/codedeploy/before_install.sh
-      timeout: 300
+      timeout: 30
+      runas: root
   AfterInstall:
     - location: scripts/codedeploy/after_install.sh
       timeout: 300
+      runas: root
   ApplicationStart:
     - location: scripts/codedeploy/application_start.sh
       timeout: 300
+      runas: root

@@ -5,7 +5,7 @@ import { LayoutService } from 'src/app/layout/service/app.layout.service';
     templateUrl: './login.component.html',
 })
 export class LoginComponent {
-    rememberMe: boolean = false;
+    rememberMe = false;
 
     constructor(private layoutService: LayoutService) {}
 
