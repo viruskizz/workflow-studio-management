@@ -4,6 +4,7 @@ import { User } from 'src/app/models/user.model';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { TeamService } from 'src/app/services/team.service';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: './team.component.html',
@@ -18,6 +19,7 @@ export class TeamComponent implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private teamService: TeamService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -161,6 +163,12 @@ export class TeamComponent implements OnInit {
       detail,
       life: 3000,
     });
+  }
+
+  navigateToTeamDetail(team: Team) {
+    if (team && team.id) {
+      this.router.navigate(['/teams', team.id]);
+    }
   }
 }
 

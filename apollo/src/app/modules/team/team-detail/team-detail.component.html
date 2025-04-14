@@ -1,0 +1,117 @@
+<div class="card">
+  <div class="flex justify-content-between align-items-center mb-4">
+    <h2>Manage Team</h2>
+    <p-button type="button" label="Delete" icon="pi pi-trash" class="p-button-warning" (click)="deleteTeam()" />
+  </div>
+
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+
+  <div *ngIf="loading" class="flex justify-content-center">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <div *ngIf="!loading" class="form-container">
+    <div class="flex justify-content-center mb-4">
+      <div class="text-center">
+        <img [src]="getImage(imagePreview)" [alt]="team.name" width="100" height="100"
+          class="mb-2 border-circle shadow-2" *ngIf="imagePreview" (error)="onImageError()">
+        <div class="mb-2" *ngIf="imagePreview">
+          <small class="text-secondary block">Image URL:</small>
+          <span class="text-xs text-overflow-ellipsis block"
+            style="max-width: 250px; overflow: hidden;">{{team.imageUrl || 'No URL available'}}</span>
+        </div>
+        <div>
+          <p-fileUpload #fileUpload mode="basic" name="cover" accept="image/*" [maxFileSize]="3000000"
+            styleClass="p-button-outlined p-button-plain" chooseLabel="Upload Image"
+            (onSelect)="onSelectImage($event)"></p-fileUpload>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mb-3">
+      <small class="text-secondary">Required Fields Are Marked With An Asterisk *</small>
+    </div>
+
+    <form [formGroup]="teamForm">
+      <div class="field">
+        <label for="name" class="block font-medium">Team name <span class="text-danger">*</span></label>
+        <input id="name" type="text" pInputText formControlName="name" required class="w-full" />
+        <small class="p-error" *ngIf="isSubmitted && formControls['name'].errors?.['required']">
+          Team name is required.
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="leader" class="block font-medium">Leader <span class="text-danger">*</span></label>
+        <app-user-autocomplete [form]="teamForm" controlName="leader" [multiple]="false" [dropdown]="true"
+          [limit]="1"></app-user-autocomplete>
+        <small class="p-error" *ngIf="isSubmitted && formControls['leader'].errors?.['required']">
+          Team leader is required.
+        </small>
+      </div>
+
+      <h3 class="mt-5 mb-3">Members</h3>
+
+      <div class="flex mb-3">
+        <span class="flex-grow-1 mr-2">
+          <app-user-autocomplete [form]="teamForm" controlName="newMember" labelFor="Add Team Member" [multiple]="false"
+            [dropdown]="true" [limit]="1">
+          </app-user-autocomplete>
+        </span>
+        <p-button type="button" icon="pi pi-plus" label="Add" styleClass="p-button-success"
+          [disabled]="!formControls['newMember'].value" (click)="addSelectedMember()">
+        </p-button>
+      </div>
+      <div class="field">
+        <p-table [value]="filteredMembers" styleClass="p-datatable-sm" [scrollable]="true" scrollHeight="250px"
+          [rowHover]="true" responsiveLayout="scroll">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="min-width: 200px">Members</th>
+              <th style="width: 120px">Role</th>
+              <th style="width: 100px">Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-member>
+            <tr>
+              <td>
+                <div class="flex align-items-center">
+                  <p-avatar [image]="getImage(member.imageUrl)" size="normal" shape="circle" class="mr-2"></p-avatar>
+                  <span class="font-medium">{{member.username}}</span>
+                </div>
+              </td>
+              <td>
+                <p-dropdown [options]="[{label: 'Member', value: 'member'}]" [(ngModel)]="member.role"
+                  [ngModelOptions]="{standalone: true}" styleClass="w-full"></p-dropdown>
+              </td>
+              <td class="text-center">
+                <p-button pRipple type="button" icon="pi pi-trash"
+                  class="p-button-rounded p-button-danger p-button-text" (click)="removeMember(member)"></p-button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="3" class="text-center p-3">No members found</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <div class="flex justify-content-between mt-4">
+        <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-text" routerLink="/teams"></p-button>
+        <p-button label="Save" icon="pi pi-check" (click)="onSave()"></p-button>
+      </div>
+    </form>
+
+    <div class="mt-4">
+      <div class="flex justify-content-between">
+        <span>Showing 1 to {{(formControls['members'].value || []).length}} of {{(formControls['members'].value ||
+          []).length}} entries</span>
+        <p-paginator [rows]="10" [totalRecords]="(formControls['members'].value || []).length"
+          [rowsPerPageOptions]="[10, 20, 30]"></p-paginator>
+      </div>
+    </div>
+  </div>
+</div>
