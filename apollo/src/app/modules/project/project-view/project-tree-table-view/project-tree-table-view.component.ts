@@ -36,7 +36,6 @@ export class ProjectTreeTableViewComponent implements OnInit {
     ];
     this.projectService.listTaskTrees(this.projectId!).subscribe(
       res => {
-        console.log('Tasks:', res);
         this.tasks = this.mapTreesToNodes(res);
         console.log('TreeNodes:', this.tasks);
       }
