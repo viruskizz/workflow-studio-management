@@ -10,10 +10,10 @@
       <div class="px-4 py-4 border-bottom-1 surface-border flex align-items-center justify-content-between h-4rem">
         <p-inplace #inplace [closable]="true" closeIcon="pi pi-check" styleClass="h-3rem" (onActivate)="focus('inputTitle')" styleClass="white-space-nowrap">
           <ng-template pTemplate="display">
-              <span class="block text-900 font-semibold text-2xl" pTooltip="Click to edit">{{projectTaskForm.controls.title.value || 'Untitled'}}</span>
+              <span class="block text-900 font-semibold text-2xl" pTooltip="Click to edit">{{projectTaskForm.controls.summary.value || 'Untitled'}}</span>
           </ng-template>
           <ng-template pTemplate="content">
-              <input #inputTitle pInputText type="text" name="title" formControlName="title" class="w-13rem sm:w-18rem h-3rem text-900 text-lg" (keydown.enter)="inplace.deactivate()">
+              <input #inputTitle pInputText type="text" name="summary" formControlName="summary" class="w-13rem sm:w-18rem h-3rem text-900 text-lg" (keydown.enter)="inplace.deactivate()">
           </ng-template>
         </p-inplace>
         <div class="flex">
@@ -136,7 +136,7 @@
       <div class="flex w-full justify-content-end py-2 px-4 gap-3">
         <!-- <button pButton pRipple type="button" icon="pi pi-paperclip" class="p-button-outlined p-button-secondary surface-border text-900 w-3rem h-3rem"></button>
         <button pButton pRipple type="button" icon="pi pi-trash" class="p-button-outlined p-button-secondary surface-border text-900 w-3rem h-3rem" (click)="onDelete()"></button> -->
-        <button pButton pRipple type="submit" icon="pi pi-check" label="Save" class="p-button-primary h-3rem" (click)="onSave()" ></button>
+        <button pButton pRipple type="button" icon="pi pi-check" label="Save" class="p-button-primary h-3rem" (click)="onSave()" ></button>
       </div>
     </form>
   </ng-template>

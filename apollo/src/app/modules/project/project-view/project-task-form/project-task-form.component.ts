@@ -20,7 +20,7 @@ export class ProjectTaskFormComponent implements OnChanges {
   coverFile?: File;
 
   projectTaskForm = new FormGroup({
-    title: new FormControl('', [Validators.required]),
+    summary: new FormControl('', [Validators.required]),
     link: new FormControl('', []),
     files: new FormControl([], []),
     status: new FormControl('', [Validators.required]),
@@ -34,7 +34,6 @@ export class ProjectTaskFormComponent implements OnChanges {
   });
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes)
     if (changes['task'].currentValue) {
       this.visible = true;
     }
@@ -77,6 +76,7 @@ export class ProjectTaskFormComponent implements OnChanges {
   onSave() {
     console.log(this.projectTaskForm)
     console.log(this.projectTaskForm.value)
-    this.visible = false;
+    // this.visible = false;
+    // this.taskService
   }
 }

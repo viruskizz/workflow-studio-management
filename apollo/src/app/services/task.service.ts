@@ -12,6 +12,36 @@ export class TaskService {
 
   constructor(private httpClient: HttpClient) { }
 
+  list(filter?: Partial<Task>) {
+    let params = new HttpParams();
+    if (filter) {
+      params = this._setParamsFromObject(params, filter, 'filter')
+    }
+    return this.httpClient.get(this.baseUrl, {
+      params,
+    });
+  }
+
+  create(body: Partial<Task>) {
+    return this.httpClient.post(this.baseUrl, {
+      body,
+    })
+  }
+
+  update(body: Partial<Task>) {
+    return this.httpClient.patch(this.baseUrl, {
+      body,
+    })
+  }
+
+  private _setParamsFromObject(param: HttpParams, params: object, name: string) {
+    for (const [key, value] of Object.entries(params)) {
+      param.set(`${name}[${key}]`,value);
+    }
+    return param;
+  }
+
+  // Wait for optimize
   getTasks(): Observable<Task[]> {
     return this.httpClient.get<Task[]>(this.baseUrl);
   }
