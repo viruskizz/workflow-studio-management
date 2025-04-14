@@ -4,6 +4,7 @@ import { Table } from 'primeng/table';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/models/user.model';
 import { getDefaultAvatar } from 'src/app/utils';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: './user.component.html',
@@ -11,8 +12,8 @@ import { getDefaultAvatar } from 'src/app/utils';
 })
 export class UserComponent implements OnInit {
   // Table config
-  cols: any[] = [];
-  statuses: any[] = [];
+  cols: { field: string; header: string }[] = [];
+  statuses: { label: string; value: string }[] = [];
   rowsPerPageOptions = [5, 10, 20];
 
   // Data config
@@ -25,6 +26,7 @@ export class UserComponent implements OnInit {
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private userService: UserService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -59,28 +61,28 @@ export class UserComponent implements OnInit {
     this.userDialog = true;
   }
 
-  deleteUser(user: User) {
-    this.deleteUserDialog = true;
-    this.user = { ...user };
-  }
+  // deleteUser(user: User) {
+  //   this.deleteUserDialog = true;
+  //   this.user = { ...user };
+  // }
 
-  confirmDelete() {
-    if (!this.user) {
-      this.deleteUserDialog = false
-      return;
-    }
-    this.userService.deleteUser(this.user!.id!).subscribe({
-      next: () => {
-        this.users = this.users.filter(u => u.id !== this.user!.id);
-        this.deleteUserDialog = false;
-        this.user = undefined;
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
-      }
-    })
+  // confirmDelete() {
+  //   if (!this.user) {
+  //     this.deleteUserDialog = false
+  //     return;
+  //   }
+  //   this.userService.deleteUser(this.user!.id!).subscribe({
+  //     next: () => {
+  //       this.users = this.users.filter(u => u.id !== this.user!.id);
+  //       this.deleteUserDialog = false;
+  //       this.user = undefined;
+  //       this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
+  //     }
+  //   })
 
-  }
+  // }
 
-  hideDialog(event: any) {
+  hideDialog(event: User | null) {
     this.userDialog = false;
     if (event && this.user?.id) {
       // Edited 
@@ -99,5 +101,11 @@ export class UserComponent implements OnInit {
 
   onImageError(idx: number) {
     this.users[idx].imageUrl = getDefaultAvatar()
+  }
+
+  navigateToUserProfile(user: User) {
+    if (user && user.id) {
+      this.router.navigate(['/users', user.id]);
+    }
   }
 }
