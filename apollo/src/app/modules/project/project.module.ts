@@ -35,6 +35,7 @@ import { ProjectTreeTableViewComponent } from './project-view/project-tree-table
 import { TabMenuModule } from 'primeng/tabmenu';
 import { SidebarModule } from 'primeng/sidebar';
 import { InplaceModule } from 'primeng/inplace';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
   imports: [
@@ -69,6 +70,7 @@ import { InplaceModule } from 'primeng/inplace';
     CalendarModule,
     SidebarModule,
     InplaceModule,
+    OverlayPanelModule
   ],
   declarations: [
     ProjectComponent,

@@ -11,7 +11,7 @@ export class ProjectTaskFormComponent implements OnChanges {
   @Input() task?: Partial<Task>;
   @Output() taskChange = new EventEmitter<Task>();
   @Output() closeEvent = new EventEmitter<Task | null>();
-  @Input() visible = false;
+  @Input() visible = true;
   @Output() visibleChange = new EventEmitter<boolean>();
 
   @ViewChild('inputTitle') inputTitle!: ElementRef;
@@ -21,16 +21,16 @@ export class ProjectTaskFormComponent implements OnChanges {
 
   projectTaskForm = new FormGroup({
     summary: new FormControl('', [Validators.required]),
-    link: new FormControl('', []),
-    files: new FormControl([], []),
+    type: new FormControl('', [Validators.required]),
     status: new FormControl('', [Validators.required]),
+    description: new FormControl('', []),
     date: new FormControl('', []),
-    team: new FormControl('', [Validators.required]),
+    team: new FormControl('', []),
     assignee: new FormControl('', []),
     state: new FormControl('', []),
     flow: new FormControl('', []),
     parent: new FormControl('', []),
-    description: new FormControl('', []),
+    files: new FormControl([], []),
   });
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -78,5 +78,12 @@ export class ProjectTaskFormComponent implements OnChanges {
     console.log(this.projectTaskForm.value)
     // this.visible = false;
     // this.taskService
+  }
+
+  get description(): FormControl<string | null> {
+    return this.projectTaskForm.controls.description;
+  }
+  get status(): FormControl<string | null> {
+    return this.projectTaskForm.controls.description;
   }
 }

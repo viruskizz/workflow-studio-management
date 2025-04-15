@@ -7,6 +7,7 @@
   [showCloseIcon]="false">
   <ng-template pTemplate="content">
     <form [formGroup]="projectTaskForm">
+      <!-- Top Menu Panel -->
       <div class="px-4 py-4 border-bottom-1 surface-border flex align-items-center justify-content-between h-4rem">
         <p-inplace #inplace [closable]="true" closeIcon="pi pi-check" styleClass="h-3rem" (onActivate)="focus('inputTitle')" styleClass="white-space-nowrap">
           <ng-template pTemplate="display">
@@ -17,28 +18,34 @@
           </ng-template>
         </p-inplace>
         <div class="flex">
-          <!-- <button pButton pRipple type="button" icon="pi pi-cog" class="p-button-rounded p-button-text p-button-secondary" pTooltip="card actions" tooltipPosition="left" (click)="op.toggle($event)"></button> -->
+          <button pButton pRipple type="button" icon="pi pi-cog" class="p-button-rounded p-button-text p-button-secondary" pTooltip="card actions" tooltipPosition="left" (click)="op.toggle($event)"></button>
           <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-text p-button-secondary" (click)="close()"></button>
-          <!-- <p-overlayPanel #op>
+          <p-overlayPanel #op>
               <ng-template pTemplate>
                   <div class="grid grid-nogutter flex-column gap-5 w-15rem">
                       <div class="col-12 flex flex-column">
                           <span class="text-900 font-semibold block w-full border-bottom-1 surface-border pb-3 mb-2">Move to...</span>
-                          <span pRipple class="text-700 block p-2 cursor-pointer hover:surface-ground select-none border-round" *ngFor="let list of listNames" (click)="onMove(list.listId || '')">{{list.title}}</span>
+                          <!-- <span pRipple class="text-700 block p-2 cursor-pointer hover:surface-ground select-none border-round" *ngFor="let list of listNames" (click)="close()">{{list.title}}</span> -->
                       </div>
                       <div class="col-12 flex flex-column">
                           <span class="text-900 font-semibold block w-full border-bottom-1 surface-border pb-3 mb-2">Tasks</span>
-                          <span pRipple class="text-700 block p-2 cursor-pointer hover:surface-ground select-none border-round" (click)="addTaskList()">Create a tasklist</span>
+                          <!-- <span pRipple class="text-700 block p-2 cursor-pointer hover:surface-ground select-none border-round" (click)="close()">Create a tasklist</span> -->
                       </div>
                   </div>
               </ng-template>
-          </p-overlayPanel> -->
+          </p-overlayPanel>
         </div>
       </div>
       
       <div class="p-fluid px-4 py-4">
-        <h5>Description</h5>
-        <p-editor [style]="{'height':'180px'}" formControlName="description"></p-editor>
+        <div class="field">
+          <label htmlFor="type">Type</label>
+          <app-task-type [form]="projectTaskForm" controlName="type" ></app-task-type>
+        </div>
+        <div class="field">
+          <label htmlFor="description">Description</label>
+          <p-editor [style]="{'height':'180px'}" formControlName="description"></p-editor>
+        </div>
         <!-- <div class="field">
           <input pInputText id="link" placeholder="Link: d://example.autocad" type="text" formControlName="link" />
         </div>
@@ -66,7 +73,7 @@
           <label htmlFor="start" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
             <i class="pi pi-calendar"></i>
             <span>
-              Start Date
+              Due Date
             </span>
           </label>
           <div class="col-12 md:col-8">

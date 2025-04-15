@@ -1,0 +1,13 @@
+<p-dropdown
+    [options]="types"
+    [optionLabel]="label"
+    [(ngModel)]="selectedType"
+    (onChange)="onChange($event)"
+    placeholder="Select Type">
+    <ng-template let-type pTemplate="item">
+      <div class="flex align-items-center gap-2">
+          <img alt="dropdown icon" [src]="type.icon" class="w-1rem" />
+          <div>{{ type.title }}</div>
+      </div>
+  </ng-template>
+</p-dropdown>
