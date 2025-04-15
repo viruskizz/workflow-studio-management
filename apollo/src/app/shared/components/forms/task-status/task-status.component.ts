@@ -11,6 +11,7 @@ export class TaskStatusComponent {
   @Output() selectedStatusChanged = new EventEmitter<TaskStatus>()
   @Input({ required: true }) form!: FormGroup;
   @Input({ required: true }) controlName!: string;
+  @Input() ngClass?: string | any[] | object;
 
   statuses: TaskStatusDropdownItem[] = [
     {id: 1, title: 'TODO', value: 'TODO'},

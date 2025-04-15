@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -6,9 +7,10 @@ import { FormGroup } from '@angular/forms';
   templateUrl: './task-type.component.html',
 })
 export class TaskTypeComponent {
-  @Input() label = 'type'
-  @Input() selectedType!: TaskType
-  @Output() selectedTypeChanged = new EventEmitter<TaskType>()
+  @Input() label = 'value'
+  @Input() selectedType?: TaskTypeDropdownItem
+  @Input() ngClass?: string | any[] | object;
+  @Output() selectedTypeChange = new EventEmitter<TaskTypeDropdownItem>()
   @Input({ required: true }) form!: FormGroup;
   @Input({ required: true }) controlName!: string;
 
@@ -20,7 +22,8 @@ export class TaskTypeComponent {
   ];
 
   onChange(event: any) {
-    this.form.controls[this.controlName].patchValue(event.value.title)
+    // this.selectedType = event;
+    this.form.controls[this.controlName].patchValue(event.value)
   }
 }
 

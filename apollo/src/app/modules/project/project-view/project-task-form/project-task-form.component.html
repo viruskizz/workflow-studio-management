@@ -40,20 +40,23 @@
       <div class="p-fluid px-4 py-4">
         <div class="field">
           <label htmlFor="type">Type</label>
-          <app-task-type [form]="projectTaskForm" controlName="type" ></app-task-type>
+          <app-task-type [form]="projectTaskForm" controlName="type" [ngClass]="{'ng-dirty ng-invalid': submitted && type.invalid}"></app-task-type>
+          <small class="p-error" *ngIf="submitted && type.invalid">Task Type is required.</small>
         </div>
         <div class="field">
           <label htmlFor="description">Description</label>
           <p-editor [style]="{'height':'180px'}" formControlName="description"></p-editor>
         </div>
-        <!-- <div class="field">
+        <!--
+        <div class="field">
           <input pInputText id="link" placeholder="Link: d://example.autocad" type="text" formControlName="link" />
         </div>
         <div class="field">
           <img [src]="imagePreview" [alt]="'example'" width="150" class="w-2 block mb-3 shadow-2" *ngIf="imagePreview">
           <p-fileUpload mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" name="file" url="/upload"
             accept="image/*" [maxFileSize]="10000000" (onSelect)="onSelectImage($event)" />
-        </div> -->
+        </div>
+        -->
       </div>
       <hr>
       <div class="p-fluid py-4 px-4">
@@ -66,7 +69,8 @@
             </span>
           </label>
           <div class="col-12 md:col-8">
-            <app-task-status [form]="projectTaskForm" controlName="status" />
+            <app-task-status [form]="projectTaskForm" controlName="status"  [ngClass]="{'ng-dirty ng-invalid': submitted && status.invalid}"/>
+          <small class="p-error" *ngIf="submitted && status.invalid">Task Status is required.</small>
           </div>
         </div>
         <div class="field grid">

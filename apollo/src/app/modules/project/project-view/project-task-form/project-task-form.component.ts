@@ -2,6 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleCh
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FileSelectEvent } from 'primeng/fileupload';
 import { Task } from 'src/app/models/task.model';
+import { TaskTypeDropdownItem } from 'src/app/shared/components/forms/task-type/task-type.component';
 
 @Component({
   selector: 'app-project-task-form',
@@ -19,9 +20,11 @@ export class ProjectTaskFormComponent implements OnChanges {
   imagePreview?: string = 'assets/images/noimage.jpg';
   coverFile?: File;
 
+  submitted = false;
+
   projectTaskForm = new FormGroup({
     summary: new FormControl('', [Validators.required]),
-    type: new FormControl('', [Validators.required]),
+    type: new FormControl<TaskTypeDropdownItem | null>(null, [Validators.required]),
     status: new FormControl('', [Validators.required]),
     description: new FormControl('', []),
     date: new FormControl('', []),
@@ -78,12 +81,10 @@ export class ProjectTaskFormComponent implements OnChanges {
     console.log(this.projectTaskForm.value)
     // this.visible = false;
     // this.taskService
+    this.submitted = true;
   }
 
-  get description(): FormControl<string | null> {
-    return this.projectTaskForm.controls.description;
-  }
-  get status(): FormControl<string | null> {
-    return this.projectTaskForm.controls.description;
-  }
+  get type() { return this.projectTaskForm.controls.type; }
+  get description() {  return this.projectTaskForm.controls.description; }
+  get status() { return this.projectTaskForm.controls.status; }
 }
