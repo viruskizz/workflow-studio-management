@@ -15,7 +15,6 @@ export const ProjectBreadcrumbResolver: ResolveFn<Breadcrumb[]> = (
 ): Observable<Breadcrumb[]> | Breadcrumb[] => projectService.getProject(+route.paramMap.get('id')!)
   .pipe(
     map(v => {
-      console.log('v:', v);
       return [
         { label: 'Project', url: '/projects' },
         { label: v.name.toString(), url: v.id.toString() },

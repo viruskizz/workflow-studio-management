@@ -13,7 +13,7 @@ export interface Task {
   parentId?: number;
   projectId: number;
   project?: Project;
-  assigneeId: number;
+  assigneeId?: number;
   assignee?: User;
   status: TaskStatus;
   type: TaskType;

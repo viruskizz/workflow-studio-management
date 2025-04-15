@@ -23,9 +23,7 @@ export class TaskService {
   }
 
   create(body: Partial<Task>) {
-    return this.httpClient.post(this.baseUrl, {
-      body,
-    })
+    return this.httpClient.post(this.baseUrl, body)
   }
 
   update(body: Partial<Task>) {

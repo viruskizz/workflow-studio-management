@@ -81,7 +81,7 @@
             </span>
           </label>
           <div class="col-12 md:col-8">
-            <p-calendar formControlName="date" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" />
+            <p-calendar formControlName="date" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" placeholder="Select Date" />
           </div>
         </div>
         <div class="field grid">
@@ -152,7 +152,4 @@
     </form>
   </ng-template>
 </p-sidebar>
-
-<ng-template pTemplate="content">
-
-</ng-template>
+<p-toast key="projectTaskForm"></p-toast>

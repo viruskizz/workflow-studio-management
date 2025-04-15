@@ -36,6 +36,8 @@ import { TabMenuModule } from 'primeng/tabmenu';
 import { SidebarModule } from 'primeng/sidebar';
 import { InplaceModule } from 'primeng/inplace';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { MessagesModule } from 'primeng/messages';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   imports: [
@@ -70,7 +72,8 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     CalendarModule,
     SidebarModule,
     InplaceModule,
-    OverlayPanelModule
+    OverlayPanelModule,
+    MessagesModule,
   ],
   declarations: [
     ProjectComponent,
@@ -78,6 +81,9 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     ProjectViewComponent,
     ProjectTaskFormComponent,
     ProjectTreeTableViewComponent,
+  ],
+  providers: [
+    MessageService
   ]
 })
 export class ProjectModule { }
