@@ -1,3 +1,4 @@
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
     FormBuilder,
@@ -326,43 +327,59 @@ export class TeamDetailComponent implements OnInit {
     }
 
     addSelectedMember() {
-        const newMember = this.formControls['newMember'].value;
-        if (newMember && newMember.id && this.teamId) {
-            const currentMembers = this.formControls['members'].value || [];
-
-            // Check if member is already in the team
-            if (!currentMembers.some((m: User) => m.id === newMember.id)) {
-                this.loading = true;
-                this.teamService.addMemberToTeam(this.teamId, newMember.id)
-                    .pipe(finalize(() => this.loading = false))
-                    .subscribe({
-                        next: () => {
-                            const updatedMembers = [...currentMembers, newMember];
-                            this.formControls['members'].setValue(updatedMembers);
-
-                            // Reset the selection
-                            this.formControls['newMember'].setValue(null);
-
-                            // Update filtered members and available users
-                            this.filteredMembers = updatedMembers;
-                            this.updateAvailableUsers();
-
-                            this.showMessage('success', 'Success', 'Member added successfully');
-                        },
-                        error: (error) => {
-                            console.error('Error adding member:', error);
-                            this.showMessage('error', 'Error', 'Failed to add member to team');
-                        }
-                    });
-            } else {
-                // Optional: Show message that user is already a member
-                this.messageService.add({
-                    severity: 'info',
-                    summary: 'Info',
-                    detail: 'This user is already a team member',
-                });
-            }
+        const newMembers = this.formControls['newMember'].value;
+        if (!newMembers || (Array.isArray(newMembers) && newMembers.length === 0)) {
+            return;
         }
+        
+        const currentMembers = this.formControls['members'].value || [];
+        const membersToAdd = Array.isArray(newMembers) ? newMembers : [newMembers];
+        
+        // Filter out members that are already in the team
+        const uniqueNewMembers = membersToAdd.filter(newMember => 
+            newMember && newMember.id && !currentMembers.some((m: User) => m.id === newMember.id)
+        );
+        
+        if (uniqueNewMembers.length === 0) {
+            this.messageService.add({
+                severity: 'info',
+                summary: 'Info',
+                detail: 'Selected users are already team members',
+            });
+            return;
+        }
+        
+        this.loading = true;
+        
+        // Create an array of observables for adding each member
+        const addMemberRequests = uniqueNewMembers.map(member => 
+            this.teamService.addMemberToTeam(this.teamId, member.id)
+        );
+        
+        // Execute all requests in parallel
+        forkJoin(addMemberRequests)
+            .pipe(finalize(() => {
+                this.loading = false;
+                // Reset the selection
+                this.formControls['newMember'].setValue(null);
+            }))
+            .subscribe({
+                next: () => {
+                    // Add the new members to the current members list
+                    const updatedMembers = [...currentMembers, ...uniqueNewMembers];
+                    this.formControls['members'].setValue(updatedMembers);
+                    
+                    // Update filtered members and available users
+                    this.filteredMembers = updatedMembers;
+                    this.updateAvailableUsers();
+                    
+                    this.showMessage('success', 'Success', 'Members added successfully');
+                },
+                error: (error) => {
+                    console.error('Error adding members:', error);
+                    this.showMessage('error', 'Error', 'Failed to add members to team');
+                }
+            });
     }
 
     onImageError() {
