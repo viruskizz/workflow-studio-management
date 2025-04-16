@@ -14,7 +14,7 @@ export class ProjectViewComponent implements OnInit {
   tasking: Partial<Task> | undefined;
   items: MenuItem[] | undefined;
   activeItem: MenuItem | undefined;
-  project? : Project;
+  project!: Project;
 
   constructor(
     private route: ActivatedRoute,

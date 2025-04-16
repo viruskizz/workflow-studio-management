@@ -57,9 +57,23 @@ export class ProjectTreeTableViewComponent implements OnInit {
     return nodes;
   }
 
-  onAddTask(task: Partial<Task>) {
+  onAddTask(task?: Partial<Task>) {
+    if (task) {
+      this.tasking = {
+        parentId: task.id,
+        type: task.type === 'EPIC' ? 'STORY' : task.type === 'STORY' ? 'TASK' : 'SUBTASK',
+      }
+    } else {
+      this.tasking = {
+        type: 'EPIC'
+      };
+    }
+    console.log(this.tasking)
+    this.taskingChange.emit(this.tasking)
+  }
+
+  onViewTask(task: Partial<Task>) {
     this.tasking = task;
-    this.taskingChange.emit(task)
   }
 
   getTypeIcon(type: TaskType): string {

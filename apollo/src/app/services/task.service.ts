@@ -22,6 +22,10 @@ export class TaskService {
     });
   }
 
+  get(id: number) {
+    return this.httpClient.get(`${this.baseUrl}/${id}`)
+  }
+
   create(body: Partial<Task>) {
     return this.httpClient.post(this.baseUrl, body)
   }

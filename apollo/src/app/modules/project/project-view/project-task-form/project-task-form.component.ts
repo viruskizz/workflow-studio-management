@@ -12,7 +12,7 @@ import { TaskTypeDropdownItem } from 'src/app/shared/components/forms/task-type/
   templateUrl: './project-task-form.component.html',
 })
 export class ProjectTaskFormComponent implements OnChanges {
-  @Input() project?: Partial<Project>;
+  @Input({required: true}) project!: Partial<Project>;
   @Input() task?: Partial<Task>;
   @Output() taskChange = new EventEmitter<Task>();
   @Output() closeEvent = new EventEmitter<Task | null>();
@@ -36,7 +36,7 @@ export class ProjectTaskFormComponent implements OnChanges {
     assignee: new FormControl('', []),
     state: new FormControl('', []),
     flow: new FormControl('', []),
-    parent: new FormControl('', []),
+    parentId: new FormControl('', []),
     files: new FormControl([], []),
   });
 
@@ -48,6 +48,8 @@ export class ProjectTaskFormComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['task']?.currentValue) {
       this.visible = true;
+      console.log('change:', changes['task']?.currentValue);
+      this.projectTaskForm.patchValue(changes['task']?.currentValue)
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { TaskType } from 'src/app/models/task.model';
 
@@ -6,11 +6,11 @@ import { TaskType } from 'src/app/models/task.model';
   selector: 'app-task-type',
   templateUrl: './task-type.component.html',
 })
-export class TaskTypeComponent {
+export class TaskTypeComponent implements OnChanges {
   @Input() label = 'value'
-  @Input() selectedType?: TaskTypeDropdownItem
+  @Input() selectedType?: TaskType;
   @Input() ngClass?: string | any[] | object;
-  @Output() selectedTypeChange = new EventEmitter<TaskTypeDropdownItem>()
+  @Output() selectedTypeChange = new EventEmitter<TaskType>()
   @Input({ required: true }) form!: FormGroup;
   @Input({ required: true }) controlName!: string;
 
@@ -21,9 +21,18 @@ export class TaskTypeComponent {
     {id: 4, title: 'subtask', value: 'SUBTASK', icon: 'assets/icons/jira-issue/subtask.png'},
   ];
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['form'].currentValue) {
+      this.selectedType = this.form.controls[this.controlName].value;
+    }
+  }
   onChange(event: any) {
     // this.selectedType = event;
-    this.form.controls[this.controlName].patchValue(event.value)
+    this.form.controls[this.controlName].patchValue(event.value.value)
+  }
+
+  getItem(type: TaskType) {
+    return this.types.find(item => item.value === type);
   }
 }
 

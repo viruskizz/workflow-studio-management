@@ -11,15 +11,15 @@ import { TaskStatusComponent } from './components/forms/task-status/task-status.
 import { TeamDropdownComponent } from './components/forms/team-dropdown/team-dropdown.component';
 import { TaskTypeComponent } from './components/forms/task-type/task-type.component';
 import { IconsModule } from './components/icons/icons.module';
+import { TaskDropdownComponent } from './components/forms/task-dropdown/task-dropdown.component';
 
 const sharedComponents: any[] = [
-  UserAutocompleteComponent,
   TestComponent,
+  UserAutocompleteComponent,
   TaskStatusComponent,
   TeamDropdownComponent,
   TaskTypeComponent,
-
-
+  TaskDropdownComponent
 ];
 
 @NgModule({
