@@ -6,7 +6,8 @@ import { TeamService } from 'src/app/services/team.service';
 import { UserService } from 'src/app/services/user.service';
 import { FileSelectEvent } from 'primeng/fileupload';
 import { MessageService } from 'primeng/api';
-import { Observable, forkJoin, of } from 'rxjs';
+import { Observable, forkJoin, of, switchMap } from 'rxjs';
+import { FileService } from 'src/app/services/file.service';
 
 @Component({
   selector: 'app-team-form',
@@ -30,7 +31,8 @@ export class TeamFormComponent implements OnChanges, OnInit {
     private fb: FormBuilder,
     private teamService: TeamService,
     private userService: UserService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private fileService: FileService
   ) {
     this.teamForm = this.createForm();
   }
@@ -51,18 +53,15 @@ export class TeamFormComponent implements OnChanges, OnInit {
     return this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       leader: [null, [Validators.required]],
-      members: [[], [Validators.required]],
-      imageUrl: [''],
+      members: [[], [Validators.required]]
     });
   }
 
   private updateForm(team: Team): void {
-    this.imagePreview = team.imageUrl;
-    this.teamForm.patchValue({
+   this.teamForm.patchValue({
       name: team.name,
       leader: this.users.find((u) => u.id === team.leaderId),
       members: team.members || [],
-      imageUrl: team.imageUrl || '',
     });
   }
 
@@ -108,18 +107,36 @@ export class TeamFormComponent implements OnChanges, OnInit {
     return {
       name: formValue.name,
       members: formValue.members,
-      imageUrl: formValue.imageUrl,
-      leaderId: formValue.leader?.id,
+      leaderId: formValue.leader?.id
     };
   }
 
   private saveTeam(teamData: Partial<Team>): void {
     this.loading = true;
+    
+    // First handle the team save operation
     const saveObservable = this.team?.id
       ? this.teamService.updateTeam(this.team.id, teamData)
       : this.teamService.createTeam(teamData as Team);
 
-    saveObservable.subscribe({
+    saveObservable.pipe(
+      switchMap(savedTeam => {
+        // After team is saved, upload the image if there is one
+        if (this.coverFile) {
+          const filepath = `/teams/${savedTeam.id}/`;
+          const filename = 'cover.png';
+          return this.fileService.upload(this.coverFile, filepath, filename).pipe(
+            switchMap(fileResponse => {
+              // Update team with image URL
+              return this.teamService.updateTeam(savedTeam.id!, { imageUrl: fileResponse.url }).pipe(
+                switchMap(() => of(savedTeam))
+              );
+            })
+          );
+        }
+        return of(savedTeam);
+      })
+    ).subscribe({
       next: this.handleSaveSuccess.bind(this),
       error: this.handleSaveError.bind(this),
       complete: () => (this.loading = false)

@@ -66,8 +66,7 @@ export class TeamDetailComponent implements OnInit {
         return this.fb.group({
             name: ['', [Validators.required, Validators.minLength(3)]],
             leader: [null, [Validators.required]],
-            members: [[], [Validators.required]],
-            imageUrl: [''],
+            members: [[], [Validators.required]]
         });
     }
 
@@ -93,12 +92,10 @@ export class TeamDetailComponent implements OnInit {
     }
 
     private updateForm(team: Team): void {
-        this.imagePreview = team.imageUrl;
         this.teamForm.patchValue({
             name: team.name,
             leader: this.users.find((u) => u.id === team.leaderId),
-            members: team.members || [],
-            imageUrl: team.imageUrl || '',
+            members: team.members || []
         });
         this.updateAvailableUsers();
     }
@@ -164,23 +161,15 @@ export class TeamDetailComponent implements OnInit {
         this.fileService
             .upload(file, filepath, filename)
             .pipe(
-                switchMap((res) =>
-                    this.teamService.updateTeam(this.teamId, {
-                        imageUrl: res.url,
-                    })
-                ),
                 finalize(() => {
                     this.loading = false;
                     if (this.fileUpload) this.fileUpload.clear();
                 })
             )
             .subscribe({
-                next: (updatedTeam) => {
-                    this.team = updatedTeam;
-                    this.imagePreview = updatedTeam.imageUrl;
-                    this.teamForm.patchValue({
-                        imageUrl: updatedTeam.imageUrl,
-                    });
+                next: (fileResponse) => {
+                    // Update the UI with the file URL without updating the team model
+                    this.imagePreview = fileResponse.url;
                     this.showMessage(
                         'success',
                         'Success',
@@ -214,8 +203,7 @@ export class TeamDetailComponent implements OnInit {
         return {
             name: formValue.name,
             members: formValue.members,
-            imageUrl: formValue.imageUrl,
-            leaderId: formValue.leader?.id,
+            leaderId: formValue.leader?.id
         };
     }
 
@@ -256,7 +244,7 @@ export class TeamDetailComponent implements OnInit {
     get formControls() {
         return this.teamForm.controls;
     }
-
+    
     getImage(url: string | undefined) {
         return url || 'assets/images/noimage.jpg';
     }
