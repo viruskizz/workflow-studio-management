@@ -14,6 +14,7 @@ import { UserService } from 'src/app/services/user.service';
 import { FileSelectEvent, FileUpload } from 'primeng/fileupload';
 import { FileService } from 'src/app/services/file.service';
 import { finalize, switchMap } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-team-detail',
@@ -289,18 +290,45 @@ export class TeamDetailComponent implements OnInit {
 
     performTeamDeletion(team: Team) {
         this.loading = true;
-        this.teamService.deleteTeam(team.id!).pipe(
-            finalize(() => this.loading = false)
-        ).subscribe({
-            next: () => {
-                this.showMessage('success', 'Success', 'Team deleted successfully');
-                this.router.navigate(['/teams']);
-            },
-            error: (error) => {
-                console.error('Error deleting team:', error);
-                this.showMessage('error', 'Error', 'Failed to delete team');
-            }
-        });
+
+        // First check if team has members
+        if (team.members && team.members.length > 0) {
+            // Create an array of observables for removing each member
+            const removeMemberRequests = team.members.map(member =>
+                this.teamService.removeMemberFromTeam(team.id!, member.id!)
+            );
+
+            // Execute all member removal requests, then delete the team
+            forkJoin(removeMemberRequests)
+                .pipe(
+                    switchMap(() => this.teamService.deleteTeam(team.id!)),
+                    finalize(() => this.loading = false)
+                )
+                .subscribe({
+                    next: () => {
+                        this.showMessage('success', 'Success', 'Team deleted successfully');
+                        this.router.navigate(['/teams']);
+                    },
+                    error: (error) => {
+                        console.error('Error deleting team:', error);
+                        this.showMessage('error', 'Error', 'Failed to delete team');
+                    }
+                });
+        } else {
+            // If no members, directly delete the team
+            this.teamService.deleteTeam(team.id!)
+                .pipe(finalize(() => this.loading = false))
+                .subscribe({
+                    next: () => {
+                        this.showMessage('success', 'Success', 'Team deleted successfully');
+                        this.router.navigate(['/teams']);
+                    },
+                    error: (error) => {
+                        console.error('Error deleting team:', error);
+                        this.showMessage('error', 'Error', 'Failed to delete team');
+                    }
+                });
+        }
     }
 
     triggerFileUpload() {
@@ -311,20 +339,33 @@ export class TeamDetailComponent implements OnInit {
 
     addSelectedMember() {
         const newMember = this.formControls['newMember'].value;
-        if (newMember) {
+        if (newMember && newMember.id && this.teamId) {
             const currentMembers = this.formControls['members'].value || [];
 
             // Check if member is already in the team
             if (!currentMembers.some((m: User) => m.id === newMember.id)) {
-                const updatedMembers = [...currentMembers, newMember];
-                this.formControls['members'].setValue(updatedMembers);
+                this.loading = true;
+                this.teamService.addMemberToTeam(this.teamId, newMember.id)
+                    .pipe(finalize(() => this.loading = false))
+                    .subscribe({
+                        next: () => {
+                            const updatedMembers = [...currentMembers, newMember];
+                            this.formControls['members'].setValue(updatedMembers);
 
-                // Reset the selection
-                this.formControls['newMember'].setValue(null);
+                            // Reset the selection
+                            this.formControls['newMember'].setValue(null);
 
-                // Update filtered members and available users
-                this.filteredMembers = updatedMembers;
-                this.updateAvailableUsers();
+                            // Update filtered members and available users
+                            this.filteredMembers = updatedMembers;
+                            this.updateAvailableUsers();
+
+                            this.showMessage('success', 'Success', 'Member added successfully');
+                        },
+                        error: (error) => {
+                            console.error('Error adding member:', error);
+                            this.showMessage('error', 'Error', 'Failed to add member to team');
+                        }
+                    });
             } else {
                 // Optional: Show message that user is already a member
                 this.messageService.add({

@@ -63,8 +63,10 @@ export class TeamService {
     return this.httpClient.post(`${this.baseUrl}/${teamId}/members`, { userId });
   }
 
-  removeMemberFromTeam(teamId: number, userId: number): Observable<unknown> {
-    return this.httpClient.delete(`${this.baseUrl}/${teamId}/members/${userId}`);
+  removeMemberFromTeam(teamId: number, userId: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.baseUrl}/${teamId}/members`, {
+      body: { userId }
+    });
   }
 }
 

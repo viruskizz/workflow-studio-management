@@ -6,6 +6,8 @@ import { Table } from 'primeng/table';
 import { TeamService } from 'src/app/services/team.service';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   templateUrl: './team.component.html',
@@ -77,28 +79,65 @@ export class TeamComponent implements OnInit {
 
   performTeamDeletion(team: Team) {
     this.loading = true;
-    this.teamService.deleteTeam(team.id!)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: () => {
-          this.teams = this.teams.filter(t => t.id !== team.id);
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Team deleted successfully',
-            life: 3000
-          });
-        },
-        error: (error) => {
-          console.error('Error deleting team:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to delete team',
-            life: 3000
-          });
-        }
-      });
+    
+    // First check if the team has members
+    if (team.members && team.members.length > 0) {
+      // Remove all members first
+      const removeMemberRequests = team.members.map(member => 
+        this.teamService.removeMemberFromTeam(team.id!, member.id!)
+      );
+      
+      // After all members are removed, delete the team
+      forkJoin(removeMemberRequests)
+        .pipe(
+          switchMap(() => this.teamService.deleteTeam(team.id!)),
+          finalize(() => this.loading = false)
+        )
+        .subscribe({
+          next: () => {
+            this.teams = this.teams.filter(t => t.id !== team.id);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Team deleted successfully',
+              life: 3000
+            });
+          },
+          error: (error) => {
+            console.error('Error deleting team:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete team. Please try again later.',
+              life: 3000
+            });
+          }
+        });
+    } else {
+      // If no members, directly delete the team
+      this.teamService.deleteTeam(team.id!)
+        .pipe(finalize(() => this.loading = false))
+        .subscribe({
+          next: () => {
+            this.teams = this.teams.filter(t => t.id !== team.id);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Team deleted successfully',
+              life: 3000
+            });
+          },
+          error: (error) => {
+            console.error('Error deleting team:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete team. Please try again later.',
+              life: 3000
+            });
+          }
+        });
+    }
   }
 
   navigateToTeamDetail(team: Team) {
@@ -107,19 +146,18 @@ export class TeamComponent implements OnInit {
 
   onTeamSave(team: Team) {
     if (team.id) {
-      // For existing team, reload to get updated data
-      this.loading = true;
-      this.teamService.getTeamWithMembers(team.id)
-        .pipe(finalize(() => this.loading = false))
-        .subscribe({
-          next: (updatedTeam) => {
-            this.updateTeamDetails(updatedTeam);
-          },
-          error: (error) => {
-            console.error('Error refreshing team data:', error);
-          }
-        });
+      // For existing team, find and update in the array
+      const index = this.teams.findIndex(t => t.id === team.id);
+      if (index !== -1) {
+        this.teams[index] = team;
+        this.teams = [...this.teams]; // Trigger change detection
+      } else {
+        // If not found, add to array
+        this.teams.push(team);
+        this.teams = [...this.teams];
+      }
     } else {
+      // For new team, add to array
       this.teams.push(team);
       this.teams = [...this.teams];
     }
@@ -170,5 +208,37 @@ export class TeamComponent implements OnInit {
           });
       }
     });
+  }
+
+  addMember(team: Team, userId: number) {
+    this.loading = true;
+    this.teamService.addMemberToTeam(team.id!, userId)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: () => {
+          // Refresh team data to get updated members list
+          this.teamService.getTeamWithMembers(team.id!)
+            .subscribe({
+              next: (updatedTeam) => {
+                this.updateTeamDetails(updatedTeam);
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Success',
+                  detail: 'Member added successfully',
+                  life: 3000
+                });
+              }
+            });
+        },
+        error: (error) => {
+          console.error('Error adding member:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to add member to team',
+            life: 3000
+          });
+        }
+      });
   }
 }
