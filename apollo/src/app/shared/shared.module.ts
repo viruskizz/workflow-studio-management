@@ -10,6 +10,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TaskStatusComponent } from './components/forms/task-status/task-status.component';
 import { TeamDropdownComponent } from './components/forms/team-dropdown/team-dropdown.component';
 import { TaskTypeComponent } from './components/forms/task-type/task-type.component';
+import { IconsModule } from './components/icons/icons.module';
 
 const sharedComponents: any[] = [
   UserAutocompleteComponent,
@@ -17,6 +18,8 @@ const sharedComponents: any[] = [
   TaskStatusComponent,
   TeamDropdownComponent,
   TaskTypeComponent,
+
+
 ];
 
 @NgModule({
@@ -34,10 +37,13 @@ const sharedComponents: any[] = [
     InputTextModule,
     AutoCompleteModule,
     AvatarModule,
-    DropdownModule
+    DropdownModule,
+
+    IconsModule,
   ],
   exports: [
     ...sharedComponents,
+    IconsModule,
   ]
 })
 export class SharedModule { }

@@ -1,6 +1,6 @@
-import { NgClass } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { TaskType } from 'src/app/models/task.model';
 
 @Component({
   selector: 'app-task-type',
@@ -18,7 +18,7 @@ export class TaskTypeComponent {
     {id: 1, title: 'Epic', value: 'EPIC', icon: 'assets/icons/jira-issue/epic.png' },
     {id: 2, title: 'Story', value: 'STORY', icon: 'assets/icons/jira-issue/story.png'},
     {id: 3, title: 'Task', value: 'TASK', icon: 'assets/icons/jira-issue/task.png'},
-    {id: 4, title: 'subtask', value: 'SUB_TASK', icon: 'assets/icons/jira-issue/subtask.png'},
+    {id: 4, title: 'subtask', value: 'SUBTASK', icon: 'assets/icons/jira-issue/subtask.png'},
   ];
 
   onChange(event: any) {
@@ -26,8 +26,6 @@ export class TaskTypeComponent {
     this.form.controls[this.controlName].patchValue(event.value)
   }
 }
-
-export type TaskType = 'EPIC' | 'STORY' | 'TASK' | 'SUB_TASK';
 
 export interface TaskTypeDropdownItem {
   id: number;

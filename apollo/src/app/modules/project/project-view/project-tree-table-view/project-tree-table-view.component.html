@@ -20,15 +20,16 @@
       </th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+  <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns" let-last="last">
     <tr [ttRow]="rowNode">
-      <td>
+      <td style="min-width: 5rem;" class="px-1">
         <p-treeTableToggler [rowNode]="rowNode" />
-        {{ rowData.id }}
+        <img alt="icon" [src]="getTypeIcon(rowData.type)" class="w-1rem mr-2 vertical-align-middle" />
+        <span>{{ rowData.code }}</span>
       </td>
-      <td>{{ rowData.summary }}</td>
-      <td>{{ rowData.type }}</td>
-      <td>{{ rowData.status }}</td>
+      <td style="width: 20px;">
+        <p-button [icon]="getStatusIconLabel(rowData.status).icon" [label]="getStatusIconLabel(rowData.status).label" severity="secondary" size="small"/>
+      </td>
       <td>
         @if (rowData.assignee) {
         <p-chip [label]="rowData.assignee.username" [image]="rowData.assignee.imageUrl" alt="assignee-image" />
@@ -36,6 +37,9 @@
         @else {
         <span>Unassigned</span>
         }
+      </td>
+      <td class="flex gap-2">
+        <p-button icon="pi pi-plus" label="Add Story" severity="secondary" size="small"/>
       </td>
     </tr>
   </ng-template>
