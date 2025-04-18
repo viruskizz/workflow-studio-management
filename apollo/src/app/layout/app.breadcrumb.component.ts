@@ -33,6 +33,10 @@ export class AppBreadcrumbComponent {
         const breadcrumb = route.data['breadcrumb'];
         const parentBreadcrumb = route.parent && route.parent.data ? route.parent.data['breadcrumb'] : null;
 
+        if (route.data['breadcrumbs']) {
+            breadcrumbs.push(...route.data['breadcrumbs'])
+        }
+
         if (breadcrumb && breadcrumb !== parentBreadcrumb) {
             breadcrumbs.push({
                 label: route.data['breadcrumb'],

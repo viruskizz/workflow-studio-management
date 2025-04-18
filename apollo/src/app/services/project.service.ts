@@ -31,7 +31,7 @@ export class ProjectService {
   }
 
   listTasks(id: number) {
-    const url = `${this.baseUrl}/${id}/tasks/tree`;
+    const url = `${this.baseUrl}/${id}/tasks`;
     return this.httpClient.get<any>(url);
   }
 

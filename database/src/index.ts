@@ -8,7 +8,7 @@ import getTeamStagesSeeds from './seeds/team-stages';
 import getTeamMembersSeeds from './seeds/team-members';
 
 AppDataSource.initialize().then(async () => {
-	console.log("Inserting a new user into the database...")
+  console.log("Inserting a new user into the database...")
   await setupUsers();
   await setupTeams();
   await setupTeamStages();

@@ -1,4 +1,4 @@
-<div class="field" [formGroup]="form">
+<form [formGroup]="form">
     <label *ngIf="isShowLabel" for="user-autocomplete">{{labelFor}}</label>
     <p-autoComplete
         #pAutocomplete
@@ -9,6 +9,7 @@
         (onUnselect)="onUnselect($event)"
         (completeMethod)="filterUsers($event)"
         [multiple]="multiple"
+        placeholder="Unassigned"
         optionValue="id"
         optionLabel="username"
         styleClass="w-full">
@@ -26,4 +27,4 @@
             <div>{{ user.username }}</div>
         </ng-template>
     </p-autoComplete>
-</div>
+</form>

@@ -31,6 +31,13 @@ import { ProjectFormComponent } from './project-form/project-form.component';
 import { ProjectViewComponent } from './project-view/project-view.component';
 import { ProjectTaskFormComponent } from './project-view/project-task-form/project-task-form.component';
 import { CalendarModule } from 'primeng/calendar';
+import { ProjectTreeTableViewComponent } from './project-view/project-tree-table-view/project-tree-table-view.component';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { SidebarModule } from 'primeng/sidebar';
+import { InplaceModule } from 'primeng/inplace';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { MessagesModule } from 'primeng/messages';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   imports: [
@@ -61,13 +68,22 @@ import { CalendarModule } from 'primeng/calendar';
     TreeModule,
     TreeTableModule,
     EditorModule,
+    TabMenuModule,
     CalendarModule,
+    SidebarModule,
+    InplaceModule,
+    OverlayPanelModule,
+    MessagesModule,
   ],
   declarations: [
     ProjectComponent,
     ProjectFormComponent,
     ProjectViewComponent,
     ProjectTaskFormComponent,
+    ProjectTreeTableViewComponent,
+  ],
+  providers: [
+    MessageService
   ]
 })
 export class ProjectModule { }

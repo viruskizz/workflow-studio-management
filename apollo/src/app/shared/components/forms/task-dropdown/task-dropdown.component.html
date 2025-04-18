@@ -1,0 +1,29 @@
+<p-dropdown
+    [options]="tasks"
+    [optionLabel]="label"
+    [(ngModel)]="selectedTask"
+    (onChange)="onChange($event)"
+    [ngClass]="ngClass"
+    [loading]="loading"
+    placeholder="Select Task">
+    <ng-template pTemplate="selectedItem">
+      <div class="flex align-items-center gap-2" *ngIf="selectedTask">
+        <div class="flex align-items-center gap-2">
+          <img alt="dropdown icon" [src]="getTypeIcon(task?.type)" class="w-1rem" />
+          <div>
+            <span class="mr-2">{{ task?.code }}</span>
+            <span class="text-color-secondary mr-2">{{task?.summary}}</span>
+          </div>
+      </div>
+      </div>
+  </ng-template>
+    <ng-template let-task pTemplate="item">
+      <div class="flex align-items-center gap-2">
+          <img alt="dropdown icon" [src]="getTypeIcon(task.type)" class="w-1rem" />
+          <div>
+            <span class="mr-2">{{ task.code }}</span>
+            <span class="text-color-secondary mr-2">{{task.summary}}</span>
+          </div>
+      </div>
+  </ng-template>
+</p-dropdown>

@@ -1,130 +1,155 @@
-<p-dialog [(visible)]="visible" (onHide)="onHide()" [style]="{width: '450px'}"
-    [header]="task ? 'Edit' : 'Create' + ' Task'" [modal]="true" class="p-fluid">
-</p-dialog>
-
-<!-- <ng-template pTemplate="content"> -->
-<form [formGroup]="projectTaskForm">
-    <div class="card p-fluid">
-        <div>
-            <h5>Create Task</h5>
-            <div class="field">
-                <input pInputText id="title" placeholder="Title" type="text" formControlName="title"/>
-            </div>
-            <div class="field">
-                <input pInputText id="link" placeholder="Link: d://example.autocad" type="text" formControlName="link" />
-            </div>
-            <div class="field">
-                <img [src]="imagePreview" [alt]="'example'" width="150" class="w-2 block mb-3 shadow-2" *ngIf="imagePreview">
-                <p-fileUpload
-                    mode="basic"
-                    chooseLabel="Choose"
-                    chooseIcon="pi pi-upload"
-                    name="file"
-                    url="/upload"
-                    accept="image/*"
-                    [maxFileSize]="10000000"
-                    (onSelect)="onSelectImage($event)" />
-            </div>
+<p-sidebar
+  [(visible)]="visible"
+  (onHide)="onHide()"
+  position="right"
+  [baseZIndex]="1000"
+  styleClass="w-full md:w-8 lg:w-6 xl:w-5"
+  [showCloseIcon]="false">
+  <ng-template pTemplate="content">
+    <form [formGroup]="projectTaskForm">
+      <!-- Top Menu Panel -->
+      <div class="px-4 py-4 border-bottom-1 surface-border flex align-items-center justify-content-between h-4rem">
+        <p-inplace #inplace [closable]="true" closeIcon="pi pi-check" styleClass="h-3rem" (onActivate)="focus('inputTitle')" styleClass="white-space-nowrap">
+          <ng-template pTemplate="display">
+              <span class="block text-900 font-semibold text-2xl" pTooltip="Click to edit">{{projectTaskForm.controls.summary.value || 'Untitled'}}</span>
+          </ng-template>
+          <ng-template pTemplate="content">
+              <input #inputTitle pInputText type="text" name="summary" formControlName="summary" class="w-13rem sm:w-18rem h-3rem text-900 text-lg" (keydown.enter)="inplace.deactivate()">
+          </ng-template>
+        </p-inplace>
+        <div class="flex">
+          <button pButton pRipple type="button" icon="pi pi-cog" class="p-button-rounded p-button-text p-button-secondary" pTooltip="card actions" tooltipPosition="left" (click)="op.toggle($event)"></button>
+          <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-text p-button-secondary" (click)="close()"></button>
+          <p-overlayPanel #op>
+              <ng-template pTemplate>
+                  <div class="grid grid-nogutter flex-column gap-5 w-15rem">
+                      <div class="col-12 flex flex-column">
+                          <span class="text-900 font-semibold block w-full border-bottom-1 surface-border pb-3 mb-2">Move to...</span>
+                          <!-- <span pRipple class="text-700 block p-2 cursor-pointer hover:surface-ground select-none border-round" *ngFor="let list of listNames" (click)="close()">{{list.title}}</span> -->
+                      </div>
+                      <div class="col-12 flex flex-column">
+                          <span class="text-900 font-semibold block w-full border-bottom-1 surface-border pb-3 mb-2">Tasks</span>
+                          <!-- <span pRipple class="text-700 block p-2 cursor-pointer hover:surface-ground select-none border-round" (click)="close()">Create a tasklist</span> -->
+                      </div>
+                  </div>
+              </ng-template>
+          </p-overlayPanel>
         </div>
-        <hr>
+      </div>
+      
+      <div class="p-fluid px-4 py-4">
+        <div class="field">
+          <label htmlFor="type">Type</label>
+          <app-task-type [form]="projectTaskForm" controlName="type" [ngClass]="{'ng-dirty ng-invalid': submitted && type.invalid}"></app-task-type>
+          <small class="p-error" *ngIf="submitted && type.invalid">Task Type is required.</small>
+        </div>
+        <div class="field">
+          <label htmlFor="description">Description</label>
+          <p-editor [style]="{'height':'180px'}" formControlName="description"></p-editor>
+        </div>
+        <!--
+        <div class="field">
+          <input pInputText id="link" placeholder="Link: d://example.autocad" type="text" formControlName="link" />
+        </div>
+        <div class="field">
+          <img [src]="imagePreview" [alt]="'example'" width="150" class="w-2 block mb-3 shadow-2" *ngIf="imagePreview">
+          <p-fileUpload mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" name="file" url="/upload"
+            accept="image/*" [maxFileSize]="10000000" (onSelect)="onSelectImage($event)" />
+        </div>
+        -->
+      </div>
+      <hr>
+      <div class="p-fluid py-4 px-4">
         <h5>Properties</h5>
         <div class="field grid">
-            <label htmlFor="status" class="col-12 mb-2 md:col-3 md:mb-0 gap-2">
-                <i class="pi pi-hourglass"></i>
-                <span>
-                    Status
-                </span>
-            </label>
-            <div class="col-12 md:col-9">
-                 <app-task-status [form]="projectTaskForm" controlName="status"/>
-            </div>
+          <label htmlFor="status" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+            <i class="pi pi-hourglass"></i>
+            <span>
+              Status
+            </span>
+          </label>
+          <div class="col-12 md:col-8">
+            <app-task-status [form]="projectTaskForm" controlName="status"  [ngClass]="{'ng-dirty ng-invalid': submitted && status.invalid}"/>
+          <small class="p-error" *ngIf="submitted && status.invalid">Task Status is required.</small>
+          </div>
         </div>
         <div class="field grid">
-            <label htmlFor="start" class="col-12 mb-2 md:col-3 md:mb-0 gap-2">
-                <i class="pi pi-calendar"></i>
-                <span>
-                    Start Date
-                </span>
-            </label>
-            <div class="col-12 md:col-9">
-                <p-calendar 
-                    formControlName="date" 
-                    [iconDisplay]="'input'" 
-                    [showIcon]="true" 
-                    inputId="icondisplay" />
-            </div>
+          <label htmlFor="start" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+            <i class="pi pi-calendar"></i>
+            <span>
+              Due Date
+            </span>
+          </label>
+          <div class="col-12 md:col-8">
+            <p-calendar formControlName="date" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" placeholder="Select Date" />
+          </div>
         </div>
         <div class="field grid">
-            <label htmlFor="team" class="col-12 mb-2 md:col-3 md:mb-0 gap-2">
-                <i class="pi pi-users"></i>
-                <span>
-                    Team
-                </span>
-            </label>
-            <div class="col-12 md:col-9">
-                <app-team-dropdown
-                    [form]="projectTaskForm"
-                    controlName="team"
-                    [isShowLabel]="false"/>
-            </div>
+          <label htmlFor="team" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+            <i class="pi pi-users"></i>
+            <span>
+              Team
+            </span>
+          </label>
+          <div class="col-12 md:col-8">
+            <app-team-dropdown [form]="projectTaskForm" controlName="team" [isShowLabel]="false" />
+          </div>
         </div>
         <div class="field grid">
-            <label htmlFor="assignee" class="col-12 mb-2 md:col-3 md:mb-0 gap-2">
-                <i class="pi pi-user"></i>
-                <span>
-                    Assignee
-                </span>
-            </label>
-            <div class="col-12 md:col-9">
-                <app-user-autocomplete
-                    [form]="projectTaskForm"
-                    controlName="assignee"
-                    [isShowLabel]="false"
-                    [multiple]="true"
-                    [dropdown]="true"
-                    [limit]=1
-            ></app-user-autocomplete>
-            </div>
+          <label htmlFor="assignee" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+            <i class="pi pi-user"></i>
+            <span>
+              Assignee
+            </span>
+          </label>
+          <div class="col-12 md:col-8">
+            <app-user-autocomplete [form]="projectTaskForm" controlName="assignee" [isShowLabel]="false" [multiple]="true"
+              [dropdown]="true" [limit]=1></app-user-autocomplete>
+          </div>
         </div>
         <div class="field grid">
-            <label htmlFor="state" class="col-12 mb-2 md:col-3 md:mb-0 gap-2">
-                <i class="pi pi-compass"></i>
-                <span>
-                    State
-                </span>
-            </label>
-            <div class="col-12 md:col-9">
-                <input pInputText id="state" type="text" formControlName="state" />
-            </div>
+          <label htmlFor="state" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+            <i class="pi pi-compass"></i>
+            <span>
+              State
+            </span>
+          </label>
+          <div class="col-12 md:col-8">
+            <input pInputText id="state" type="text" formControlName="state" />
+          </div>
         </div>
         <div class="field grid">
-            <label htmlFor="flow" class="col-12 mb-2 md:col-3 md:mb-0 gap-2">
-                <i class="pi pi-bolt"></i>
-                <span>
-                    Task Flow
-                </span>
-            </label>
-            <div class="col-12 md:col-9">
-                <input pInputText id="flow" type="text" formControlName="flow" />
-            </div>
+          <label htmlFor="flow" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+            <i class="pi pi-bolt"></i>
+            <span>
+              Task Flow
+            </span>
+          </label>
+          <div class="col-12 md:col-8">
+            <input pInputText id="flow" type="text" formControlName="flow" />
+          </div>
         </div>
         <div class="field grid">
-            <label htmlFor="parent" class="col-12 mb-2 md:col-3 md:mb-0 gap-2">
-                <i class="pi pi-folder"></i>
-                <span>
-                    Change Parent
-                </span>
-            </label>
-            <div class="col-12 md:col-9">
-                <input pInputText id="parent" type="text" formControlName="parent" />
-            </div>
+          <label htmlFor="parent" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+            <i class="pi pi-folder"></i>
+            <span>
+              Change Parent
+            </span>
+          </label>
+          <div class="col-12 md:col-8">
+            <app-task-dropdown [projectId]="project?.id!" [form]="projectTaskForm" controlName="parentId"></app-task-dropdown>
+          </div>
         </div>
-        <hr>
-        <div>
-            <h5>Description</h5>
-            <p-editor [style]="{'height':'250px'}" formControlName="description"></p-editor>
-        </div>
-        <p-button class="mt-4" label="Submit" (click)="onSave()"/>
-    </div>
-</form>
-<!-- </ng-template> -->
+      </div>
+      <hr>
+      <!-- Footer -->
+      <!-- <p-button class="mt-4" label="Submit" (click)="onSave()" /> -->
+      <div class="flex w-full justify-content-end py-2 px-4 gap-3">
+        <!-- <button pButton pRipple type="button" icon="pi pi-paperclip" class="p-button-outlined p-button-secondary surface-border text-900 w-3rem h-3rem"></button>
+        <button pButton pRipple type="button" icon="pi pi-trash" class="p-button-outlined p-button-secondary surface-border text-900 w-3rem h-3rem" (click)="onDelete()"></button> -->
+        <button pButton pRipple type="button" icon="pi pi-check" label="Save" class="p-button-primary h-3rem" (click)="onSave()" ></button>
+      </div>
+    </form>
+  </ng-template>
+</p-sidebar>
+<p-toast key="projectTaskForm"></p-toast>

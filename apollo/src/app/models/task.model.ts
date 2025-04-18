@@ -3,7 +3,7 @@ import { User } from "./user.model";
 
 export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
 
-export type TaskType = 'EPIC' | 'STORY' | 'TASK' | 'SUB_TASK';
+export type TaskType = 'EPIC' | 'STORY' | 'TASK' | 'SUBTASK';
 
 export interface Task {
   id: number;
@@ -13,7 +13,7 @@ export interface Task {
   parentId?: number;
   projectId: number;
   project?: Project;
-  assigneeId: number;
+  assigneeId?: number;
   assignee?: User;
   status: TaskStatus;
   type: TaskType;

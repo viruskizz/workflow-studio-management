@@ -1,7 +1,9 @@
 <nav class="layout-breadcrumb">
     <ol>
         <ng-template ngFor let-item let-last="last" [ngForOf]="breadcrumbs$ | async">
-            <li>{{item.label}}</li>
+            <a class="cursor-pointer" [routerLink]="item.url">
+                <li [ngClass]="[last ? 'text-primary': 'text-color']">{{item.label}}</li>
+            </a>
             <li *ngIf="!last" class="layout-breadcrumb-chevron"> / </li>
         </ng-template>
     </ol>
