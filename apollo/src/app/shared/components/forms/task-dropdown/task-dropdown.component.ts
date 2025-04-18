@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Task, TaskType } from 'src/app/models/task.model';
 import { ProjectService } from 'src/app/services/project.service';
@@ -46,7 +46,6 @@ export class TaskDropdownComponent implements OnInit {
   }
 
   onChange(event: any) {
-    // this.selectedType = event;
     this.form.controls[this.controlName].patchValue(event.value.id)
   }
 
