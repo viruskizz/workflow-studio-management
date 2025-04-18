@@ -137,8 +137,7 @@
             </span>
           </label>
           <div class="col-12 md:col-8">
-            <!-- <input pInputText id="parent" type="text" formControlName="parent" /> -->
-            <app-task-dropdown [projectId]="project.id!" [form]="projectTaskForm" controlName="parentId"></app-task-dropdown>
+            <app-task-dropdown [projectId]="project?.id!" [form]="projectTaskForm" controlName="parentId"></app-task-dropdown>
           </div>
         </div>
       </div>

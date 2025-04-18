@@ -21,7 +21,7 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns" let-last="last">
-    <tr [ttRow]="rowNode">
+    <tr [ttRow]="rowNode" (click)="onViewTask(rowData)">
       <td style="min-width: 5rem;" class="px-1">
         <p-treeTableToggler [rowNode]="rowNode" />
         <img alt="icon" [src]="getTypeIcon(rowData.type)" class="w-1rem mr-2 vertical-align-middle" />

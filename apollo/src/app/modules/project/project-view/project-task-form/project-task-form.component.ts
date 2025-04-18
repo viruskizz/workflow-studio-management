@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { FileSelectEvent } from 'primeng/fileupload';
@@ -12,7 +12,7 @@ import { TaskTypeDropdownItem } from 'src/app/shared/components/forms/task-type/
   templateUrl: './project-task-form.component.html',
 })
 export class ProjectTaskFormComponent implements OnChanges {
-  @Input({required: true}) project!: Partial<Project>;
+  @Input({required: true}) project?: Partial<Project>;
   @Input() task?: Partial<Task>;
   @Output() taskChange = new EventEmitter<Task>();
   @Output() closeEvent = new EventEmitter<Task | null>();
@@ -29,7 +29,7 @@ export class ProjectTaskFormComponent implements OnChanges {
   projectTaskForm = new FormGroup({
     summary: new FormControl('', [Validators.required]),
     type: new FormControl<TaskTypeDropdownItem | null>(null, [Validators.required]),
-    status: new FormControl('', [Validators.required]),
+    status: new FormControl<TaskStatus | null>(null, [Validators.required]),
     description: new FormControl('', []),
     date: new FormControl('', []),
     team: new FormControl('', []),
@@ -48,7 +48,7 @@ export class ProjectTaskFormComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['task']?.currentValue) {
       this.visible = true;
-      console.log('change:', changes['task']?.currentValue);
+      this.projectTaskForm.reset()
       this.projectTaskForm.patchValue(changes['task']?.currentValue)
     }
   }

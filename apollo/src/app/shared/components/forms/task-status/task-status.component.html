@@ -1,6 +1,21 @@
-<p-dropdown
-    [options]="statuses"
-    [optionLabel]="label"
-    [(ngModel)]="selectedStatus"
-    (onChange)="onChange($event)"
-    placeholder="Select Status"/>
+<p-dropdown 
+  [options]="statuses"
+  [optionLabel]="label"
+  [(ngModel)]="selectedStatus"
+  (onChange)="onChange($event)"
+  placeholder="Select Status">
+  <ng-template pTemplate="selectedItem">
+    <div class="flex align-items-center gap-2" *ngIf="selectedStatus">
+      <div class="flex align-items-center gap-2">
+        <i [ngClass]="getItem(selectedStatus)?.icon" class="w-1rem"></i>
+        <div>{{ getItem(selectedStatus)?.title }}</div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template let-status pTemplate="item">
+    <div class="flex align-items-center gap-2">
+      <i [ngClass]="status.icon" class="w-1rem"></i>
+      <div>{{ status.title }}</div>
+    </div>
+  </ng-template>
+</p-dropdown>

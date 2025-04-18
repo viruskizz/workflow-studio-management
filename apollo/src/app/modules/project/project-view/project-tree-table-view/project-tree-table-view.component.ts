@@ -68,12 +68,12 @@ export class ProjectTreeTableViewComponent implements OnInit {
         type: 'EPIC'
       };
     }
-    console.log(this.tasking)
     this.taskingChange.emit(this.tasking)
   }
 
   onViewTask(task: Partial<Task>) {
     this.tasking = task;
+    this.taskingChange.emit(this.tasking)
   }
 
   getTypeIcon(type: TaskType): string {
