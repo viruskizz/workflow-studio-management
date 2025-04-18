@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { User } from 'src/app/models/user.model';
@@ -12,10 +12,10 @@ import { ProjectService } from 'src/app/services/project.service';
 import { TaskService } from 'src/app/services/task.service';
 
 @Component({
-  selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html',
+  selector: 'app-user-detail',
+  templateUrl: './user-detail.component.html',
 })
-export class UserProfileComponent implements OnInit {
+export class UserDetailComponent implements OnInit {
   user: User | null = null;
   userTeams: Team[] = [];
   userProjects: Project[] = [];
@@ -31,6 +31,7 @@ export class UserProfileComponent implements OnInit {
   
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private userService: UserService,
     private teamService: TeamService,
     private projectService: ProjectService,
@@ -187,8 +188,8 @@ export class UserProfileComponent implements OnInit {
   }
 
   editUser() {
-    if (this.user) {
-      this.userDialog = true;
+    if (this.user && this.user.id) {
+      this.router.navigate(['/users', this.user.id, 'edit']);
     }
   }
   

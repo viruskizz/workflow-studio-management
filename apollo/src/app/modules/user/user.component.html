@@ -13,7 +13,7 @@
 
             <!-- Table -->
             <p-table #dt [value]="users" [columns]="cols" responsiveLayout="scroll" [rows]="10"
-                [globalFilterFields]="['name','country.name','representative.name','status']" [rows]="10"
+                [globalFilterFields]="['id', 'username', 'firstName', 'lastName', 'email', 'role']" [rows]="10"
                 [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowHover]="true"
                 dataKey="id">
@@ -61,9 +61,9 @@
                         <td>
                             <div class="flex" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="0">
                                 <p-button pRipple icon="pi pi-eye" class="p-button-rounded p-button-info mr-2"
-                                    (click)="navigateToUserProfile(user)" />
+                                    (click)="navigateToUserDetail(user)" />
                                 <p-button pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
-                                    (click)="editUser(user)" />
+                                    (click)="navigateToUserEdit(user)" />
                             </div>
                         </td>
                     </tr>
@@ -71,7 +71,6 @@
             </p-table>
         </div>
 
-        <app-user-form [(visible)]="userDialog" [(user)]="user" (closeEvent)="hideDialog($event)"></app-user-form>
 
         <!-- Confirm Delete Dialog -->
         <!-- <p-dialog [(visible)]="deleteUserDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">

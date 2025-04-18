@@ -23,11 +23,12 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { UserComponent } from './user.component';
 import { UserRoutingModule } from './user-routing.module';
-import { UserFormComponent } from './user-form/user-form.component';
-import { UserProfileComponent } from './user-profile/user-profile.component';
+
 import { ImageModule } from 'primeng/image';
 import { TagModule } from 'primeng/tag';
 import { AvatarModule } from 'primeng/avatar';
+import { UserDetailManageComponent } from './user-detail-manage/user-detail-manage.component';
+import { UserDetailComponent } from './user-detail/user-detail.component';
 
 @NgModule({
   imports: [
@@ -59,6 +60,6 @@ import { AvatarModule } from 'primeng/avatar';
     AvatarModule
 
   ],
-  declarations: [UserComponent, UserFormComponent, UserProfileComponent]
+  declarations: [UserComponent, UserDetailManageComponent, UserDetailComponent]
 })
 export class UserModule { }

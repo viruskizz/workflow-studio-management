@@ -103,7 +103,13 @@ export class UserComponent implements OnInit {
     this.users[idx].imageUrl = getDefaultAvatar()
   }
 
-  navigateToUserProfile(user: User) {
+  navigateToUserEdit(user: User) {
+    if (user && user.id) {
+      this.router.navigate(['/users', user.id, 'edit']);
+    }
+  }
+
+  navigateToUserDetail(user: User) {
     if (user && user.id) {
       this.router.navigate(['/users', user.id]);
     }
