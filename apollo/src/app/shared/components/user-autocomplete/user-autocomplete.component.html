@@ -10,7 +10,8 @@
         (completeMethod)="filterUsers($event)"
         [multiple]="multiple"
         optionValue="id"
-        optionLabel="username">
+        optionLabel="username"
+        styleClass="w-full">
         <ng-template let-user let-i="index" pTemplate="item">
             <div class="flex items-center gap-2">
                 <p-avatar [image]="user.imageUrl" size="normal" styleClass="mr-2" shape="circle" (onImageError)="onImageError($event, i)"/>

@@ -6,6 +6,8 @@ import { TeamService } from 'src/app/services/team.service';
 import { UserService } from 'src/app/services/user.service';
 import { FileSelectEvent } from 'primeng/fileupload';
 import { MessageService } from 'primeng/api';
+import { Observable, forkJoin, of, switchMap } from 'rxjs';
+import { FileService } from 'src/app/services/file.service';
 
 @Component({
   selector: 'app-team-form',
@@ -29,7 +31,8 @@ export class TeamFormComponent implements OnChanges, OnInit {
     private fb: FormBuilder,
     private teamService: TeamService,
     private userService: UserService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private fileService: FileService
   ) {
     this.teamForm = this.createForm();
   }
@@ -50,18 +53,15 @@ export class TeamFormComponent implements OnChanges, OnInit {
     return this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       leader: [null, [Validators.required]],
-      members: [[], [Validators.required]],
-      imageUrl: [''],
+      members: [[], [Validators.required]]
     });
   }
 
   private updateForm(team: Team): void {
-    this.imagePreview = team.imageUrl;
-    this.teamForm.patchValue({
+   this.teamForm.patchValue({
       name: team.name,
       leader: this.users.find((u) => u.id === team.leaderId),
       members: team.members || [],
-      imageUrl: team.imageUrl || '',
     });
   }
 
@@ -107,18 +107,36 @@ export class TeamFormComponent implements OnChanges, OnInit {
     return {
       name: formValue.name,
       members: formValue.members,
-      imageUrl: formValue.imageUrl,
-      leaderId: formValue.leader?.id,
+      leaderId: formValue.leader?.id
     };
   }
 
   private saveTeam(teamData: Partial<Team>): void {
     this.loading = true;
+    
+    // First handle the team save operation
     const saveObservable = this.team?.id
       ? this.teamService.updateTeam(this.team.id, teamData)
       : this.teamService.createTeam(teamData as Team);
 
-    saveObservable.subscribe({
+    saveObservable.pipe(
+      switchMap(savedTeam => {
+        // After team is saved, upload the image if there is one
+        if (this.coverFile) {
+          const filepath = `/teams/${savedTeam.id}/`;
+          const filename = 'cover.png';
+          return this.fileService.upload(this.coverFile, filepath, filename).pipe(
+            switchMap(fileResponse => {
+              // Update team with image URL
+              return this.teamService.updateTeam(savedTeam.id!, { imageUrl: fileResponse.url }).pipe(
+                switchMap(() => of(savedTeam))
+              );
+            })
+          );
+        }
+        return of(savedTeam);
+      })
+    ).subscribe({
       next: this.handleSaveSuccess.bind(this),
       error: this.handleSaveError.bind(this),
       complete: () => (this.loading = false)
@@ -126,17 +144,46 @@ export class TeamFormComponent implements OnChanges, OnInit {
   }
 
   private handleSaveSuccess(updatedTeam: Team): void {
-    this.teamChange.emit(updatedTeam);
+    // If we're creating a new team and have members to add
+    if (!this.team?.id && updatedTeam.id && this.teamForm.value.members?.length > 0) {
+      // Add members to the newly created team
+      this.addMembersToTeam(updatedTeam.id, this.teamForm.value.members)
+        .subscribe({
+          next: () => {
+            // Get the updated team with members
+            this.teamService.getTeamWithMembers(updatedTeam.id!)
+              .subscribe(teamWithMembers => {
+                this.teamChange.emit(teamWithMembers);
+                this.showSuccessMessage();
+                this.closeDialog();
+              });
+          },
+          error: (error) => {
+            console.error('Error adding members to team:', error);
+            // Still emit the team even if adding members failed
+            this.teamChange.emit(updatedTeam);
+            this.showSuccessMessage();
+            this.closeDialog();
+          }
+        });
+    } else {
+      // For updates or teams without members, just emit the team
+      this.teamChange.emit(updatedTeam);
+      this.showSuccessMessage();
+      this.closeDialog();
+    }
+  }
+
+  private showSuccessMessage(): void {
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
       detail: `Team ${this.team?.id ? 'updated' : 'created'} successfully.`,
       life: 3000,
     });
-    this.closeDialog();
   }
 
-  private handleSaveError(error: any): void {
+  private handleSaveError(error: Error): void {
     console.error('Error saving team:', error);
     this.messageService.add({
       severity: 'error',
@@ -161,6 +208,20 @@ export class TeamFormComponent implements OnChanges, OnInit {
     const currentMembers = this.teamForm.get('members')?.value as User[];
     const updatedMembers = currentMembers.filter(m => m.id !== undefined && m.id !== member.id);
     this.teamForm.patchValue({ members: updatedMembers });
+  }
+
+  private addMembersToTeam(teamId: number, members: User[]): Observable<unknown[]|null> {
+    if (!members || members.length === 0) {
+      return of(null);
+    }
+    
+    // Create an array of observables for each member addition
+    const addMemberRequests = members.map(member => 
+      this.teamService.addMemberToTeam(teamId, member.id!)
+    );
+    
+    // Execute all requests in parallel
+    return forkJoin(addMemberRequests);
   }
 }
 

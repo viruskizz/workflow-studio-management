@@ -11,9 +11,6 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { TeamComponent } from './team.component';
-import { TeamFormComponent } from './team-form/team-form.component';
-import { TeamRoutingModule } from './team-routing.module';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AvatarModule } from 'primeng/avatar';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -22,7 +19,13 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ImageModule } from 'primeng/image';
 import { ChipModule } from 'primeng/chip';
 import { TagModule } from 'primeng/tag';
-
+import { PaginatorModule } from 'primeng/paginator';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TeamRoutingModule } from './team-routing.module';
+import { TeamComponent } from './team.component';
+import { TeamFormComponent } from './team-form/team-form.component'
+import { TeamDetailComponent } from './team-detail/team-detail.component'
+import { ConfirmationService, MessageService } from 'primeng/api';
 @NgModule({
   imports: [
     CommonModule,
@@ -48,8 +51,18 @@ import { TagModule } from 'primeng/tag';
     TagModule,
     ImageModule,
     SharedModule,
+    PaginatorModule,
+    ProgressSpinnerModule,
   ],
-  declarations: [TeamComponent, TeamFormComponent]
+  declarations: [
+    TeamComponent,
+    TeamFormComponent,
+    TeamDetailComponent
+  ],
+  providers: [
+    MessageService,
+    ConfirmationService
+  ]
 })
 export class TeamModule { }
 

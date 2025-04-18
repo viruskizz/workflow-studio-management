@@ -1,0 +1,254 @@
+<div class="card">
+    <div class="flex justify-content-between align-items-center mb-4 gap-4">
+        <h2>Manage Team</h2>
+        <div class="flex gap-2">
+            <p-button
+                icon="pi pi-times"
+                [rounded]="true"
+                [text]="true"
+                [raised]="true"
+                severity="secondary"
+                routerLink="/teams"
+            ></p-button>
+            <p-button
+                icon="pi pi-save"
+                [rounded]="true"
+                [text]="true"
+                [raised]="true"
+                severity="success"
+                (click)="onSave()"
+            ></p-button>
+            <p-button
+                icon="pi pi-trash"
+                [rounded]="true"
+                [text]="true"
+                [raised]="true"
+                severity="danger"
+                (click)="deleteTeam()"
+            ></p-button>
+        </div>
+    </div>
+
+    <p-toast></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+
+    <div *ngIf="loading" class="flex justify-content-center">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+
+    <div *ngIf="!loading" class="grid">
+        <!-- Left side - Team details -->
+        <div class="col-12 md:col-6">
+            <div class="flex flex-column align-items-center mb-4">
+                <img
+                    [src]="getImage(imagePreview || team.imageUrl)"
+                    [alt]="team.name"
+                    width="100"
+                    height="100"
+                    class="mb-4 border-circle shadow-2"
+                    (error)="onImageError()"
+                />
+                <!-- <div class="text-center">
+          <small>{{team.name}}</small>
+        </div> -->
+                <div>
+                    <p-fileUpload
+                        #fileUpload
+                        mode="basic"
+                        name="cover"
+                        accept="image/*"
+                        [maxFileSize]="3000000"
+                        styleClass="p-button-outlined p-button-plain p-button-sm"
+                        chooseLabel="Upload Image"
+                        (onSelect)="onSelectImage($event)"
+                    ></p-fileUpload>
+                </div>
+            </div>
+
+            <div class="text-center mb-3">
+                <small class="text-secondary"
+                    >Required Fields Are Marked With An Asterisk *</small
+                >
+            </div>
+
+            <form [formGroup]="teamForm">
+                <div class="field flex flex-column align-items-center">
+                    <div class="w-30rem">
+                        <label for="name" class="block font-medium"
+                            >Team name <span class="text-danger">*</span></label
+                        >
+                        <input
+                            id="name"
+                            type="text"
+                            pInputText
+                            formControlName="name"
+                            required
+                            class="w-full"
+                        />
+                        <small
+                            class="p-error"
+                            *ngIf="isSubmitted && formControls['name'].errors?.['required']"
+                        >
+                            Team name is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="field flex flex-column align-items-center">
+                    <div class="w-30rem">
+                        <label for="leader" class="block font-medium"
+                            >Leader <span class="text-danger">*</span></label
+                        >
+                        <app-user-autocomplete
+                            [form]="teamForm"
+                            [isShowLabel]="false"
+                            controlName="leader"
+                            [multiple]="false"
+                            [dropdown]="true"
+                            [limit]="1"
+                        ></app-user-autocomplete>
+                        <small
+                            class="p-error"
+                            *ngIf="isSubmitted && formControls['leader'].errors?.['required']"
+                        >
+                            Team leader is required.
+                        </small>
+                    </div>
+                </div>
+
+                <h3 class="mt-5 mb-3">Members</h3>
+
+                <div class="flex mb-3">
+                    <span class="flex-grow-1 mr-2">
+                        <app-user-autocomplete
+                            [form]="teamForm"
+                            [isShowLabel]="false"
+                            controlName="newMember"
+                            labelFor="Add Team Member"
+                            [multiple]="true"
+                            [dropdown]="true"
+                            [limit]="0"
+                        >
+                        </app-user-autocomplete>
+                    </span>
+                    <p-button
+                        type="button"
+                        icon="pi pi-plus"
+                        label="Add"
+                        styleClass="p-button-success"
+                        [disabled]="!formControls['newMember'].value"
+                        (click)="addSelectedMember()"
+                    >
+                    </p-button>
+                </div>
+                <div class="field">
+                    <div class="members-list">
+                        <div
+                            class="members-header flex justify-content-between align-items-center p-4"
+                        >
+                            <span class="font-medium">Members</span>
+                            <span class="font-medium">Role</span>
+                            <span class="font-medium">Action</span>
+                        </div>
+                        <div
+                            class="members-container"
+                            style="
+                                max-height: 250px;
+                                overflow-y: auto;
+                                border: 1px solid #dee2e6;
+                                border-radius: 6px;
+                            "
+                        >
+                            <div
+                                *ngFor="let member of filteredMembers"
+                                class="member-item flex justify-content-between align-items-center p-4 mb-0 border-bottom-1 border-300"
+                            >
+                                <div class="flex align-items-center">
+                                    <p-avatar
+                                        [image]="getImage(member.imageUrl)"
+                                        size="normal"
+                                        shape="circle"
+                                        class="mr-2"
+                                    ></p-avatar>
+                                    <span class="font-medium">{{
+                                        member.username
+                                    }}</span>
+                                </div>
+                                <p-dropdown
+                                    [options]="[
+                                        { label: 'Member', value: 'member' }
+                                    ]"
+                                    [(ngModel)]="member.role"
+                                    [ngModelOptions]="{ standalone: true }"
+                                    styleClass="role-dropdown"
+                                ></p-dropdown>
+                                <p-button
+                                    pRipple
+                                    type="button"
+                                    icon="pi pi-trash"
+                                    class="p-button-rounded p-button-danger p-button-text"
+                                    (click)="removeMember(member)"
+                                ></p-button>
+                            </div>
+                            <div
+                                *ngIf="filteredMembers.length === 0"
+                                class="text-center p-3"
+                            >
+                                No members found
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right side - Projects -->
+        <div class="col-12 md:col-6 mt-auto">
+            <div class="working-projects p-4 border-1 border-300 border-round">
+                <h3>Working on projects</h3>
+
+                <p-table
+                    styleClass="p-datatable-sm"
+                    [value]="[1, 2, 3, 4, 5, 6, 7, 8]"
+                    size="large"
+                >
+                    <!-- This is mock projects data -->
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Progress</th>
+                            <th>Date Start</th>
+                            <th>Status</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-i>
+                        <tr class="">
+                            <td >Project {{ i }}</td>
+                            <td >
+                                <div *ngIf="i % 3 !== 0">
+                                    <span>{{ 30 + i * 10 }}%</span>
+                                </div>
+                                <div *ngIf="i % 3 === 0">
+                                    <span>0%</span>
+                                </div>
+                            </td>
+                            <td >{{ i }}/04/2022</td>
+                            <td >
+                                <p-tag
+                                    *ngIf="i % 3 !== 0"
+                                    severity="info"
+                                    value="In Progress"
+                                ></p-tag>
+                                <p-tag
+                                    *ngIf="i % 3 === 0"
+                                    severity="warning"
+                                    value="To Do"
+                                ></p-tag>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>
