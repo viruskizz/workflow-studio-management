@@ -13,8 +13,19 @@ module.exports = tseslint.config(
       ...tseslint.configs.stylistic,
       ...angular.configs.tsRecommended,
     ],
+    
     processor: angular.processInlineTemplates,
     rules: {
+      "indent": ["error", 2],
+      "max-lines": [
+        "error",
+        {
+          max: 300,
+          skipBlankLines: true,
+          skipComments: true
+        }
+      ],
+      "max-lines-per-function": ["error", 50],
       "@typescript-eslint/no-explicit-any": "warn",
       "@angular-eslint/directive-selector": [
         "error",
@@ -42,6 +53,15 @@ module.exports = tseslint.config(
       ...angular.configs.templateAccessibility,
     ],
     rules: {
+      "indent": ["warn", 2],
+      "max-lines": [
+        "warn",
+        {
+          max: 300,
+          skipBlankLines: true,
+          skipComments: true
+        }
+      ],
       "@angular-eslint/template/elements-content": [
         "warn",
         {
