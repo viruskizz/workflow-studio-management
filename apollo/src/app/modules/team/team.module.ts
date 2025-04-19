@@ -1,3 +1,4 @@
+import { TeamDetailProjectWorkingComponent } from './team-detail/team-detail-project-working/team-detail-project-working.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -26,6 +27,7 @@ import { TeamComponent } from './team.component';
 import { TeamFormComponent } from './team-form/team-form.component'
 import { TeamDetailComponent } from './team-detail/team-detail.component'
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { TeamDetailMemberComponent } from './team-detail/team-detail-member/team-detail-member.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -57,7 +59,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   declarations: [
     TeamComponent,
     TeamFormComponent,
-    TeamDetailComponent
+    TeamDetailComponent,
+    TeamDetailMemberComponent,
+    TeamDetailProjectWorkingComponent,
   ],
   providers: [
     MessageService,
