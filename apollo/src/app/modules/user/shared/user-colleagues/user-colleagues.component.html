@@ -1,0 +1,14 @@
+<p-card [styleClass]="styleClass">
+    <ng-template pTemplate="header">
+        <div class="p-3">
+            <h3 class="m-0">Works with</h3>
+        </div>
+    </ng-template>
+
+    <div class="grid">
+        <div *ngFor="let member of teamMembers?.slice(0, 6)" class="col-4 md:col-2 text-center">
+            <p-avatar [image]="member.imageUrl || ''" shape="circle" size="large" class="mb-2"></p-avatar>
+            <div class="text-sm">team member</div>
+        </div>
+    </div>
+</p-card>
