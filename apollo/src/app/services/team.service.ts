@@ -69,9 +69,13 @@ export class TeamService {
     });
   }
 
-  listTeamStages(id: number): Observable<TeamStage[]> {
+  listStages(id: number): Observable<TeamStage[]> {
     const url = `${this.baseUrl}/${id}/stages`
     return this.httpClient.get<TeamStage[]>(url);
+  }
+  removeStage(teamId: number, id: number) {
+    const url = `${this.baseUrl}/${teamId}/stages/${id}`;
+    return this.httpClient.delete(url);
   }
 }
 

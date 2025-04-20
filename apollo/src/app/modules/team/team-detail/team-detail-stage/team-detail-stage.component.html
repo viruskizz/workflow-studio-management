@@ -40,13 +40,6 @@
             [label]="getTaskStatusStyle(stage.taskStatus).label"
             [icon]="getTaskStatusStyle(stage.taskStatus).icon" />
         </td>
-        <!-- <td>
-          <p-button
-            icon="pi pi-plus"
-            label="Add"
-            size="small"
-            styleClass="px-3 py-2"/>
-        </td> -->
       </tr>
     </ng-template>
     <ng-template pTemplate="rowexpansion" let-stage>
@@ -62,9 +55,12 @@
             icon="pi pi-trash"
             size="small"
             severity="danger"
-            styleClass="px-3 py-2"/>
+            styleClass="px-3 py-2"
+            (onClick)="remove(stage)"/>
         </td>
       </tr>
     </ng-template>
   </p-table>
+  <p-toast key="teamDetailStage"></p-toast>
+  <p-confirmDialog key="removeTeamStage" rejectButtonStyleClass="p-button-outlined" />
 </div>
