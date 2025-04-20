@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, forkJoin, of } from 'rxjs';
-import { Team } from '../models/team.model';
+import { Team, TeamStage } from '../models/team.model';
 import { User } from '../models/user.model';
 import { switchMap, map } from 'rxjs/operators';
 
@@ -67,6 +67,11 @@ export class TeamService {
     return this.httpClient.delete<void>(`${this.baseUrl}/${teamId}/members`, {
       body: { userId }
     });
+  }
+
+  listTeamStages(id: number): Observable<TeamStage[]> {
+    const url = `${this.baseUrl}/${id}/stages`
+    return this.httpClient.get<TeamStage[]>(url);
   }
 }
 

@@ -1,0 +1,70 @@
+<div class="card">
+  <div class="flex justify-content-between align-items-center mb-2 gap-4">
+    <h3>Stages</h3>
+    <p-button
+      icon="pi pi-plus"
+      label="Add"
+      styleClass="px-3 py-2"/>
+  </div>
+  <p-table
+    size="small"
+    [value]="stages"
+    rowGroupMode="subheader"
+    groupRowsBy="taskStatus"
+    sortField="taskStatus"
+    sortMode="single"
+    dataKey="taskStatus"
+    styleClass="p-datatable-sm"
+    [sortOrder]="-1"
+    [scrollable]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Name</th>
+        <th>Action</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="groupheader" let-stage let-expanded="expanded">
+      <tr pRowGroupHeader>
+        <td colspan="2">
+          <button 
+              type="button" 
+              pButton 
+              pRipple 
+              [pRowToggler]="stage"
+              class="p-button-text p-button-rounded p-button-plain mr-3 vertical-align-baseline" 
+              style="height: 1rem; width: 1.5rem;"
+              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
+          </button>
+          <p-chip
+            [styleClass]="getTaskStatusStyle(stage.taskStatus).styleClass"
+            [label]="getTaskStatusStyle(stage.taskStatus).label"
+            [icon]="getTaskStatusStyle(stage.taskStatus).icon" />
+        </td>
+        <!-- <td>
+          <p-button
+            icon="pi pi-plus"
+            label="Add"
+            size="small"
+            styleClass="px-3 py-2"/>
+        </td> -->
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-stage>
+      <tr>
+        <td>
+          <span class="font-bold mr-2">
+            {{stage.order}}
+          </span>
+          {{stage.name}}
+        </td>
+        <td>
+          <p-button
+            icon="pi pi-trash"
+            size="small"
+            severity="danger"
+            styleClass="px-3 py-2"/>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -1,5 +1,5 @@
 import { TeamDetailProjectWorkingComponent } from './team-detail/team-detail-project-working/team-detail-project-working.component';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
@@ -28,7 +28,9 @@ import { TeamFormComponent } from './team-form/team-form.component'
 import { TeamDetailComponent } from './team-detail/team-detail.component'
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TeamDetailMemberComponent } from './team-detail/team-detail-member/team-detail-member.component';
+import { TeamDetailStageComponent } from './team-detail/team-detail-stage/team-detail-stage.component';
 @NgModule({
+
   imports: [
     CommonModule,
     FormsModule,
@@ -62,11 +64,15 @@ import { TeamDetailMemberComponent } from './team-detail/team-detail-member/team
     TeamDetailComponent,
     TeamDetailMemberComponent,
     TeamDetailProjectWorkingComponent,
+    TeamDetailStageComponent,
   ],
   providers: [
     MessageService,
     ConfirmationService
-  ]
+  ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ],
 })
 export class TeamModule { }
 

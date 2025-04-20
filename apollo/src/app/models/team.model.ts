@@ -1,3 +1,4 @@
+import { TaskStatus } from './task.model';
 import { User } from "./user.model";
 
 export interface Team {
@@ -12,4 +13,12 @@ export interface Team {
   projectActive?: string;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface TeamStage {
+  id?: number;
+  name: string;
+  taskStatus: TaskStatus;
+  order: number;
+  teamId: number;
 }
