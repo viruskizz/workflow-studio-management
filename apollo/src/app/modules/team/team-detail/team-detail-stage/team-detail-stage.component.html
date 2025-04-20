@@ -1,11 +1,22 @@
 <div class="card">
+  <!-- Header -->
   <div class="flex justify-content-between align-items-center mb-2 gap-4">
     <h3>Stages</h3>
+    <div class="flex gap-2">
+      <p-button
+      icon="pi pi-replay"
+      label="Reorder"
+      severity="info"
+      styleClass="px-3 py-2"
+      (onClick)="reorder()"/>
     <p-button
       icon="pi pi-plus"
       label="Add"
       styleClass="px-3 py-2"/>
+    </div>
   </div>
+
+  <!-- Table -->
   <p-table
     size="small"
     [value]="stages"
@@ -15,6 +26,7 @@
     sortMode="single"
     dataKey="taskStatus"
     styleClass="p-datatable-sm"
+    [loading]="loading"
     [sortOrder]="-1"
     [scrollable]="true">
     <ng-template pTemplate="header">
@@ -61,6 +73,8 @@
       </tr>
     </ng-template>
   </p-table>
+  <!-- Form -->
+
   <p-toast key="teamDetailStage"></p-toast>
   <p-confirmDialog key="removeTeamStage" rejectButtonStyleClass="p-button-outlined" />
 </div>

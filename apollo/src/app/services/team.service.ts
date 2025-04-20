@@ -68,10 +68,14 @@ export class TeamService {
       body: { userId }
     });
   }
-
+  // Stage
   listStages(id: number): Observable<TeamStage[]> {
     const url = `${this.baseUrl}/${id}/stages`
     return this.httpClient.get<TeamStage[]>(url);
+  }
+  reorderStages(id: number) {
+    const url = `${this.baseUrl}/${id}/stages/reorder`
+    return this.httpClient.patch<TeamStage[]>(url, {});
   }
   removeStage(teamId: number, id: number) {
     const url = `${this.baseUrl}/${teamId}/stages/${id}`;
