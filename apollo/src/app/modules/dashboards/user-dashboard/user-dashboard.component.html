@@ -1,0 +1,15 @@
+<div class="grid">
+    <div class="col-12">
+        <!-- Main content area -->
+        <div class="col-12">
+            <!-- Task Statistics Cards -->
+            <app-user-stats [taskStats]="taskStats"></app-user-stats>
+
+            <!-- Worked on section -->
+            <app-user-activity styleClass="mt-3"></app-user-activity>
+
+            <!-- Works with section -->
+            <app-user-colleagues [teamMembers]="teamMembers" styleClass="mt-3"></app-user-colleagues>
+        </div>
+    </div>
+</div>
