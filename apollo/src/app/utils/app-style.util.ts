@@ -5,7 +5,7 @@ export class AppStyleUtil {
     const data = {
       'BACKLOG': {
         label: 'Backlog',
-        icon: 'pi pi-circle',
+        icon: 'pi pi-circle-fill',
         styleClass: 'bg-surface-400 text-white',
       },
       'TODO': {
@@ -20,12 +20,12 @@ export class AppStyleUtil {
       },
       'DONE': {
         label: 'Done',
-        icon: 'pi pi-verified',
+        icon: 'pi pi-check-circle',
         styleClass: 'bg-green-400 text-white',
       },
       'CANCELLED': {
         label: 'Cancelled',
-        icon: 'pi pi-circle',
+        icon: 'pi pi-times-circle',
         styleClass: 'bg-red-400 text-white',
       },
     };

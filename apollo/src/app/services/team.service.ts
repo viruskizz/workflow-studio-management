@@ -68,18 +68,22 @@ export class TeamService {
       body: { userId }
     });
   }
+
   // Stage
-  listStages(id: number): Observable<TeamStage[]> {
-    const url = `${this.baseUrl}/${id}/stages`
-    return this.httpClient.get<TeamStage[]>(url);
+  listStages(teamId: number): Observable<TeamStage[]> {
+    return this.httpClient.get<TeamStage[]>(`${this.baseUrl}/${teamId}/stages`);
   }
-  reorderStages(id: number) {
-    const url = `${this.baseUrl}/${id}/stages/reorder`
-    return this.httpClient.patch<TeamStage[]>(url, {});
+  createStage(teamId: number, body: TeamStage) {
+    return this.httpClient.post<TeamStage>(`${this.baseUrl}/${teamId}/stages`, body);
+  }
+  editStage(teamId: number, id: number, body: TeamStage) {
+    return this.httpClient.patch<TeamStage>(`${this.baseUrl}/${teamId}/stages/${id}`, body);
+  }
+  reorderStages(teamId: number) {
+    return this.httpClient.patch<TeamStage[]>(`${this.baseUrl}/${teamId}/stages/reorder`, {});
   }
   removeStage(teamId: number, id: number) {
-    const url = `${this.baseUrl}/${teamId}/stages/${id}`;
-    return this.httpClient.delete(url);
+    return this.httpClient.delete(`${this.baseUrl}/${teamId}/stages/${id}`);
   }
 }
 

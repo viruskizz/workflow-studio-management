@@ -3,16 +3,8 @@
   <div class="flex justify-content-between align-items-center mb-2 gap-4">
     <h3>Stages</h3>
     <div class="flex gap-2">
-      <p-button
-      icon="pi pi-replay"
-      label="Reorder"
-      severity="info"
-      styleClass="px-3 py-2"
-      (onClick)="reorder()"/>
-    <p-button
-      icon="pi pi-plus"
-      label="Add"
-      styleClass="px-3 py-2"/>
+      <p-button icon="pi pi-replay" label="Reorder" severity="info" styleClass="px-3 py-2" (onClick)="reorder()"/>
+      <p-button icon="pi pi-plus" label="Add" styleClass="px-3 py-2" (onClick)="add()"/>
     </div>
   </div>
 
@@ -57,23 +49,55 @@
     <ng-template pTemplate="rowexpansion" let-stage>
       <tr>
         <td>
-          <span class="font-bold mr-2">
-            {{stage.order}}
-          </span>
-          {{stage.name}}
+          <span class="font-bold mr-2"> {{stage.order}}</span>
+          <span>{{stage.name}}</span>
         </td>
         <td>
-          <p-button
-            icon="pi pi-trash"
-            size="small"
-            severity="danger"
-            styleClass="px-3 py-2"
-            (onClick)="remove(stage)"/>
+          <button pButton pRipple icon="pi pi-pencil" class="p-ripple p-button p-component p-button-icon-only p-button-rounded p-button-outlined mr-2" (click)="edit(stage)"></button>
+          <button pButton pRipple icon="pi pi-trash" class="p-ripple p-button p-component p-button-icon-only p-button-danger p-button-rounded p-button-outlined" (click)="remove(stage)"></button>
         </td>
       </tr>
     </ng-template>
   </p-table>
+
   <!-- Form -->
+  <p-dialog
+    [(visible)]="visible"
+    [style]="{width: '450px'}"
+    header="Stage Detail"
+    [modal]="true"
+    (onHide)="hide()"
+    [resizable]="true"
+    class="p-fluid">
+    <ng-template pTemplate="content">
+      <form [formGroup]="form">
+        <div class="field">
+          <label for="description">Status</label>
+          <app-task-status [form]="form" controlName="taskStatus" [ngClass]="{'ng-invalid ng-dirty' : submitted && taskStatus?.invalid}"/>
+          <small class="p-error" *ngIf="submitted && taskStatus?.hasError('required')">Task Status is required.</small>
+        </div>
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" pInputText id="name" formControlName="name" [ngClass]="{'ng-invalid ng-dirty' : submitted && name?.invalid}"/>
+          <small class="p-error" *ngIf="submitted && name?.hasError('required')">Name is required.</small>
+        </div>
+        <div class="field">
+            <label for="description">Description</label>
+            <input type="text" pInputText id="description" formControlName="description">
+        </div>
+        <div class="field">
+          <label for="description">Order</label>
+          <input type="number" pInputText id="order" formControlName="order" placeholder="0"  [ngClass]="{'ng-invalid ng-dirty' : submitted && order?.invalid}">
+          <small class="p-error block" *ngIf="submitted && order?.hasError('required')">Order is required.</small>
+          <small class="p-error block" *ngIf="(order?.dirty || order?.touched) && order?.hasError('duplicatedOrder')">Order could not duplicated.</small>
+        </div>
+      </form>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hide()"></button>
+      <button pButton pRipple label="Save" icon="pi pi-check" (click)="submit()"></button>
+    </ng-template>
+  </p-dialog>
 
   <p-toast key="teamDetailStage"></p-toast>
   <p-confirmDialog key="removeTeamStage" rejectButtonStyleClass="p-button-outlined" />
