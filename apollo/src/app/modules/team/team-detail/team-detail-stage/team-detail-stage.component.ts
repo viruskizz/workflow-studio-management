@@ -1,7 +1,7 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { delay, map, Observable, tap } from 'rxjs';
+import { delay, Observable, tap } from 'rxjs';
 import { TaskStatus } from 'src/app/models/task.model';
 import { TeamStage } from 'src/app/models/team.model';
 import { TeamService } from 'src/app/services/team.service';
@@ -39,10 +39,22 @@ export class TeamDetailStageComponent implements OnInit {
     if (this.teamId) {
       this.teamService.listStages(this.teamId).subscribe({
         next: (v) => {
-          this.stages = v;
+          this.stages = this.sortStage(v);
         }
       })
     }
+  }
+
+  sortStage(ss: TeamStage[]) {
+    ss.sort((a, b) => {
+      const statusOrder: TaskStatus[] = ['BACKLOG', 'TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED'];
+      const aIdx = statusOrder.indexOf( a.taskStatus );
+      const bIdx = statusOrder.indexOf( b.taskStatus );
+      if ( aIdx !== bIdx )
+        return aIdx - bIdx;
+      return a.order - b.order;
+    })
+    return ss.slice();
   }
 
   getTaskStatusStyle(status: TaskStatus) {
@@ -96,7 +108,7 @@ export class TeamDetailStageComponent implements OnInit {
     }
     event.subscribe(v => {
       this.stages.push(v);
-      this.stages = this.stages.slice();
+      this.stages = this.sortStage(this.stages);
       this.messageService.add({ severity: 'success', summary: 'Success', detail: `${stage.name} has been ${this.staging ? 'editted' : 'created'}`, key: 'teamDetailStage' });
       this.visible = false;
     })
