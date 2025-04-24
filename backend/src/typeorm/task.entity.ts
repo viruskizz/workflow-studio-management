@@ -18,16 +18,18 @@ import { User } from './user.entity';
 import { Project } from './project.entity';
 
 export enum TaskStatus {
+  BACKLOG = 'BACKLOG',
   TODO = 'TODO',
   IN_PROGRESS = 'IN_PROGRESS',
   DONE = 'DONE',
+  CANCELLED = 'CANCELLED',
 }
 
 export enum TaskType {
   EPIC = 'EPIC',
   STORY = 'STORY',
   TASK = 'TASK',
-  SUB_TASK = 'SUB_TASK',
+  SUBTASK = 'SUBTASK',
 }
 
 @Entity({ name: 'tasks' })

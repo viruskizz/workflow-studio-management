@@ -4,6 +4,7 @@ import { TreeNode } from 'primeng/api';
 import { TreeTable } from 'primeng/treetable';
 import { Task, TaskStatus, TaskTree, TaskType } from 'src/app/models/task.model';
 import { ProjectService } from 'src/app/services/project.service';
+import { AppStyleUtil } from 'src/app/utils/app-style.util';
 
 @Component({
   selector: 'app-project-tree-table-view',
@@ -87,28 +88,6 @@ export class ProjectTreeTableViewComponent implements OnInit {
   }
 
   getStatusIconLabel(status: TaskStatus) {
-    const data = {
-      'BACKLOG': {
-        label: 'Backlog',
-        icon: 'pi pi-circle'
-      },
-      'TODO': {
-        label: 'Todo',
-        icon: 'pi pi-circle'
-      },
-      'IN_PROGRESS': {
-        label: 'In Progress',
-        icon: 'pi pi-spinner-dotted'
-      },
-      'DONE': {
-        label: 'Done',
-        icon: 'pi pi-verified'
-      },
-      'CANCELLED': {
-        label: 'Cancelled',
-        icon: 'pi pi-circle'
-      },
-    };
-    return data[status];
+    return AppStyleUtil.getTaskStatusIcon(status);
   }
 }

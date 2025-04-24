@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, forkJoin, of } from 'rxjs';
-import { Team } from '../models/team.model';
+import { Team, TeamStage } from '../models/team.model';
 import { User } from '../models/user.model';
 import { switchMap, map } from 'rxjs/operators';
 
@@ -67,6 +67,23 @@ export class TeamService {
     return this.httpClient.delete<void>(`${this.baseUrl}/${teamId}/members`, {
       body: { userId }
     });
+  }
+
+  // Stage
+  listStages(teamId: number): Observable<TeamStage[]> {
+    return this.httpClient.get<TeamStage[]>(`${this.baseUrl}/${teamId}/stages`);
+  }
+  createStage(teamId: number, body: TeamStage) {
+    return this.httpClient.post<TeamStage>(`${this.baseUrl}/${teamId}/stages`, body);
+  }
+  editStage(teamId: number, id: number, body: TeamStage) {
+    return this.httpClient.patch<TeamStage>(`${this.baseUrl}/${teamId}/stages/${id}`, body);
+  }
+  reorderStages(teamId: number) {
+    return this.httpClient.patch<TeamStage[]>(`${this.baseUrl}/${teamId}/stages/reorder`, {});
+  }
+  removeStage(teamId: number, id: number) {
+    return this.httpClient.delete(`${this.baseUrl}/${teamId}/stages/${id}`);
   }
 }
 

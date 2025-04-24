@@ -1,5 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormGroup} from '@angular/forms';
+import { TaskStatus } from 'src/app/models/task.model';
+import { AppStyleUtil } from 'src/app/utils/app-style.util';
+
+
+interface TaskStatusDropdownItem {
+  id: number;
+  value: TaskStatus;
+}
 
 @Component({
   selector: 'app-task-status',
@@ -7,40 +15,32 @@ import { FormGroup} from '@angular/forms';
 })
 export class TaskStatusComponent implements OnChanges {
   @Input() label = 'value'
-  @Input() selectedStatus?: TaskStatus;
+  @Input() selectedStatus?: TaskStatusDropdownItem;
   @Output() selectedStatusChanged = new EventEmitter<TaskStatus>()
   @Input({ required: true }) form!: FormGroup;
   @Input({ required: true }) controlName!: string;
   @Input() ngClass?: string | any[] | object;
 
   statuses: TaskStatusDropdownItem[] = [
-    {id: 3, title: 'BACKLOG', value: 'DONE', icon: 'pi pi-circle-on'},
-    {id: 1, title: 'Todo', value: 'TODO', icon: 'pi pi-circle'},
-    {id: 2, title: 'In Progress', value: 'IN_PROGRESS', icon: 'pi pi-spinner'},
-    {id: 3, title: 'Done', value: 'DONE', icon: 'pi pi-check-circle'},
-    {id: 3, title: 'CANCELLED', value: 'DONE', icon: 'pi pi-times-circle'},
+    {id: 4, value: 'BACKLOG'},
+    {id: 1, value: 'TODO'},
+    {id: 2, value: 'IN_PROGRESS'},
+    {id: 3, value: 'DONE'},
+    {id: 5, value: 'CANCELLED'},
   ];
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['form'].currentValue) {
-      this.selectedStatus = this.form.controls[this.controlName].value;
+    if (changes['form']?.currentValue) {
+      const value = this.form.controls[this.controlName].value;
+      this.selectedStatus = this.statuses.find(s => s.value === value);
     }
   }
 
   onChange(event: any) {
-    this.form.controls[this.controlName].patchValue(event.value.title)
+    this.form.controls[this.controlName].patchValue(event.value.value)
   }
 
   getItem(type: TaskStatus) {
-    return this.statuses.find(item => item.value === type);
+    return AppStyleUtil.getTaskStatusIcon(type);
   }
-}
-
-export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
-
-export interface TaskStatusDropdownItem {
-  id: number;
-  title: string;
-  value: TaskStatus;
-  icon: string;
 }
