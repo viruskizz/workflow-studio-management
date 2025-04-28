@@ -20,6 +20,7 @@ export interface Task {
   assignee?: User;
   status: TaskStatus;
   type: TaskType;
+  stageId?: number;
   stage?: TeamStage;
   createdAt?: string;
   updatedAt?: string;

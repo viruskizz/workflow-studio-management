@@ -8,13 +8,13 @@
   <ng-template pTemplate="selectedItem">
     <div class="flex align-items-center gap-2" *ngIf="selectedStage">
       <div class="flex align-items-center gap-2">
-        <div>{{ getItem(selectedStage)?.label }}</div>
+        <div>{{ getItem(selectedStage)?.name }}</div>
       </div>
     </div>
   </ng-template>
   <ng-template let-stage pTemplate="item">
     <div class="flex align-items-center gap-2 z-9999">
-      <div>{{ stage.label }}</div>
+      <div>{{ stage.name }}</div>
     </div>
   </ng-template>
 </p-dropdown>

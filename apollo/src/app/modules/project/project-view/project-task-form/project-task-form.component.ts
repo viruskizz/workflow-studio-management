@@ -4,7 +4,7 @@ import { MessageService } from 'primeng/api';
 import { FileSelectEvent } from 'primeng/fileupload';
 import { Project } from 'src/app/models/project.model';
 import { Task, TaskStatus } from 'src/app/models/task.model';
-import { Team } from 'src/app/models/team.model';
+import { Team, TeamStage } from 'src/app/models/team.model';
 import { TaskService } from 'src/app/services/task.service';
 import { TaskTypeDropdownItem } from 'src/app/shared/components/forms/task-type/task-type.component';
 
@@ -35,7 +35,7 @@ export class ProjectTaskFormComponent implements OnChanges {
     date: new FormControl('', []),
     team: new FormControl<Team | null>(null, []),
     assignee: new FormControl('', []),
-    stage: new FormControl('', []),
+    stage: new FormControl<TeamStage | null>(null, []),
     flow: new FormControl('', []),
     parentId: new FormControl('', []),
     files: new FormControl([], []),
@@ -106,9 +106,14 @@ export class ProjectTaskFormComponent implements OnChanges {
       type: value.type!.value,
       status: value.status as TaskStatus,
       teamId: value.team?.id,
+      stageId: value.stage?.id,
     }
     console.log('body:', body);
     return;
+    this.saveService(body);
+  }
+
+  saveService(body: Partial<Task>) {
     this.taskService.create(body).subscribe({
       next: (v) => {
         console.log(v);

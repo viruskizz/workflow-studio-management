@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges, OnChanges, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { TeamStage } from 'src/app/models/team.model';
 import { TeamService } from 'src/app/services/team.service';
 interface DropdownItem {
   value: number;
@@ -11,15 +12,15 @@ interface DropdownItem {
   templateUrl: './team-stage.component.html',
 })
 export class TeamStageComponent implements OnChanges, OnInit {
-  @Input() label = 'value'
+  @Input() label = 'name'
   @Input() selectedStage?: any;
-  @Output() selectedStageChanged = new EventEmitter<DropdownItem>()
+  @Output() selectedStageChanged = new EventEmitter<TeamStage>()
   @Input({ required: true }) form!: FormGroup;
   @Input({ required: true }) controlName!: string;
   @Input() ngClass?: string | any[] | object;
   @Input() teamId?: number;
 
-  stages: DropdownItem[] = [];
+  stages: TeamStage[] = [];
   loading = false;
 
   constructor(private teamService: TeamService) {}
@@ -37,17 +38,14 @@ export class TeamStageComponent implements OnChanges, OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['form']?.currentValue) {
       const value = this.form.controls[this.controlName].value;
-      this.selectedStage = this.stages.find(s => s.value === value);
+      this.selectedStage = this.stages.find(s => s.id === value);
     }
     if (changes['teamId']?.currentValue) {
       this.loading = true;
       const teamId = changes['teamId'].currentValue;
       this.teamService.listStages(teamId).subscribe({
         next: (v) => {
-          this.stages = v.map(v => ({
-            value: v.id!,
-            label: v.name,
-          }));
+          this.stages = v.slice()
           this.loading = false;
         }
       })
@@ -58,7 +56,7 @@ export class TeamStageComponent implements OnChanges, OnInit {
     this.form.controls[this.controlName].patchValue(event.value)
   }
 
-  getItem(stage: DropdownItem) {
-    return this.stages.find(s => s.value === stage.value)
+  getItem(stage: TeamStage) {
+    return this.stages.find(s => s.id === stage.id)
   }
 }
