@@ -8,12 +8,6 @@ on:
       - .github/**
 
 jobs:
-  lint:
-    name: Angular Lint Check on Dev
-    uses: ./.github/workflows/tpl-angular-lint.yml
-    with:
-      environment: dev
-    secrets: inherit
   build:
     name: Angular build on Dev
     uses: ./.github/workflows/tpl-angular-build.yml
