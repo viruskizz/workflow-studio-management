@@ -1,4 +1,5 @@
 import { Project } from "./project.model";
+import { Team, TeamStage } from "./team.model";
 import { User } from "./user.model";
 
 export type TaskStatus = 'BACKLOG' | 'TODO' | 'IN_PROGRESS' | 'DONE' | 'CANCELLED';
@@ -13,10 +14,13 @@ export interface Task {
   parentId?: number;
   projectId: number;
   project?: Project;
+  teamId?: number;
+  team?: Team;
   assigneeId?: number;
   assignee?: User;
   status: TaskStatus;
   type: TaskType;
+  stage?: TeamStage;
   createdAt?: string;
   updatedAt?: string;
 }
