@@ -1,0 +1,155 @@
+<div class="card">
+  <p-toolbar styleClass="mb-4">
+    <ng-template pTemplate="left">
+      <h5 class="m-0">Manage Teams</h5>
+    </ng-template>
+    <ng-template pTemplate="right">
+      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="onNew()"></button>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table
+    #dt
+    [value]="teams"
+    responsiveLayout="scroll"
+    [rows]="10"
+    [paginator]="true"
+    [rowsPerPageOptions]="[10, 20, 30]"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [rowHover]="true"
+    dataKey="id"
+    [globalFilterFields]="['name', 'key', 'description', 'leader.username', 'projectActive']"
+    [loading]="loading"
+    styleClass="p-datatable-gridlines">
+    <ng-template pTemplate="caption">
+      <div class="flex justify-content-between align-items-center">
+        <h5 class="m-0">Manage Teams</h5>
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            (input)="onGlobalFilter(dt, $event)"
+            placeholder="Search..."
+          />
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">
+          Name <p-sortIcon field="name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="key">
+          Key <p-sortIcon field="key"></p-sortIcon>
+        </th>
+        <th pSortableColumn="description">
+          Description
+          <p-sortIcon field="description"></p-sortIcon>
+        </th>
+        <th pSortableColumn="leaderId">
+          Lead <p-sortIcon field="leaderId"></p-sortIcon>
+        </th>
+        <th>Members</th>
+        <th pSortableColumn="projectActive">
+          Project Active
+          <p-sortIcon field="projectActive"></p-sortIcon>
+        </th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-team>
+      <tr>
+        <td class="flex align-items-center">
+          <p-image
+            [src]="getImage(team?.imageUrl)"
+            [alt]="team?.key"
+            width="100"
+            (onImageError)="onImageError(team)"
+          />
+          <span class="ml-2">{{ team.name }}</span>
+        </td>
+        <td>{{ team.key || "not assigned" }}</td>
+        <td>{{ team.description || "not assigned" }}</td>
+        <td>
+          <div
+            class="flex align-items-center"
+            *ngIf="team.leader"
+          >
+            <p-avatar
+              [image]="getImage(team.leader?.imageUrl)"
+              size="large"
+              shape="circle"
+              [pTooltip]="team.leader?.username"
+              tooltipPosition="top"
+            >
+            </p-avatar>
+            <span class="ml-2">{{
+              team.leader?.username
+            }}</span>
+          </div>
+        </td>
+        <td>
+          <div
+            class="flex gap-2"
+            *ngIf="team.members && team.members.length > 0"
+          >
+            <p-avatar
+              *ngFor="
+                let member of team.members?.slice(0, 5);
+                let i = index
+              "
+              [image]="getImage(member.imageUrl)"
+              size="large"
+              shape="circle"
+              [style]="{
+                'z-index': 5 - i,
+                'margin-left': i > 0 ? '-0.5rem' : '0'
+              }"
+              [pTooltip]="member.username"
+              tooltipPosition="top"
+              [style]="{ cursor: 'pointer' }"
+            >
+            </p-avatar>
+            <span
+              *ngIf="
+                team.members && team.members.length > 5
+              "
+              class="ml-2 flex items-center"
+            >
+              +{{ team.members.length - 5 || "no members" }}
+            </span>
+          </div>
+        </td>
+        <td>
+          <p-tag
+            [value]="team.projectActive || 'not assigned'"
+            [severity]="
+              team.projectActive ? 'success' : 'warning'
+            "
+          ></p-tag>
+        </td>
+        <td>
+          <p-button
+            pRipple
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-success mr-2"
+            (click)="onEdit(team)"
+          />
+          <p-button
+            pRipple
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-danger"
+            (click)="onDelete(team)"
+          />
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7" class="text-center">No teams found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

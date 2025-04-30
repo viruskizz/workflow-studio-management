@@ -216,6 +216,10 @@ export class TeamDetailComponent implements OnInit {
             .subscribe({
                 next: (updatedTeam) => {
                     this.team = updatedTeam;
+                    // Force router navigation to refresh breadcrumb
+                    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+                        this.router.navigate(['/teams', this.teamId]);
+                    });
                     this.showMessage(
                         'success',
                         'Success',

@@ -1,227 +1,168 @@
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Team } from 'src/app/models/team.model';
-import { User } from 'src/app/models/user.model';
-import { TeamService } from 'src/app/services/team.service';
-import { UserService } from 'src/app/services/user.service';
-import { FileSelectEvent } from 'primeng/fileupload';
+
+import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Observable, forkJoin, of, switchMap } from 'rxjs';
+import { FileSelectEvent } from 'primeng/fileupload';
+import { map, Observable, of, switchMap, catchError, forkJoin } from 'rxjs';
+import { Team } from 'src/app/models/team.model';
+import { TeamService } from 'src/app/services/team.service';
 import { FileService } from 'src/app/services/file.service';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-team-form',
   templateUrl: './team-form.component.html',
 })
-export class TeamFormComponent implements OnChanges, OnInit {
-  @Input() team?: Team;
+export class TeamFormComponent implements OnInit {
+  @Output() teamChange = new EventEmitter<Team>();
+  @Output() closeEvent = new EventEmitter<Team | null>();
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
-  @Output() teamChange = new EventEmitter<Team>();
-
-  teamForm: FormGroup;
-  isSubmitted = false;
-  users: User[] = [];
-  loading = false;
 
   imagePreview?: string;
   coverFile?: File;
+  isSubmitted = false;
+  loading = false;
+
+  teamForm = new FormGroup({
+    name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    leader: new FormControl<User | null>(null, [Validators.required]),
+    members: new FormControl<User[]>([], [Validators.required]),
+  });
 
   constructor(
-    private fb: FormBuilder,
     private teamService: TeamService,
-    private userService: UserService,
-    private messageService: MessageService,
-    private fileService: FileService
-  ) {
-    this.teamForm = this.createForm();
-  }
+    private fileService: FileService,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit() {
-    this.loadUsers();
+    this.resetForm();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['team']?.currentValue) {
-      this.updateForm(changes['team'].currentValue);
-    } else {
-      this.resetForm();
-    }
-  }
-
-  private createForm(): FormGroup {
-    return this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      leader: [null, [Validators.required]],
-      members: [[], [Validators.required]]
-    });
-  }
-
-  private updateForm(team: Team): void {
-   this.teamForm.patchValue({
-      name: team.name,
-      leader: this.users.find((u) => u.id === team.leaderId),
-      members: team.members || [],
-    });
-  }
-
-  private resetForm(): void {
+  resetForm() {
     this.teamForm.reset();
     this.imagePreview = undefined;
-  }
-
-  loadUsers() {
-    this.userService.listUser().subscribe({
-      next: (users) => (this.users = users),
-      error: (error) => console.error('Error loading users:', error),
-    });
+    this.coverFile = undefined;
   }
 
   onSelectImage(event: FileSelectEvent) {
     const file = event.currentFiles[0];
     if (file) {
       this.coverFile = file;
-      this.readFile(file);
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        this.imagePreview = event.target?.result as string;
+      }
     }
   }
 
-  private readFile(file: File): void {
-    const reader = new FileReader();
-    reader.onload = (e) => (this.imagePreview = e.target?.result as string);
-    reader.readAsDataURL(file);
-  }
-
   onSave() {
-    this.isSubmitted = true;
     if (this.teamForm.invalid) {
       this.teamForm.markAllAsTouched();
       return;
     }
 
-    const teamData = this.prepareTeamData();
-    this.saveTeam(teamData);
-  }
-
-  private prepareTeamData(): Partial<Team> {
-    const formValue = this.teamForm.value;
-    return {
-      name: formValue.name,
-      members: formValue.members,
-      leaderId: formValue.leader?.id
+    const body: Partial<Team> = {
+      name: this.teamForm.value.name!,
+      leaderId: this.teamForm.value.leader?.id,
+      // Don't include members in the update payload as they're handled separately
     };
-  }
 
-  private saveTeam(teamData: Partial<Team>): void {
+    this.isSubmitted = true;
     this.loading = true;
-    
-    // First handle the team save operation
-    const saveObservable = this.team?.id
-      ? this.teamService.updateTeam(this.team.id, teamData)
-      : this.teamService.createTeam(teamData as Team);
 
-    saveObservable.pipe(
-      switchMap(savedTeam => {
-        // After team is saved, upload the image if there is one
-        if (this.coverFile) {
-          const filepath = `/teams/${savedTeam.id}/`;
-          const filename = 'cover.png';
-          return this.fileService.upload(this.coverFile, filepath, filename).pipe(
-            switchMap(fileResponse => {
-              // Update team with image URL
-              return this.teamService.updateTeam(savedTeam.id!, { imageUrl: fileResponse.url }).pipe(
-                switchMap(() => of(savedTeam))
-              );
-            })
-          );
-        }
-        return of(savedTeam);
-      })
+    this.createTeam(body).pipe(
+      switchMap(team => this.uploadImage(team)),
+      switchMap(team => this.addMembers(team))
     ).subscribe({
-      next: this.handleSaveSuccess.bind(this),
-      error: this.handleSaveError.bind(this),
-      complete: () => (this.loading = false)
-    });
-  }
-
-  private handleSaveSuccess(updatedTeam: Team): void {
-    // If we're creating a new team and have members to add
-    if (!this.team?.id && updatedTeam.id && this.teamForm.value.members?.length > 0) {
-      // Add members to the newly created team
-      this.addMembersToTeam(updatedTeam.id, this.teamForm.value.members)
-        .subscribe({
-          next: () => {
-            // Get the updated team with members
-            this.teamService.getTeamWithMembers(updatedTeam.id!)
-              .subscribe(teamWithMembers => {
-                this.teamChange.emit(teamWithMembers);
-                this.showSuccessMessage();
-                this.closeDialog();
-              });
-          },
-          error: (error) => {
-            console.error('Error adding members to team:', error);
-            // Still emit the team even if adding members failed
-            this.teamChange.emit(updatedTeam);
-            this.showSuccessMessage();
-            this.closeDialog();
-          }
+      next: this.handleSuccess.bind(this),
+      error: (e) => {
+        this.isSubmitted = false;
+        this.loading = false;
+        this.messageService.add({
+          severity: 'error',
+          summary: e.error?.error || (e as any).message || 'Error',
+          detail: e.error?.message || 'Failed to create team',
         });
-    } else {
-      // For updates or teams without members, just emit the team
-      this.teamChange.emit(updatedTeam);
-      this.showSuccessMessage();
-      this.closeDialog();
+      }
+    });
+  }
+
+  private addMembers(team: Team): Observable<Team> {
+    const currentMembers = this.teamForm.value.members || [];
+    if (!team.id || currentMembers.length === 0) {
+      return of(team);
     }
+
+    const addMemberRequests = currentMembers.map(member =>
+      this.teamService.addMemberToTeam(team.id!, member.id!)
+        .pipe(
+          catchError(error => {
+            console.warn(`Failed to add member ${member.username || member.id}:`, error);
+            return of(null);
+          })
+        )
+    );
+
+    return forkJoin(addMemberRequests).pipe(
+      map(() => {
+        team.members = currentMembers;
+        return team;
+      })
+    );
   }
 
-  private showSuccessMessage(): void {
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Success',
-      detail: `Team ${this.team?.id ? 'updated' : 'created'} successfully.`,
-      life: 3000,
-    });
-  }
-
-  private handleSaveError(error: Error): void {
-    console.error('Error saving team:', error);
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'Failed to save team.',
-      life: 3000,
-    });
+  private handleSuccess(team: Team) {
+    this.isSubmitted = false;
+    this.loading = false;
+    this.closeEvent.emit(team);
+    this.visible = false;
+    this.visibleChange.emit(false);
+    this.resetForm();
   }
 
   closeDialog() {
     this.visible = false;
     this.visibleChange.emit(false);
+    this.closeEvent.emit(null);
     this.resetForm();
+  }
+
+  onHide() {
+    if (!this.isSubmitted) {
+      this.closeEvent.emit(null);
+    }
+    this.visible = false;
+    this.visibleChange.emit(false);
     this.isSubmitted = false;
+    this.resetForm();
   }
 
   get formControls() {
     return this.teamForm.controls;
   }
 
-  removeMember(member: User) {
-    const currentMembers = this.teamForm.get('members')?.value as User[];
-    const updatedMembers = currentMembers.filter(m => m.id !== undefined && m.id !== member.id);
-    this.teamForm.patchValue({ members: updatedMembers });
+  private uploadImage(team: Team): Observable<Team> {
+    if (this.coverFile && team.id) {
+      const filepath = `/teams/${team.id}/`;
+      const filename = 'cover.png';
+      return this.fileService.upload(this.coverFile, filepath, filename).pipe(
+        switchMap(res => {
+          return this.teamService.updateTeam(team.id!, { imageUrl: res.url }).pipe(
+            map(() => {
+              team.imageUrl = res.url;
+              return team;
+            })
+          );
+        })
+      );
+    }
+    return of(team);
   }
 
-  private addMembersToTeam(teamId: number, members: User[]): Observable<unknown[]|null> {
-    if (!members || members.length === 0) {
-      return of(null);
-    }
-    
-    // Create an array of observables for each member addition
-    const addMemberRequests = members.map(member => 
-      this.teamService.addMemberToTeam(teamId, member.id!)
-    );
-    
-    // Execute all requests in parallel
-    return forkJoin(addMemberRequests);
+  private createTeam(body: Partial<Team>): Observable<Team> {
+    return this.teamService.createTeam(body);
   }
 }
-

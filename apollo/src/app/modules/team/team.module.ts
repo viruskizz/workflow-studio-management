@@ -1,4 +1,3 @@
-import { TeamDetailProjectWorkingComponent } from './team-detail/team-detail-project-working/team-detail-project-working.component';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -27,8 +26,8 @@ import { TeamComponent } from './team.component';
 import { TeamFormComponent } from './team-form/team-form.component'
 import { TeamDetailComponent } from './team-detail/team-detail.component'
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { TeamDetailMemberComponent } from './team-detail/team-detail-member/team-detail-member.component';
 import { TeamDetailStageComponent } from './team-detail/team-detail-stage/team-detail-stage.component';
+import { TeamTableComponent } from './team-table/team-table.component';
 @NgModule({
 
   imports: [
@@ -62,9 +61,8 @@ import { TeamDetailStageComponent } from './team-detail/team-detail-stage/team-d
     TeamComponent,
     TeamFormComponent,
     TeamDetailComponent,
-    TeamDetailMemberComponent,
-    TeamDetailProjectWorkingComponent,
     TeamDetailStageComponent,
+    TeamTableComponent
   ],
   providers: [
     MessageService,
