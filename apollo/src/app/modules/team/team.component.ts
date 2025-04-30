@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
+import { finalize, switchMap, forkJoin, of, catchError } from 'rxjs';
 import { Team } from 'src/app/models/team.model';
 import { TeamService } from 'src/app/services/team.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-team',
@@ -15,7 +16,8 @@ export class TeamComponent implements OnInit {
 
   constructor(
     private teamService: TeamService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
@@ -35,11 +37,34 @@ export class TeamComponent implements OnInit {
 
   onDelete(team: Team) {
     this.loading = true;
-    this.teamService.deleteTeam(team.id!)
-      .pipe(finalize(() => this.loading = false))
+    
+    this.teamService.getTeamMembers(team.id!)
+      .pipe(
+        switchMap(members => {
+          if (!members.length) return of([]);
+          
+          const removeRequests = members.map(member => 
+            this.teamService.removeMemberFromTeam(team.id!, member.id!)
+              .pipe(catchError(err => {
+                console.warn(`Failed to remove member ${member.id}`, err);
+                return of(null);
+              }))
+          );
+          return forkJoin(removeRequests);
+        }),
+        switchMap(() => this.teamService.deleteTeam(team.id!)),
+        finalize(() => this.loading = false)
+      )
       .subscribe({
-        next: () => this.teams = this.teams.filter(t => t.id !== team.id),
-        error: err => console.error('Error deleting team:', err)
+        next: () => {
+          this.teams = this.teams.filter(t => t.id !== team.id);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Team deleted successfully'
+          });
+        },
+        error: this.handleError('delete team')
       });
   }
 
@@ -58,5 +83,16 @@ export class TeamComponent implements OnInit {
       this.loadTeams();
     }
     this.teamDialog = false;
+  }
+
+  private handleError(operation: string) {
+    return (err: Error) => {
+      console.error(`Error ${operation}:`, err);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: `Failed to ${operation}. Please try again later.`
+      });
+    };
   }
 }

@@ -83,7 +83,7 @@ export class TeamFormComponent implements OnInit {
         this.loading = false;
         this.messageService.add({
           severity: 'error',
-          summary: e.error?.error || (e as any).message || 'Error',
+          summary: e.error?.error || 'Error',
           detail: e.error?.message || 'Failed to create team',
         });
       }
@@ -92,25 +92,19 @@ export class TeamFormComponent implements OnInit {
 
   private addMembers(team: Team): Observable<Team> {
     const currentMembers = this.teamForm.value.members || [];
-    if (!team.id || currentMembers.length === 0) {
-      return of(team);
-    }
+    if (!team.id || !currentMembers.length) return of(team);
 
-    const addMemberRequests = currentMembers.map(member =>
-      this.teamService.addMemberToTeam(team.id!, member.id!)
-        .pipe(
-          catchError(error => {
-            console.warn(`Failed to add member ${member.username || member.id}:`, error);
-            return of(null);
-          })
-        )
+    const addRequests = currentMembers.map(member =>
+      this.teamService.addMemberToTeam(team.id!, member.id!).pipe(
+        catchError(error => {
+          console.warn(`Failed to add member ${member.username || member.id}:`, error);
+          return of(null);
+        })
+      )
     );
 
-    return forkJoin(addMemberRequests).pipe(
-      map(() => {
-        team.members = currentMembers;
-        return team;
-      })
+    return forkJoin(addRequests).pipe(
+      map(() => ({ ...team, members: currentMembers }))
     );
   }
 
@@ -145,21 +139,22 @@ export class TeamFormComponent implements OnInit {
   }
 
   private uploadImage(team: Team): Observable<Team> {
-    if (this.coverFile && team.id) {
-      const filepath = `/teams/${team.id}/`;
-      const filename = 'cover.png';
-      return this.fileService.upload(this.coverFile, filepath, filename).pipe(
-        switchMap(res => {
-          return this.teamService.updateTeam(team.id!, { imageUrl: res.url }).pipe(
-            map(() => {
-              team.imageUrl = res.url;
-              return team;
-            })
-          );
-        })
-      );
-    }
-    return of(team);
+    if (!this.coverFile || !team.id) return of(team);
+    
+    const filepath = `/teams/${team.id}/`;
+    const filename = 'cover.png';
+    
+    return this.fileService.upload(this.coverFile, filepath, filename).pipe(
+      switchMap(res => 
+        this.teamService.updateTeam(team.id!, { imageUrl: res.url }).pipe(
+          map(() => ({ ...team, imageUrl: res.url }))
+        )
+      ),
+      catchError(err => {
+        console.error('Failed to upload image:', err);
+        return of(team);
+      })
+    );
   }
 
   private createTeam(body: Partial<Team>): Observable<Team> {
