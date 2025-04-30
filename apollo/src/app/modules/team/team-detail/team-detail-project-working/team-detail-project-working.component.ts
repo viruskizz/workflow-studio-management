@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Project } from 'src/app/models/project.model';
+import { Team } from 'src/app/models/team.model';
 import { ProjectService } from 'src/app/services/project.service';
+import { TeamService } from 'src/app/services/team.service';
 
 @Component({
   selector: 'app-team-detail-project-working',
@@ -8,11 +10,15 @@ import { ProjectService } from 'src/app/services/project.service';
 })
 export class TeamDetailProjectWorkingComponent implements OnInit {
   @Input() teamId!: number;
-  
+
+  team?: Team;
   projects: Project[] = [];
   loading = false;
-  
-  constructor(private projectService: ProjectService) {}
+
+  constructor(
+    private projectService: ProjectService,
+    private teamService: TeamService
+  ) {}
 
   ngOnInit(): void {
     if (this.teamId) {
@@ -23,17 +29,30 @@ export class TeamDetailProjectWorkingComponent implements OnInit {
   loadProjects(): void {
     this.loading = true;
     
-    // Get projects for the specific team
-    this.projectService.listProject().subscribe({
-      next: (projects) => {
-        this.projects = projects;
-        this.loading = false;
+    // First get the team to access the leaderId
+    this.teamService.getTeamWithMembers(this.teamId).subscribe({
+      next: (team) => {
+        this.team = team;
+        
+        // Then load projects
+        this.projectService.listProject().subscribe({
+          next: (projects) => {
+            // Filter projects where the team leader is the project leader
+            this.projects = projects.filter(project => {
+              return project.leaderId === this.team?.leaderId;
+            });
+            this.loading = false;
+          },
+          error: (err) => {
+            console.error('Error loading team projects', err);
+            this.loading = false;
+            this.projects = [];
+          }
+        });
       },
       error: (err) => {
-        console.error('Error loading team projects', err);
+        console.error('Error loading team details', err);
         this.loading = false;
-        // Fallback to empty array
-        this.projects = [];
       }
     });
   }
@@ -43,17 +62,17 @@ export class TeamDetailProjectWorkingComponent implements OnInit {
     if (!project.tasks || project.tasks.length === 0) {
       return 0;
     }
-    
-    const completedTasks = project.tasks.filter((task: { status: string }) => task.status === 'COMPLETED').length;    return Math.round((completedTasks / project.tasks.length) * 100);
+
+    const completedTasks = project.tasks.filter((task: { status: string }) => task.status === 'COMPLETED').length; return Math.round((completedTasks / project.tasks.length) * 100);
   }
 
   formatDate(date: string | Date): string {
     if (!date) return '';
     const d = new Date(date);
-    return d.toLocaleDateString('en-US', { 
-      day: '2-digit', 
-      month: '2-digit', 
-      year: 'numeric' 
+    return d.toLocaleDateString('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
     });
   }
 

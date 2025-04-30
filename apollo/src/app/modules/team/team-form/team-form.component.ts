@@ -67,7 +67,6 @@ export class TeamFormComponent implements OnInit {
     const body: Partial<Team> = {
       name: this.teamForm.value.name!,
       leaderId: this.teamForm.value.leader?.id,
-      // Don't include members in the update payload as they're handled separately
     };
 
     this.isSubmitted = true;
