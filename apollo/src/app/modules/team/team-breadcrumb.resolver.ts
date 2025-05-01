@@ -12,17 +12,22 @@ export const TeamBreadcrumbResolver: ResolveFn<Breadcrumb[]> = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot,
   teamService: TeamService = inject(TeamService)
-): Observable<Breadcrumb[]> | Breadcrumb[] => teamService.getTeam(+route.paramMap.get('id')!)
-  .pipe(
-    map(v => {
-      const ext = [];
-      if (route.url.length > 1) {
-        ext.push({ label: route.url[1].path })
-      }
-      return [
-        { label: 'Team', url: '/teams' },
-        { label: v.name.toString(), url: `/teams/${v.id}` },
-        ...ext,
-      ]
-    })
-  );
+): Observable<Breadcrumb[]> | Breadcrumb[] => {
+  // Force resolver to run every time by adding a timestamp to the route data
+  route.data = { ...route.data, timestamp: Date.now() };
+  
+  return teamService.getTeam(+route.paramMap.get('id')!)
+    .pipe(
+      map(v => {
+        const ext = [];
+        if (route.url.length > 1) {
+          ext.push({ label: route.url[1].path })
+        }
+        return [
+          { label: 'Team', url: '/teams' },
+          { label: v.name.toString(), url: `/teams/${v.id}` },
+          ...ext,
+        ]
+      })
+    );
+};
