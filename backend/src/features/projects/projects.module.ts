@@ -11,7 +11,7 @@ import { TasksModule } from '../tasks/tasks.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Project]),
-    UsersModule,
+    forwardRef(() => UsersModule),
     forwardRef(() => TasksModule),
   ],
   controllers: [ProjectsController, ProjectTasksController],

@@ -11,6 +11,8 @@ export class TeamsService {
   constructor(
     @InjectRepository(Team)
     private repo: Repository<Team>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
     private userSerivce: UsersService,
   ) {}
   async create(createTeamDto: CreateTeamDto) {
