@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '@backend/typeorm';
+import { User, UserDashboard } from '@backend/typeorm';
 import { TasksService } from '@backend/features/tasks/tasks.service';
 import { ProjectsService } from '@backend/features/projects/projects.service';
 import { TeamsService } from '@backend/features/teams/teams.service';
@@ -12,6 +12,8 @@ export class UserDashboardService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(UserDashboard)
+    private dashboardRepository: Repository<UserDashboard>,
     private taskService: TasksService,
     private projectService: ProjectsService,
     private teamsService: TeamsService,
@@ -28,17 +30,34 @@ export class UserDashboardService {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
 
-    const [taskStats, workingOn, workingWith] = await Promise.all([
-      this.getTaskStats(userId),
-      this.getWorkingOn(userId),
-      this.getWorkingWith(userId),
-    ]);
+    // Try to find existing dashboard data
+    let dashboard = await this.dashboardRepository.findOne({
+      where: { userId },
+    });
+
+    // If no dashboard exists, generate one and save it
+    if (!dashboard) {
+      const [taskStats, workingOn, workingWith] = await Promise.all([
+        this.getTaskStats(userId),
+        this.getWorkingOn(userId),
+        this.getWorkingWith(userId),
+      ]);
+
+      dashboard = this.dashboardRepository.create({
+        userId,
+        taskStats,
+        workingOn,
+        workingWith,
+      });
+
+      await this.dashboardRepository.save(dashboard);
+    }
 
     return {
       user,
-      taskStats,
-      workingOn,
-      workingWith,
+      taskStats: dashboard.taskStats,
+      workingOn: dashboard.workingOn,
+      workingWith: dashboard.workingWith,
     };
   }
 
@@ -56,7 +75,6 @@ export class UserDashboardService {
   async getWorkingOn(userId: number) {
     const projects =
       await this.projectService.findProjectsWorkingOnByUserId(userId);
-    // console.log(`Found ${projects.length} projects for user ${userId}`);
 
     return projects.map((project) => ({
       id: project.id,
