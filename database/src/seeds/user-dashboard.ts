@@ -1,5 +1,6 @@
 import { User } from '@backend/typeorm';
 import { faker } from '@faker-js/faker';
+import { TaskStatus } from '@backend/typeorm/task.entity';
 
 export const getUserDashboardSeeds = (userId: number) => {
   return {
@@ -7,21 +8,21 @@ export const getUserDashboardSeeds = (userId: number) => {
       todo: faker.number.int({ min: 2, max: 8 }),
       inProgress: faker.number.int({ min: 1, max: 5 }),
       done: faker.number.int({ min: 5, max: 15 }),
-      total: 0, 
+      total: 0,
     },
     workingOn: [
       {
         id: 1,
         name: 'Demo project',
         description: 'This is demo project for testing purpose',
-        status: 'In Progress',
+        status: TaskStatus.IN_PROGRESS,
         imageUrl: 'https://initiate.alphacoders.com/images/109/stretched-1920-1080-109174.jpg',
       },
       {
         id: 2,
         name: 'ABCD project',
         description: 'This is demo project for testing purpose',
-        status: 'Planning',
+        status: TaskStatus.TODO,
         imageUrl: 'https://initiate.alphacoders.com/images/132/stretched-1920-1080-1321153.jpeg',
       },
     ],
@@ -34,6 +35,7 @@ export const getUserDashboardSeeds = (userId: number) => {
         imageUrl: userId === 1 
           ? 'https://avatarfiles.alphacoders.com/358/358011.jpg'
           : 'https://avatarfiles.alphacoders.com/825/82567.jpg',
+        teams: [{ id: 1, name: 'GoodGeek' }]
       },
       {
         id: 3,
@@ -41,11 +43,13 @@ export const getUserDashboardSeeds = (userId: number) => {
         firstName: 'Aporlo',
         lastName: 'Olropa',
         imageUrl: 'https://avatarfiles.alphacoders.com/926/thumb-1920-92694.gif',
+        teams: [{ id: 1, name: 'GoodGeek' }]
       }
     ]
   };
 };
 
+// Generate dashboard data for all users
 export const getAllUserDashboardSeeds = async (userCount: number) => {
   const dashboards = [];
   

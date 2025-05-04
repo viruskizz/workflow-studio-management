@@ -7,6 +7,7 @@ import getTeamSeeds from './seeds/team';
 import getTeamStagesSeeds from './seeds/team-stages';
 import getTeamMembersSeeds from './seeds/team-members';
 import getAllUserDashboardSeeds from './seeds/user-dashboard';
+import { In } from 'typeorm';
 
 AppDataSource.initialize().then(async () => {
   console.log("Inserting a new user into the database...")
@@ -83,7 +84,7 @@ export async function setupUserDashboards() {
   await dashboardRepo.clear();
   
   const userCount = await AppDataSource.manager.getRepository(User).count();
-  console.log(`Generating dashboard data for ${userCount} users`);
+  console.log(userCount);
   
   const dashboards = await getAllUserDashboardSeeds(userCount);
   for (const dashboard of dashboards) {
