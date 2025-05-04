@@ -68,6 +68,10 @@ export async function setupTeamStages() {
  */
 export async function setupTeamMembers() {
   const memberRepo = AppDataSource.manager.getRepository(TeamMember);
+  
+  // Clear existing team members data
+  await memberRepo.clear();
+  
   for (const member of getTeamMembersSeeds()) {
     console.log(member);
     await memberRepo.save(member);

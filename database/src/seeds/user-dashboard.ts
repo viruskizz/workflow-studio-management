@@ -1,8 +1,48 @@
-import { User } from '@backend/typeorm';
 import { faker } from '@faker-js/faker';
 import { TaskStatus } from '@backend/typeorm/task.entity';
 
+
+const coreTeamMembers = [
+  {
+    id: 1,
+    username: 'araiva',
+    firstName: 'Araiva',
+    lastName: 'Aviara',
+    imageUrl: 'https://avatarfiles.alphacoders.com/825/82567.jpg',
+    teams: [{ id: 1, name: 'Good Geek' }] 
+  },
+  {
+    id: 2,
+    username: 'viruskizz',
+    firstName: 'Viruskizz',
+    lastName: 'Zziksuriv',
+    imageUrl: 'https://avatarfiles.alphacoders.com/358/358011.jpg',
+    teams: [{ id: 1, name: 'Good Geek' }]
+  },
+  {
+    id: 3,
+    username: 'aporlo',
+    firstName: 'Aporlo',
+    lastName: 'Olropa',
+    imageUrl: 'https://avatarfiles.alphacoders.com/926/thumb-1920-92694.gif',
+    teams: [{ id: 1, name: 'Good Geek' }]
+  }
+];
+
 export const getUserDashboardSeeds = (userId: number) => {
+  // Only include team members that are actually in the same team as this user
+  // Based on team-members.ts, users 1, 2, and 3 are in team 1
+  let workingWithMembers = [];
+  
+  // Only users 1, 2, and 3 are in team 1 according to team-members.ts
+  if (userId <= 3) {
+    // Filter out the current user from the team members
+    workingWithMembers = coreTeamMembers.filter(member => member.id !== userId);
+  } else {
+    // For other users, they don't have team members in the seed data
+    workingWithMembers = [];
+  }
+  
   return {
     taskStats: {
       todo: faker.number.int({ min: 2, max: 8 }),
@@ -26,30 +66,10 @@ export const getUserDashboardSeeds = (userId: number) => {
         imageUrl: 'https://initiate.alphacoders.com/images/132/stretched-1920-1080-1321153.jpeg',
       },
     ],
-    workingWith: [
-      {
-        id: userId === 1 ? 2 : 1,
-        username: userId === 1 ? 'viruskizz' : 'araiva',
-        firstName: userId === 1 ? 'Viruskizz' : 'Araiva',
-        lastName: userId === 1 ? 'Zziksuriv' : 'Aviara',
-        imageUrl: userId === 1 
-          ? 'https://avatarfiles.alphacoders.com/358/358011.jpg'
-          : 'https://avatarfiles.alphacoders.com/825/82567.jpg',
-        teams: [{ id: 1, name: 'GoodGeek' }]
-      },
-      {
-        id: 3,
-        username: 'aporlo',
-        firstName: 'Aporlo',
-        lastName: 'Olropa',
-        imageUrl: 'https://avatarfiles.alphacoders.com/926/thumb-1920-92694.gif',
-        teams: [{ id: 1, name: 'GoodGeek' }]
-      }
-    ]
+    workingWith: workingWithMembers
   };
 };
 
-// Generate dashboard data for all users
 export const getAllUserDashboardSeeds = async (userCount: number) => {
   const dashboards = [];
   
