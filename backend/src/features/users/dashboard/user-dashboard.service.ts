@@ -1,11 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '@backend/typeorm';
+import { Project, User } from '@backend/typeorm';
 import {
   TaskStats,
   UserDashboard,
-  WorkingOnProject,
   WorkingWithUser,
 } from '@backend/interfaces/user-dashboard.interface';
 import { TasksService } from '@backend/features/tasks/tasks.service';
@@ -63,18 +62,8 @@ export class UserDashboardService {
   }
 
   // GET /users/:id/dashboard/workingOn
-  async getWorkingOn(userId: number): Promise<WorkingOnProject[]> {
-    const projects =
-      await this.projectService.findProjectsWorkingOnByUserId(userId);
-
-    return projects.map((project) => ({
-      id: project.id,
-      name: project.name,
-      description: project.description,
-      updatedAt: project.updatedAt,
-      status: project.status,
-      imageUrl: project.imageUrl,
-    }));
+  async getWorkingOn(userId: number): Promise<Project[]> {
+    return this.projectService.findProjectsWorkingOnByUserId(userId);
   }
 
   // GET /users/:id/dashboard/workingWith
