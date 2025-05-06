@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User, UserDashboard } from '@backend/typeorm';
+import { User } from '@backend/typeorm';
 import { TasksService } from '@backend/features/tasks/tasks.service';
 import { ProjectsService } from '@backend/features/projects/projects.service';
 import { TeamsService } from '@backend/features/teams/teams.service';
@@ -12,8 +12,6 @@ export class UserDashboardService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    @InjectRepository(UserDashboard)
-    private dashboardRepository: Repository<UserDashboard>,
     private taskService: TasksService,
     private projectService: ProjectsService,
     private teamsService: TeamsService,
@@ -24,43 +22,30 @@ export class UserDashboardService {
     return this.usersRepository;
   }
 
+  // GET /users/:id/dashboard
   async getDashboardSummary(userId: number) {
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
 
-    // Try to find existing dashboard data
-    let dashboard = await this.dashboardRepository.findOne({
-      where: { userId },
-    });
-
-    // If no dashboard exists, generate one and save it
-    if (!dashboard) {
-      const [taskStats, workingOn, workingWith] = await Promise.all([
-        this.getTaskStats(userId),
-        this.getWorkingOn(userId),
-        this.getWorkingWith(userId),
-      ]);
-
-      dashboard = this.dashboardRepository.create({
-        userId,
-        taskStats,
-        workingOn,
-        workingWith,
-      });
-
-      await this.dashboardRepository.save(dashboard);
-    }
+    // Get all dashboard data
+    const [taskStats, workingOn, workingWith] = await Promise.all([
+      this.getTaskStats(userId),
+      this.getWorkingOn(userId),
+      this.getWorkingWith(userId),
+    ]);
 
     return {
       user,
-      taskStats: dashboard.taskStats,
-      workingOn: dashboard.workingOn,
-      workingWith: dashboard.workingWith,
+      taskStats,
+      workingOn,
+      workingWith,
     };
   }
 
+  // GET /users/:id/dashboard/stats
+  // SQL: SELECT status, COUNT(*) as count FROM tasks WHERE assignee_id = :userId GROUP BY status
   async getTaskStats(userId: number) {
     const tasks = await this.taskService.findTasksByUserId(userId);
 
@@ -72,6 +57,8 @@ export class UserDashboardService {
     };
   }
 
+  // GET /users/:id/dashboard/workingOn
+  // SQL: SELECT p.* FROM projects p JOIN project_members pm ON p.id = pm.project_id WHERE pm.user_id = :userId
   async getWorkingOn(userId: number) {
     const projects =
       await this.projectService.findProjectsWorkingOnByUserId(userId);
@@ -86,6 +73,13 @@ export class UserDashboardService {
     }));
   }
 
+  // GET /users/:id/dashboard/workingWith
+  // SQL:
+  // SELECT DISTINCT u.*
+  // FROM users u
+  // JOIN team_members tm1 ON u.id = tm1.user_id
+  // JOIN team_members tm2 ON tm1.team_id = tm2.team_id
+  // WHERE tm2.user_id = :userId AND u.id != :userId
   async getWorkingWith(userId: number) {
     try {
       // Get teams where user is a member
