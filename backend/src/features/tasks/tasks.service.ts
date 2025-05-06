@@ -101,4 +101,11 @@ export class TasksService {
     }
     return parent;
   }
+
+  async findTasksByUserId(userId: number) {
+    return this.repo.find({
+      where: { assignee: { id: userId } },
+      relations: ['assignee', 'project'],
+    });
+  }
 }

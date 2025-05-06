@@ -54,4 +54,35 @@ export class ProjectsService {
   remove(id: number) {
     return this.repository.delete(id);
   }
+
+  async findProjectsWorkingOnByUserId(userId: number) {
+    // Find projects where the user is the leader
+    const projects = await this.repository.find({
+      where: { leaderId: userId },
+      relations: {
+        leader: true,
+      },
+    });
+
+    return projects;
+  }
+
+  async findUsersByProjectIds(projectIds: number[]) {
+    if (!projectIds.length) return [];
+
+    console.log(`Finding users for project IDs: ${projectIds.join(', ')}`);
+
+    // Find all users who are working on these projects
+    // This assumes you have a relationship between projects and users
+    const users = await this.usersService
+      .getRepository()
+      .createQueryBuilder('user')
+      .innerJoin('user.projects', 'project', 'project.id IN (:...projectIds)', {
+        projectIds,
+      })
+      .getMany();
+
+    console.log(`Found ${users.length} users for these projects`);
+    return users;
+  }
 }

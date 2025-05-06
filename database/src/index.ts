@@ -1,11 +1,13 @@
 import 'module-alias/register';
 import { AppDataSource } from "./data-source"
-import { Project, Team, TeamMember, TeamStage, User } from '@backend/typeorm';
+import { Project, Team, TeamMember, TeamStage, User, UserDashboard } from '@backend/typeorm';
 import getUserSeeds from "./seeds/users";
 import getProjectSeeds from './seeds/project';
 import getTeamSeeds from './seeds/team';
 import getTeamStagesSeeds from './seeds/team-stages';
 import getTeamMembersSeeds from './seeds/team-members';
+import getAllUserDashboardSeeds from './seeds/user-dashboard';
+import { In } from 'typeorm';
 
 AppDataSource.initialize().then(async () => {
   console.log("Inserting a new user into the database...")
@@ -14,6 +16,7 @@ AppDataSource.initialize().then(async () => {
   await setupTeamStages();
   await setupTeamMembers();
   await setupProjects();
+  await setupUserDashboards();
 }).catch(e => console.log(e));
 
 /**
@@ -65,8 +68,31 @@ export async function setupTeamStages() {
  */
 export async function setupTeamMembers() {
   const memberRepo = AppDataSource.manager.getRepository(TeamMember);
+  
+  // Clear existing team members data
+  await memberRepo.clear();
+  
   for (const member of getTeamMembersSeeds()) {
     console.log(member);
     await memberRepo.save(member);
+  }
+}
+
+/**
+ * User Dashboards
+ */
+export async function setupUserDashboards() {
+  const dashboardRepo = AppDataSource.manager.getRepository(UserDashboard);
+  
+  // Clear existing dashboard data
+  await dashboardRepo.clear();
+  
+  const userCount = await AppDataSource.manager.getRepository(User).count();
+  console.log(userCount);
+  
+  const dashboards = await getAllUserDashboardSeeds(userCount);
+  for (const dashboard of dashboards) {
+    console.log(dashboard);
+    await dashboardRepo.save(dashboard);
   }
 }
