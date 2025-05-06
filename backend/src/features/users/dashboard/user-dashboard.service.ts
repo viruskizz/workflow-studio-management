@@ -2,6 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '@backend/typeorm';
+import {
+  TaskStats,
+  UserDashboard,
+  WorkingOnProject,
+  WorkingWithUser,
+} from '@backend/interfaces/user-dashboard.interface';
 import { TasksService } from '@backend/features/tasks/tasks.service';
 import { ProjectsService } from '@backend/features/projects/projects.service';
 import { TeamsService } from '@backend/features/teams/teams.service';
@@ -23,13 +29,13 @@ export class UserDashboardService {
   }
 
   // GET /users/:id/dashboard
-  async getDashboardSummary(userId: number) {
+  async getDashboardSummary(userId: number): Promise<UserDashboard> {
     const user = await this.usersRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new NotFoundException(`User with ID ${userId} not found`);
     }
 
-    // Get all dashboard data
+    // Get all dashboard data in parallel
     const [taskStats, workingOn, workingWith] = await Promise.all([
       this.getTaskStats(userId),
       this.getWorkingOn(userId),
@@ -45,8 +51,7 @@ export class UserDashboardService {
   }
 
   // GET /users/:id/dashboard/stats
-  // SQL: SELECT status, COUNT(*) as count FROM tasks WHERE assignee_id = :userId GROUP BY status
-  async getTaskStats(userId: number) {
+  async getTaskStats(userId: number): Promise<TaskStats> {
     const tasks = await this.taskService.findTasksByUserId(userId);
 
     return {
@@ -58,8 +63,7 @@ export class UserDashboardService {
   }
 
   // GET /users/:id/dashboard/workingOn
-  // SQL: SELECT p.* FROM projects p JOIN project_members pm ON p.id = pm.project_id WHERE pm.user_id = :userId
-  async getWorkingOn(userId: number) {
+  async getWorkingOn(userId: number): Promise<WorkingOnProject[]> {
     const projects =
       await this.projectService.findProjectsWorkingOnByUserId(userId);
 
@@ -74,13 +78,7 @@ export class UserDashboardService {
   }
 
   // GET /users/:id/dashboard/workingWith
-  // SQL:
-  // SELECT DISTINCT u.*
-  // FROM users u
-  // JOIN team_members tm1 ON u.id = tm1.user_id
-  // JOIN team_members tm2 ON tm1.team_id = tm2.team_id
-  // WHERE tm2.user_id = :userId AND u.id != :userId
-  async getWorkingWith(userId: number) {
+  async getWorkingWith(userId: number): Promise<WorkingWithUser[]> {
     try {
       // Get teams where user is a member
       const teams = await this.teamsService.findAll();
