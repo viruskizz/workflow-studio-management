@@ -1,4 +1,4 @@
-import { Project, User } from '@backend/typeorm';
+import { Project, Team, User } from '@backend/typeorm';
 
 export interface TaskStats {
   todo: number;
@@ -7,18 +7,13 @@ export interface TaskStats {
   total: number;
 }
 
-export interface TeamInfo {
-  id: number;
-  name: string;
-}
-
-export interface WorkingWithUser extends User {
-  teams: TeamInfo[];
+export interface UserTeam extends Team {
+  members: User[];
 }
 
 export interface UserDashboard {
   user: User;
   taskStats: TaskStats;
   workingOn: Project[];
-  workingWith: WorkingWithUser[];
+  workingWith: UserTeam[];
 }

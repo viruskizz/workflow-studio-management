@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+// PrimeNG modules
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
-import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -18,27 +18,31 @@ import { DialogModule } from 'primeng/dialog';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { FieldsetModule } from 'primeng/fieldset';
-import { CardModule } from 'primeng/card';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-
-import { UserComponent } from './user.component';
-import { UserRoutingModule } from './user-routing.module';
-import { UserFormComponent } from './user-form/user-form.component';
-import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ImageModule } from 'primeng/image';
 import { TagModule } from 'primeng/tag';
-import { AvatarModule } from 'primeng/avatar';
+
+// App modules
+import { UserRoutingModule } from './user-routing.module';
+import { UserSharedModule } from './shared/user-shared.module';
+
+// Components
+import { UserComponent } from './user.component';
+import { UserFormComponent } from './user-form/user-form.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { UserInfoSidebarComponent } from './user-profile/user-info-sidebar/user-info-sidebar.component';
 
 @NgModule({
   imports: [
     CommonModule,
     UserRoutingModule,
     ReactiveFormsModule,
+    FormsModule,
+    
+    UserSharedModule,
 
     TableModule,
     FileUploadModule,
-    FormsModule,
-    ButtonModule,
     RippleModule,
     ToastModule,
     ToolbarModule,
@@ -52,13 +56,15 @@ import { AvatarModule } from 'primeng/avatar';
     InputGroupModule,
     InputGroupAddonModule,
     FieldsetModule,
-    CardModule,
     ImageModule,
-    ProgressSpinnerModule,
     TagModule,
-    AvatarModule
-
+    ProgressSpinnerModule
   ],
-  declarations: [UserComponent, UserFormComponent, UserProfileComponent]
+  declarations: [
+    UserComponent,
+    UserFormComponent,
+    UserProfileComponent,
+    UserInfoSidebarComponent
+  ]
 })
 export class UserModule { }

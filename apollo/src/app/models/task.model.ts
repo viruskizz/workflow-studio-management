@@ -24,3 +24,10 @@ export interface Task {
 export interface TaskTree extends Task {
   children: TaskTree[];
 }
+
+export interface TaskStats {
+  todo: number;
+  inProgress: number;
+  done: number;
+  total: number;
+}

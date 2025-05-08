@@ -1,0 +1,36 @@
+<p-card [styleClass]="styleClass">
+    <ng-template pTemplate="header">
+        <div class="flex justify-content-between align-items-center p-3">
+            <h3 class="m-0">Worked on</h3>
+        </div>
+    </ng-template>
+
+    <div class="work-items">
+        <div *ngIf="projects.length === 0" class="text-center p-3">
+            <p>You haven't worked on any projects yet.</p>
+        </div>
+        
+        <div *ngFor="let project of projects" class="work-item flex align-items-start mb-3 p-2">
+            <i class="pi pi-file-edit mr-3 mt-1 text-primary"></i>
+            <div>
+                <div class="font-medium">{{project.name}}</div>
+                <div class="text-sm text-color-secondary">
+                    {{project.description || 'No description'}} • Last updated: {{project.updatedAt | date}}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fallback to dummy data if no projects -->
+        <!-- <div *ngIf="projects.length === 0" class="work-items">
+            <div *ngFor="let i of [1, 2, 3]" class="work-item flex align-items-start mb-3 p-2">
+                <i class="pi pi-file-edit mr-3 mt-1 text-primary"></i>
+                <div>
+                    <div class="font-medium">Sample Project</div>
+                    <div class="text-sm text-color-secondary">
+                        Start working on projects to see them here
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</p-card>

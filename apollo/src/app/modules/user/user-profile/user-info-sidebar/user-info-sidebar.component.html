@@ -1,0 +1,34 @@
+<p-card [styleClass]="'h-full ' + styleClass">
+    <div class="flex flex-column align-items-center">
+        <img [src]="user?.imageUrl || ''" class="profile-image mb-3 border-circle" width="200px"
+            alt="User profile image">
+        <h2 class="mt-0 mb-1">{{user?.firstName}} {{user?.lastName}}</h2>
+        <p class="text-lg text-color-secondary mt-0 mb-3">{{user?.username}}</p>
+
+        <div class="w-full mt-4">
+            <p-button label="Edit Profile" styleClass="p-button-outlined w-full mb-3"
+                icon="pi pi-user-edit" (click)="editUser()"></p-button>
+
+            <h3 class="text-lg font-medium mt-4 mb-2">ABOUT</h3>
+            <div class="flex align-items-center mb-2">
+                <i class="pi pi-briefcase mr-2"></i>
+                <span>{{user?.role || 'Role Not Assigned'}}</span>
+            </div>
+
+            <h3 class="text-lg font-medium mt-4 mb-2">CONTACT</h3>
+            <div class="flex align-items-center mb-2">
+                <i class="pi pi-envelope mr-2"></i>
+                <span>{{user?.email}}</span>
+            </div>
+
+            <h3 class="text-lg font-medium mt-4 mb-2">TEAMS</h3>
+            <div *ngFor="let team of userTeams?.slice(0, 3)" class="flex align-items-center mb-2">
+                <!-- <p-avatar [image]="team.imageUrl || ''" shape="circle" size="normal"
+                    class="mr-2"></p-avatar> -->
+                <span>{{team.name}}</span>
+                <span class="text-xs text-color-secondary ml-2">{{(team.members && team.members.length)
+                    || 0}} members</span>
+            </div>
+        </div>
+    </div>
+</p-card>

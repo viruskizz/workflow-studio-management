@@ -1,0 +1,59 @@
+<div class="card" [ngClass]="styleClass">
+    <div class="card-header mb-6">
+        <h3 class="m-0">Works With</h3>
+    </div>
+    <div class="card-body">
+        <div *ngIf="teams.length === 0" class="text-center p-3">
+            <p>You are not a member or leader of any team yet.</p>
+        </div>
+        <div *ngIf="teams.length > 0">
+            <div *ngFor="let team of teams" class="mb-4">
+                <div
+                    class="flex justify-content-between align-items-center mb-2"
+                >
+                    <h6>{{ team.name }}</h6>
+                    <p-button
+                        label="View Team"
+                        icon="pi pi-users"
+                        styleClass="p-button-sm p-button-outlined"
+                        [routerLink]="['/teams', team.id]"
+                    >
+                    </p-button>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                    <div
+                        *ngFor="let member of team.members?.slice(0, 5)"
+                        class="text-center"
+                    >
+                        <p-avatar
+                            [image]="member.imageUrl"
+                            size="large"
+                            shape="circle"
+                            [pTooltip]="
+                                member.firstName + ' ' + member.lastName
+                            "
+                            tooltipPosition="top"
+                        >
+                        </p-avatar>
+                    </div>
+                    <div
+                        *ngIf="team.members && team.members.length > 5"
+                        class="text-center"
+                    >
+                        <p-avatar
+                            label="+{{ team.members.length - 5 }}"
+                            size="large"
+                            shape="circle"
+                            [pTooltip]="
+                                team.members.length - 5 + ' more members'
+                            "
+                            tooltipPosition="top"
+                        >
+                        </p-avatar>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
