@@ -1,57 +1,52 @@
 <div class="card">
-    <div class="flex justify-content-between align-items-center mb-4 gap-4">
-        <h2>Manage Team</h2>
-        <div class="flex gap-2">
-            <p-button
-                icon="pi pi-times"
-                [rounded]="true"
-                [text]="true"
-                [raised]="true"
-                severity="secondary"
-                routerLink="/teams"
-                pTooltip="Back to teams"
-            ></p-button>
-            <p-button
-                icon="pi pi-save"
-                [rounded]="true"
-                [text]="true"
-                [raised]="true"
-                severity="success"
-                (click)="saveTeam()"
-                pTooltip="Save changes"
-            ></p-button>
-            <p-button
-                icon="pi pi-trash"
-                [rounded]="true"
-                [text]="true"
-                [raised]="true"
-                severity="danger"
-                (click)="deleteTeam()"
-                pTooltip="Delete team"
-            ></p-button>
-        </div>
+  <div class="flex justify-content-between align-items-center mb-4 gap-4">
+    <h2>Manage Team</h2>
+    <div class="flex gap-2">
+      <p-button
+        icon="pi pi-times"
+        [rounded]="true"
+        [text]="true"
+        [raised]="true"
+        severity="secondary"
+        routerLink="/teams"
+        pTooltip="Back to teams"></p-button>
+      <p-button
+        icon="pi pi-save"
+        [rounded]="true"
+        [text]="true"
+        [raised]="true"
+        severity="success"
+        (click)="saveTeam()"
+        pTooltip="Save changes"></p-button>
+      <p-button
+        icon="pi pi-trash"
+        [rounded]="true"
+        [text]="true"
+        [raised]="true"
+        severity="danger"
+        (click)="deleteTeam()"
+        pTooltip="Delete team"></p-button>
     </div>
+  </div>
 
-    <p-toast></p-toast>
-    <p-confirmDialog></p-confirmDialog>
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
 
-    <div *ngIf="loading" class="flex justify-content-center">
-        <p-progressSpinner></p-progressSpinner>
+  <div *ngIf="loading" class="flex justify-content-center">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <div *ngIf="!loading" class="grid">
+    <!-- Left side - Team details -->
+    <div class="col-12 md:col-6">
+      <app-team-detail-info [teamId]="teamId"/>
+      <app-team-detail-member [teamId]="teamId"/>
     </div>
-
-    <div *ngIf="!loading" class="grid">
-        <!-- Left side - Team details -->
-        <div class="col-12 md:col-6">
-            <app-team-detail-info [teamId]="teamId"></app-team-detail-info>
-
-            <app-team-detail-member [teamId]="teamId"></app-team-detail-member>
-        </div>
-
-        <!-- Right side - Projects -->
-        <div class="col-12 md:col-6 mt-auto">
-            <app-team-detail-project-working
-                [teamId]="teamId"
-            ></app-team-detail-project-working>
-        </div>
+    <!-- Right side - Projects -->
+    <div class="col-12 md:col-6">
+      <app-team-detail-stage [teamId]="teamId"/>
+      <div class="my-4"></div>
+      <app-team-detail-project-working [teamId]="teamId"/>
     </div>
+  </div>
 </div>

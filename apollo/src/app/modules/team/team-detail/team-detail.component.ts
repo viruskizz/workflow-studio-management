@@ -15,37 +15,38 @@ import { switchMap, catchError } from 'rxjs/operators';
 export class TeamDetailComponent implements OnInit {
   @ViewChild(TeamDetailInfoComponent) teamInfoComponent!: TeamDetailInfoComponent;
   @ViewChild(TeamDetailMemberComponent) teamMemberComponent!: TeamDetailMemberComponent;
-  
+
   teamId!: number;
   loading = false;
-  
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private confirmationService: ConfirmationService,
     private teamService: TeamService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
       this.teamId = +params['id'];
+      console.log(this.teamId)
     });
   }
 
   saveTeam() {
     this.loading = true;
-    
+
     // First save the team info (name, leader)
     if (this.teamInfoComponent) {
       this.teamInfoComponent.onSave();
     }
-    
+
     // Then save the team members
     if (this.teamMemberComponent) {
       this.teamMemberComponent.onSave();
     }
-    
+
     this.loading = false;
   }
 
@@ -56,12 +57,12 @@ export class TeamDetailComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.loading = true;
-        
+
         // First remove all team members
         this.teamService.getTeamMembers(this.teamId)
           .pipe(
             switchMap(members => {
-              const removeRequests = members.map(member => 
+              const removeRequests = members.map(member =>
                 this.teamService.removeMemberFromTeam(this.teamId, member.id!)
                   .pipe(catchError(err => {
                     console.warn(`Failed to remove member ${member.id}`, err);
