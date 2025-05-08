@@ -6,10 +6,20 @@ import { User } from './user.entity';
 import { Team } from './team.entity';
 import { TeamStage } from './team-stage.entity';
 import { TeamMember } from './team-member.entity';
+import { Auth } from './auth.entity';
 
-const entities = [User, Project, FileEntity, Task, Team, TeamStage, TeamMember];
+const entities = [
+  User,
+  Project,
+  FileEntity,
+  Task,
+  Team,
+  TeamStage,
+  TeamMember,
+  Auth,
+];
 
-export { User, Project, FileEntity, Task, Team, TeamStage, TeamMember };
+export { User, Project, FileEntity, Task, Team, TeamStage, TeamMember, Auth };
 
 export default entities;
 export class ConstructableBaseEntity extends BaseEntity {

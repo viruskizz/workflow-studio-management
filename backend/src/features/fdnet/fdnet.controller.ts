@@ -9,6 +9,6 @@ export class FdnetController {
   @Get('hello')
   @ApiOperation({ summary: 'Create new project' })
   async hello() {
-    return {};
+    return this.service.getAuth();
   }
 }
