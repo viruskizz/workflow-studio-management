@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { delay, Observable, tap } from 'rxjs';
@@ -11,8 +11,8 @@ import { AppStyleUtil } from 'src/app/utils/app-style.util';
   selector: 'app-team-detail-stage',
   templateUrl: './team-detail-stage.component.html',
 })
-export class TeamDetailStageComponent implements OnInit {
-  teamId?: number;
+export class TeamDetailStageComponent implements OnInit, OnChanges {
+  @Input({ required: true }) teamId!: number;
   stages: TeamStage[] = [];
   loading?: boolean;
 
@@ -32,11 +32,13 @@ export class TeamDetailStageComponent implements OnInit {
     private teamService: TeamService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
-  ngOnInit() {
-    this.teamId = 1;
-    if (this.teamId) {
+  ngOnInit() { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['teamId'] && changes['teamId'].currentValue) {
+      this.teamId = changes['teamId'].currentValue;
       this.teamService.listStages(this.teamId).subscribe({
         next: (v) => {
           this.stages = this.sortStage(v);
@@ -48,9 +50,9 @@ export class TeamDetailStageComponent implements OnInit {
   sortStage(ss: TeamStage[]) {
     ss.sort((a, b) => {
       const statusOrder: TaskStatus[] = ['BACKLOG', 'TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED'];
-      const aIdx = statusOrder.indexOf( a.taskStatus );
-      const bIdx = statusOrder.indexOf( b.taskStatus );
-      if ( aIdx !== bIdx )
+      const aIdx = statusOrder.indexOf(a.taskStatus);
+      const bIdx = statusOrder.indexOf(b.taskStatus);
+      if (aIdx !== bIdx)
         return aIdx - bIdx;
       return a.order - b.order;
     })
@@ -142,7 +144,7 @@ export class TeamDetailStageComponent implements OnInit {
         return null;
       }
       const idx = this.stages.findIndex(s => s.order === control.value);
-      return idx > -1 ? {duplicatedOrder: {value: control.value}} : null;
+      return idx > -1 ? { duplicatedOrder: { value: control.value } } : null;
     };
   }
 }

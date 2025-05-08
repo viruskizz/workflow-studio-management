@@ -111,13 +111,15 @@
           <label htmlFor="state" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
             <i class="pi pi-compass"></i>
             <span>
-              State
+              Stage
             </span>
           </label>
           <div class="col-12 md:col-8">
-            <input pInputText id="state" type="text" formControlName="state" />
+            <!-- <input pInputText id="stage" type="text" formControlName="stage" /> -->
+            <app-team-stage [form]="projectTaskForm" controlName="stage" [teamId]="team.value?.id"></app-team-stage>
           </div>
         </div>
+        <!--
         <div class="field grid">
           <label htmlFor="flow" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
             <i class="pi pi-bolt"></i>
@@ -129,6 +131,7 @@
             <input pInputText id="flow" type="text" formControlName="flow" />
           </div>
         </div>
+        -->
         <div class="field grid">
           <label htmlFor="parent" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
             <i class="pi pi-folder"></i>

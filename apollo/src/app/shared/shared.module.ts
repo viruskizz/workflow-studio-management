@@ -12,6 +12,8 @@ import { TeamDropdownComponent } from './components/forms/team-dropdown/team-dro
 import { TaskTypeComponent } from './components/forms/task-type/task-type.component';
 import { IconsModule } from './components/icons/icons.module';
 import { TaskDropdownComponent } from './components/forms/task-dropdown/task-dropdown.component';
+import { TeamStageComponent } from './components/forms/team-stage/team-stage.component';
+import { TeamService } from '../services/team.service';
 
 const sharedComponents: any[] = [
   TestComponent,
@@ -19,7 +21,8 @@ const sharedComponents: any[] = [
   TaskStatusComponent,
   TeamDropdownComponent,
   TaskTypeComponent,
-  TaskDropdownComponent
+  TaskDropdownComponent,
+  TeamStageComponent
 ];
 
 @NgModule({
@@ -40,6 +43,9 @@ const sharedComponents: any[] = [
     DropdownModule,
 
     IconsModule,
+  ],
+  providers: [
+    TeamService
   ],
   exports: [
     ...sharedComponents,

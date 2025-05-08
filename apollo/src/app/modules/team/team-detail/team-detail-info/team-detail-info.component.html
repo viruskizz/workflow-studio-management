@@ -1,74 +1,36 @@
 <div class="flex flex-column align-items-center mb-4">
-    <img
-        [src]="getImage(imagePreview || (team.imageUrl || ''))"
-        [alt]="team.name || 'Team'"
-        width="100"
-        height="100"
-        class="mb-4 border-circle shadow-2"
-        (error)="onImageError()"
-    />
-    <div>
-        <p-fileUpload
-            #fileUpload
-            mode="basic"
-            name="cover"
-            accept="image/*"
-            [maxFileSize]="3000000"
-            styleClass="p-button-outlined p-button-plain p-button-sm"
-            chooseLabel="Upload Image"
-            (onSelect)="onSelectImage($event)"
-        ></p-fileUpload>
-    </div>
+  <img [src]="getImage(imagePreview || (team.imageUrl || ''))" [alt]="team.name || 'Team'" width="100" height="100"
+    class="mb-4 border-circle shadow-2" (error)="onImageError()" />
+  <div>
+    <p-fileUpload #fileUpload mode="basic" name="cover" accept="image/*" [maxFileSize]="3000000"
+      styleClass="p-button-outlined p-button-plain p-button-sm" chooseLabel="Upload Image"
+      (onSelect)="onSelectImage($event)"></p-fileUpload>
+  </div>
 </div>
 
 <div class="text-center mb-3">
-    <small class="text-secondary"
-        >Required Fields Are Marked With An Asterisk *</small
-    >
+  <small class="text-secondary">Required Fields Are Marked With An Asterisk *</small>
 </div>
 
 <form [formGroup]="teamForm">
-    <div class="field flex flex-column align-items-center">
-        <div class="w-30rem">
-            <label for="name" class="block font-medium"
-                >Team name <span class="text-danger">*</span></label
-            >
-            <input
-                id="name"
-                type="text"
-                pInputText
-                formControlName="name"
-                required
-                class="w-full"
-            />
-            <small
-                class="p-error"
-                *ngIf="isSubmitted && formControls['name'].errors?.['required']"
-            >
-                Team name is required.
-            </small>
-        </div>
+  <div class="field flex flex-column align-items-center">
+    <div class="w-30rem">
+      <label for="name" class="block font-medium">Team name <span class="text-danger">*</span></label>
+      <input id="name" type="text" pInputText formControlName="name" required class="w-full" />
+      <small class="p-error" *ngIf="isSubmitted && formControls['name'].errors?.['required']">
+        Team name is required.
+      </small>
     </div>
+  </div>
 
-    <div class="field flex flex-column align-items-center">
-        <div class="w-30rem">
-            <label for="leader" class="block font-medium"
-                >Leader <span class="text-danger">*</span></label
-            >
-            <app-user-autocomplete
-                [form]="teamForm"
-                [isShowLabel]="false"
-                controlName="leader"
-                [multiple]="false"
-                [dropdown]="true"
-                [limit]="1"
-            ></app-user-autocomplete>
-            <small
-                class="p-error"
-                *ngIf="isSubmitted && formControls['leader'].errors?.['required']"
-            >
-                Team leader is required.
-            </small>
-        </div>
+  <div class="field flex flex-column align-items-center">
+    <div class="w-30rem">
+      <label for="leader" class="block font-medium">Leader <span class="text-danger">*</span></label>
+      <app-user-autocomplete [form]="teamForm" [isShowLabel]="false" controlName="leader" [multiple]="false"
+        [dropdown]="true" [limit]="1"></app-user-autocomplete>
+      <small class="p-error" *ngIf="isSubmitted && formControls['leader'].errors?.['required']">
+        Team leader is required.
+      </small>
     </div>
+  </div>
 </form>
