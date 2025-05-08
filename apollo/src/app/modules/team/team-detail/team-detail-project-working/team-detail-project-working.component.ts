@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import { Project } from 'src/app/models/project.model';
 import { Team } from 'src/app/models/team.model';
 import { ProjectService } from 'src/app/services/project.service';
@@ -8,8 +8,8 @@ import { TeamService } from 'src/app/services/team.service';
   selector: 'app-team-detail-project-working',
   templateUrl: './team-detail-project-working.component.html',
 })
-export class TeamDetailProjectWorkingComponent implements OnInit {
-  @Input() teamId!: number;
+export class TeamDetailProjectWorkingComponent implements OnChanges {
+  @Input({ required: true }) teamId!: number;
 
   team?: Team;
   projects: Project[] = [];
@@ -18,22 +18,23 @@ export class TeamDetailProjectWorkingComponent implements OnInit {
   constructor(
     private projectService: ProjectService,
     private teamService: TeamService
-  ) {}
+  ) { }
 
-  ngOnInit(): void {
-    if (this.teamId) {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['teamId'] && changes['teamId'].currentValue) {
+      this.teamId = changes['teamId'].currentValue;
       this.loadProjects();
     }
   }
 
   loadProjects(): void {
     this.loading = true;
-    
+
     // First get the team to access the leaderId
     this.teamService.getTeamWithMembers(this.teamId).subscribe({
       next: (team) => {
         this.team = team;
-        
+
         // Then load projects
         this.projectService.listProject().subscribe({
           next: (projects) => {
@@ -78,31 +79,31 @@ export class TeamDetailProjectWorkingComponent implements OnInit {
 
   getStatusFromProject(project: any): string {
     switch (project.status) {
-    case 'COMPLETED':
-      return 'Completed';
-    case 'IN_PROGRESS':
-      return 'In Progress';
-    case 'PENDING':
-      return 'Pending';
-    case 'CANCELLED':
-      return 'Cancelled';
-    default:
-      return project.status;
+      case 'COMPLETED':
+        return 'Completed';
+      case 'IN_PROGRESS':
+        return 'In Progress';
+      case 'PENDING':
+        return 'Pending';
+      case 'CANCELLED':
+        return 'Cancelled';
+      default:
+        return project.status;
     }
   }
 
   getSeverityFromStatus(status: string): string {
     switch (status) {
-    case 'COMPLETED':
-      return 'success';
-    case 'IN_PROGRESS':
-      return 'info';
-    case 'PENDING':
-      return 'warning';
-    case 'CANCELLED':
-      return 'danger';
-    default:
-      return 'info';
+      case 'COMPLETED':
+        return 'success';
+      case 'IN_PROGRESS':
+        return 'info';
+      case 'PENDING':
+        return 'warning';
+      case 'CANCELLED':
+        return 'danger';
+      default:
+        return 'info';
     }
   }
 }

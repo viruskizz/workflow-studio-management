@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FileSelectEvent, FileUpload } from 'primeng/fileupload';
 import { Team } from 'src/app/models/team.model';
@@ -12,17 +12,17 @@ import { TeamService } from 'src/app/services/team.service';
   selector: 'app-team-detail-info',
   templateUrl: './team-detail-info.component.html',
 })
-export class TeamDetailInfoComponent implements OnInit {
+export class TeamDetailInfoComponent implements OnInit, OnChanges {
   @ViewChild('fileUpload') fileUpload!: FileUpload;
-  
-  @Input() teamId!: number;
+  @Input({ required: true }) teamId!: number;
+
   team: Team = {} as Team; // Initialize with empty object to prevent undefined errors
   teamForm!: FormGroup;
   isSubmitted = false;
   loading = false;
   imagePreview?: string;
   coverFile?: File;
-  
+
   @Output() loadingChange = new EventEmitter<boolean>();
   @Output() imagePreviewChange = new EventEmitter<string>();
   @Output() coverFileChange = new EventEmitter<File>();
@@ -37,13 +37,11 @@ export class TeamDetailInfoComponent implements OnInit {
     this.teamForm = this.createForm();
   }
 
-  ngOnInit() {
-    if (!this.teamId) {
-      this.route.parent?.params.subscribe(params => {
-        this.teamId = +params['id'];
-        this.loadTeamDetails();
-      });
-    } else {
+  ngOnInit() { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['teamId'] && changes['teamId'].currentValue) {
+      this.teamId = changes['teamId'].currentValue;
       this.loadTeamDetails();
     }
   }
@@ -88,7 +86,7 @@ export class TeamDetailInfoComponent implements OnInit {
       name: formValue.name,
       leaderId: formValue.leader?.id
     };
-    
+
     this.loading = true;
     this.teamService
       .updateTeam(this.teamId, teamData)
@@ -137,7 +135,7 @@ export class TeamDetailInfoComponent implements OnInit {
 
     this.loading = true;
     this.loadingChange.emit(this.loading);
-    
+
     const filepath = `/teams/${this.teamId}/`;
     const filename = 'cover.png';
 

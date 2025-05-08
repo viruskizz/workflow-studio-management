@@ -43,13 +43,12 @@
         <!-- Left side - Team details -->
         <div class="col-12 md:col-6">
             <app-team-detail-info [teamId]="teamId"></app-team-detail-info>
-
             <app-team-detail-member [teamId]="teamId"></app-team-detail-member>
         </div>
 
         <!-- Right side - Projects -->
-        <div class="col-12 md:col-6 mt-auto">
-            <app-team-detail-stage class="my-1" />
+        <div class="col-12 md:col-6">
+            <app-team-detail-stage [teamId]="teamId" />
             <app-team-detail-project-working
                 [teamId]="teamId"
             ></app-team-detail-project-working>

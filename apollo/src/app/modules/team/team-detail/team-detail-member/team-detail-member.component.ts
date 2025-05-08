@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { User } from 'src/app/models/user.model';
@@ -12,8 +12,8 @@ import { UserService } from 'src/app/services/user.service';
   selector: 'app-team-detail-member',
   templateUrl: './team-detail-member.component.html',
 })
-export class TeamDetailMemberComponent implements OnInit {
-  @Input() teamId!: number;
+export class TeamDetailMemberComponent implements OnInit, OnChanges {
+  @Input({ required: true }) teamId!: number;
   teamForm: FormGroup;
   isSubmitted = false;
   loading = false;
@@ -46,16 +46,13 @@ export class TeamDetailMemberComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    if (!this.teamId) {
-      this.route.parent?.params.subscribe(params => {
-        this.teamId = +params['id'];
-        this.loadMembers();
-      });
-    } else {
+  ngOnInit() { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['teamId'] && changes['teamId'].currentValue) {
+      this.teamId = changes['teamId'].currentValue;
       this.loadMembers();
     }
-    this.loadUsers();
   }
 
   loadMembers() {
@@ -125,17 +122,17 @@ export class TeamDetailMemberComponent implements OnInit {
   addSelectedMember() {
     const newMembers = this.formControls['newMember'].value;
     if (!newMembers || (Array.isArray(newMembers) && newMembers.length === 0)) return;
-    
+
     const membersToAdd = Array.isArray(newMembers) ? newMembers : [newMembers];
-    const uniqueNewMembers = membersToAdd.filter(newMember => 
+    const uniqueNewMembers = membersToAdd.filter(newMember =>
       newMember && newMember.id && !this.filteredMembers.some(m => m.id === newMember.id)
     );
-    
+
     if (uniqueNewMembers.length === 0) {
       this.showMessage('info', 'Info', 'Selected users are already team members');
       return;
     }
-    
+
     this.membersToAdd = [...this.membersToAdd, ...uniqueNewMembers];
     this.filteredMembers = [...this.filteredMembers, ...uniqueNewMembers];
     this.formControls['members'].setValue(this.filteredMembers);
@@ -145,26 +142,26 @@ export class TeamDetailMemberComponent implements OnInit {
 
   onSave() {
     if (this.membersToAdd.length === 0 && this.membersToRemove.length === 0) return;
-    
+
     this.loading = true;
     this.loadingChange.emit(this.loading);
-    
-    const removeRequests = this.membersToRemove.map(member => 
+
+    const removeRequests = this.membersToRemove.map(member =>
       this.teamService.removeMemberFromTeam(this.teamId, member.id!)
         .pipe(catchError(error => {
           console.error(`Failed to remove member ${member.id}:`, error);
           return of(null);
         }))
     );
-    
-    const addRequests = this.membersToAdd.map(member => 
+
+    const addRequests = this.membersToAdd.map(member =>
       this.teamService.addMemberToTeam(this.teamId, member.id!)
         .pipe(catchError(error => {
           console.error(`Failed to add member ${member.id}:`, error);
           return of(null);
         }))
     );
-    
+
     forkJoin([...removeRequests, ...addRequests])
       .pipe(finalize(() => {
         this.loading = false;
