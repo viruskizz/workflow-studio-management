@@ -62,8 +62,43 @@ export class UserDashboardService {
   }
 
   // GET /users/:id/dashboard/workingOn
-  async getWorkingOn(userId: number): Promise<Project[]> {
-    return this.projectService.findProjectsWorkingOnByUserId(userId);
+  async getWorkingOn(userId: number): Promise<any[]> {
+    // Get tasks for the user
+    const tasks = await this.taskService.findTasksByUserId(userId);
+
+    // Extract unique projects from tasks
+    const projectIds = [
+      ...new Set(tasks.map((task) => task.projectId).filter(Boolean)),
+    ];
+
+    if (projectIds.length === 0) {
+      return [];
+    }
+
+    // Get full project details for each project ID
+    const projects = await Promise.all(
+      projectIds.map((id) => this.projectService.findOne(id)),
+    );
+
+    // For each project, add its tasks but remove circular references
+    const projectsWithTasks = projects.filter(Boolean).map((project) => {
+      // Find tasks for this project
+      const projectTasks = tasks
+        .filter((task) => task.projectId === project.id)
+        .map((task) => {
+          // Create a clean copy of the task without the project reference
+          const { project: _, ...taskWithoutProject } = task;
+          return taskWithoutProject;
+        });
+
+      // Return a new object with the project properties and tasks
+      return {
+        ...project,
+        tasks: projectTasks,
+      };
+    });
+
+    return projectsWithTasks;
   }
 
   // GET /users/:id/dashboard/workingWith

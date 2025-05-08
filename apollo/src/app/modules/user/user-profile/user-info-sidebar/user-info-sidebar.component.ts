@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from 'src/app/models/user.model';
 import { Team } from 'src/app/models/team.model';
+import { getDefaultAvatar } from 'src/app/utils';
 
 @Component({
   selector: 'app-user-info-sidebar',
@@ -14,5 +15,21 @@ export class UserInfoSidebarComponent {
 
   editUser() {
     this.editUserEvent.emit();
+  }
+
+  getImage(url: string | undefined) {
+    return url || 'assets/images/noimage.jpg';
+  }
+
+  onUserImageError() {
+    if (this.user) {
+      this.user.imageUrl = getDefaultAvatar();
+    }
+  }
+
+  onTeamImageError(teamIndex: number) {
+    if (this.userTeams[teamIndex]) {
+      this.userTeams[teamIndex].imageUrl = 'assets/images/noimage.jpg';
+    }
   }
 }

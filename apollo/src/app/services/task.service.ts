@@ -69,4 +69,9 @@ export class TaskService {
   deleteTask(id: number): Observable<void> {
     return this.httpClient.delete<void>(`${this.baseUrl}/${id}`);
   }
+
+  getTasksByProjectIds(projectIds: number[]): Observable<Task[]> {
+    const params = new HttpParams().set('projectIds', projectIds.join(','));
+    return this.httpClient.get<Task[]>(`${this.baseUrl}`, { params });
+  }
 }

@@ -7,7 +7,7 @@
             <p>You are not a member or leader of any team yet.</p>
         </div>
         <div *ngIf="teams.length > 0">
-            <div *ngFor="let team of teams" class="mb-4">
+            <div *ngFor="let team of teams; let teamIndex = index" class="mb-4">
                 <div
                     class="flex justify-content-between align-items-center mb-2"
                 >
@@ -23,17 +23,23 @@
 
                 <div class="flex flex-wrap gap-2">
                     <div
-                        *ngFor="let member of team.members?.slice(0, 5)"
+                        *ngFor="
+                            let member of team.members?.slice(0, 5);
+                            let memberIndex = index
+                        "
                         class="text-center"
                     >
                         <p-avatar
-                            [image]="member.imageUrl"
+                            [image]="getImage(member.imageUrl || '')"
                             size="large"
                             shape="circle"
                             [pTooltip]="
                                 member.firstName + ' ' + member.lastName
                             "
                             tooltipPosition="top"
+                            (onImageError)="
+                                onImageError(teamIndex, memberIndex)
+                            "
                         >
                         </p-avatar>
                     </div>
@@ -49,6 +55,9 @@
                                 team.members.length - 5 + ' more members'
                             "
                             tooltipPosition="top"
+                            (onImageError)="
+                                onImageError(teamIndex, team.members.length)
+                            "
                         >
                         </p-avatar>
                     </div>

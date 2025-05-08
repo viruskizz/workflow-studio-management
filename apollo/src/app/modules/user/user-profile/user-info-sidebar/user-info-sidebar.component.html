@@ -1,7 +1,7 @@
 <p-card [styleClass]="'h-full ' + styleClass">
     <div class="flex flex-column align-items-center">
-        <img [src]="user?.imageUrl || ''" class="profile-image mb-3 border-circle" width="200px"
-            alt="User profile image">
+        <img [src]="getImage(user?.imageUrl)" class="profile-image mb-3 border-circle" width="200px"
+            alt="User profile image" (error)="onUserImageError()">
         <h2 class="mt-0 mb-1">{{user?.firstName}} {{user?.lastName}}</h2>
         <p class="text-lg text-color-secondary mt-0 mb-3">{{user?.username}}</p>
 
@@ -22,9 +22,9 @@
             </div>
 
             <h3 class="text-lg font-medium mt-4 mb-2">TEAMS</h3>
-            <div *ngFor="let team of userTeams?.slice(0, 3)" class="flex align-items-center mb-2">
-                <!-- <p-avatar [image]="team.imageUrl || ''" shape="circle" size="normal"
-                    class="mr-2"></p-avatar> -->
+            <div *ngFor="let team of userTeams?.slice(0, 3); let i = index" class="flex align-items-center mb-2">
+                <p-avatar [image]="getImage(team.imageUrl)" shape="circle" size="normal"
+                    class="mr-2" (onImageError)="onTeamImageError(i)"></p-avatar>
                 <span>{{team.name}}</span>
                 <span class="text-xs text-color-secondary ml-2">{{(team.members && team.members.length)
                     || 0}} members</span>

@@ -11,6 +11,11 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { UserWorkingOnComponent } from './user-working-on/user-working-on.component';
 import { UserTaskStatsComponent } from './user-task-stats/user-task-stats.component';
 import { UserWorkingWithComponent } from './user-working-with/user-working-with.component';
+import { PanelModule } from 'primeng/panel';
+import { MessageModule } from 'primeng/message';
+import { ChipModule } from 'primeng/chip';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   imports: [
@@ -21,7 +26,12 @@ import { UserWorkingWithComponent } from './user-working-with/user-working-with.
     ButtonModule,
     AvatarModule,
     TooltipModule,
-    ProgressSpinnerModule
+    PanelModule,
+    MessageModule,
+    ChipModule,
+    TableModule,
+    TagModule,
+    ProgressSpinnerModule,
   ],
   declarations: [
     UserWorkingWithComponent,
