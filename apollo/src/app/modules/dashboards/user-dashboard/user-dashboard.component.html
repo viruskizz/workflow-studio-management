@@ -3,7 +3,7 @@
         <!-- Main content area -->
         <div class="col-12">
             <app-user-task-stats [taskStats]="taskStats"></app-user-task-stats>
-            <app-user-working-on [projects]="workingOn" styleClass="mt-3"></app-user-working-on>
+            <app-user-working-on [projects]="workingOn" [userId]="user?.id" styleClass="mt-3"></app-user-working-on>
             <app-user-working-with [teams]="userTeams" styleClass="mt-3"></app-user-working-with>
         </div>
     </div>

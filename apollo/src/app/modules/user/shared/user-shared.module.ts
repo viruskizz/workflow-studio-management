@@ -16,12 +16,14 @@ import { MessageModule } from 'primeng/message';
 import { ChipModule } from 'primeng/chip';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { FormsModule } from '@angular/forms';
+import { MenuModule } from 'primeng/menu';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
-    
+    FormsModule,
     CardModule,
     ButtonModule,
     AvatarModule,
@@ -31,6 +33,7 @@ import { TagModule } from 'primeng/tag';
     ChipModule,
     TableModule,
     TagModule,
+    MenuModule,
     ProgressSpinnerModule,
   ],
   declarations: [

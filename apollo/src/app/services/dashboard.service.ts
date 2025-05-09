@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 
 import { UserDashboard } from '../models/user.model';
 import { Project } from '../models/project.model';
-import { TaskStats } from '../models/task.model';
+import { Task, TaskStats, TaskStatus } from '../models/task.model';
 import { Team } from '../models/team.model';
 
 @Injectable({
@@ -31,4 +31,12 @@ export class DashboardService {
   getWorkingWith(userId: number): Observable<Team[]> {
     return this.httpClient.get<Team[]>(`${this.baseUrl}/${userId}/dashboard/workingWith`);
   }
+
+  updateTaskStatus(userId: number, taskId: number, status: TaskStatus) {
+    return this.httpClient.patch<Task>(
+      `${this.baseUrl}/${userId}/dashboard/tasks/${taskId}/status`,
+      { status }
+    );
+  }
 }
+
