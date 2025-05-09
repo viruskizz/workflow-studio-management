@@ -1,43 +1,24 @@
-import {
-  BadRequestException,
-  HttpException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { UsersService } from '@backend/features/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import * as argon2 from 'argon2';
-import { User } from '@backend/typeorm';
+import { Auth, User } from '@backend/typeorm';
+import { AuthProvider } from '@backend/typeorm/auth.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectRepository(Auth)
+    private repository: Repository<Auth>,
     private userService: UsersService,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.userService.getRepository().findOne({
-      where: { username },
-      select: {
-        id: true,
-        username: true,
-        password: true,
-      },
-    });
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
-    const isMatch: boolean = await argon2.verify(user.password, pass);
-    // console.log('isMatch', isMatch);
-    if (!isMatch) {
-      throw new UnauthorizedException('Password does not match');
-    }
-    const fullUser = await this.userService.findOne(user.id);
-    return fullUser;
-  }
-
   async signin(user: any) {
+    // Use LocalStrategy Guard to validate before signin
     return {
       access_token: this.jwtService.sign(this.userPayload(user)),
     };
@@ -58,5 +39,35 @@ export class AuthService {
       username: user.username,
       sub: user.id,
     };
+  }
+
+  getAuthUsers() {
+    return this.repository.find({
+      where: {
+        provider: AuthProvider.FDNET,
+      },
+    });
+  }
+
+  getAuthUser(username: string): Promise<Auth> {
+    return this.repository.findOne({
+      where: {
+        username,
+        provider: AuthProvider.FDNET,
+      },
+    });
+  }
+
+  saveAuth(data: Partial<Auth>) {
+    return this.repository.save(data);
+  }
+
+  getAuthServer(): Promise<Auth> {
+    return this.repository.findOne({
+      where: {
+        username: this.configService.get('FDNET_USERNAME'),
+        provider: AuthProvider.FDNET_SERVER,
+      },
+    });
   }
 }
