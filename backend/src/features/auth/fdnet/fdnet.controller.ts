@@ -22,7 +22,7 @@ export class FdnetController {
   @Get('hello')
   @ApiOperation({ summary: 'Create new project' })
   async hello() {
-    return this.service.getAuth();
+    return this.service.getHello();
   }
 
   @HttpCode(HttpStatus.OK)
@@ -30,6 +30,6 @@ export class FdnetController {
   @Post('signin')
   @ApiOperation({ summary: 'Singin user to backend' })
   async signIn(@Request() req) {
-    return this.authService.signin(req.user);
+    return this.service.signIn(req.user);
   }
 }

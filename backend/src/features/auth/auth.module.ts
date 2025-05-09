@@ -11,6 +11,7 @@ import { FdnetService } from './fdnet/fdnet.service';
 import { Auth } from '@backend/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FdnetStrategy } from './strategies/fdnet/fdnet.strategy';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { FdnetStrategy } from './strategies/fdnet/fdnet.strategy';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '24h' },
     }),
+    HttpModule,
   ],
   controllers: [AuthController, FdnetController],
   providers: [AuthService, LocalStrategy, FdnetService, FdnetStrategy],

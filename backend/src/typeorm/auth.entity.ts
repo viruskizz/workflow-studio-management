@@ -9,12 +9,13 @@ import {
 
 export enum AuthProvider {
   FDNET = 'FDNET',
+  FDNET_SERVER = 'FDNET_SERVER',
 }
 
 @Entity({ name: 'auth' })
 export class Auth extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column({ unique: true })
   username: string;
@@ -22,16 +23,16 @@ export class Auth extends BaseEntity {
   @Column()
   provider: AuthProvider;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   token: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   refeshtoken: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   issueAt: Date;
 
-  @Column({ nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   expiredAt: Date;
 
   @CreateDateColumn({ name: 'created_at' })
