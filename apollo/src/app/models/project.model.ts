@@ -1,3 +1,4 @@
+import { Task } from "./task.model";
 import { User } from "./user.model";
 
 export interface ProjectMetadata {
@@ -17,4 +18,7 @@ export interface Project {
   leader?: User;
   createdAt: string; 
   updatedAt: string;
+}
+export interface ProjectWithTasks extends Project {
+  tasks?: Task[];
 }

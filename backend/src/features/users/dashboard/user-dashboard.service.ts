@@ -5,7 +5,7 @@ import { Project, User } from '@backend/typeorm';
 import {
   TaskStats,
   UserDashboard,
-  WorkingWithUser,
+  UserTeam,
 } from '@backend/interfaces/user-dashboard.interface';
 import { TasksService } from '@backend/features/tasks/tasks.service';
 import { ProjectsService } from '@backend/features/projects/projects.service';
@@ -62,55 +62,72 @@ export class UserDashboardService {
   }
 
   // GET /users/:id/dashboard/workingOn
-  async getWorkingOn(userId: number): Promise<Project[]> {
-    return this.projectService.findProjectsWorkingOnByUserId(userId);
+  async getWorkingOn(userId: number): Promise<any[]> {
+    // Get tasks for the user
+    const tasks = await this.taskService.findTasksByUserId(userId);
+
+    // Extract unique projects from tasks
+    const projectIds = [
+      ...new Set(tasks.map((task) => task.projectId).filter(Boolean)),
+    ];
+
+    if (projectIds.length === 0) {
+      return [];
+    }
+
+    // Get full project details for each project ID
+    const projects = await Promise.all(
+      projectIds.map((id) => this.projectService.findOne(id)),
+    );
+
+    // For each project, add its tasks but remove circular references
+    const projectsWithTasks = projects.filter(Boolean).map((project) => {
+      // Find tasks for this project
+      const projectTasks = tasks
+        .filter((task) => task.projectId === project.id)
+        .map((task) => {
+          // Create a clean copy of the task without the project reference
+          const { project: _, ...taskWithoutProject } = task;
+          return taskWithoutProject;
+        });
+
+      // Return a new object with the project properties and tasks
+      return {
+        ...project,
+        tasks: projectTasks,
+      };
+    });
+
+    return projectsWithTasks;
   }
 
   // GET /users/:id/dashboard/workingWith
-  async getWorkingWith(userId: number): Promise<WorkingWithUser[]> {
+  async getWorkingWith(userId: number): Promise<UserTeam[]> {
     try {
-      // Get teams where user is a member
+      // Get all teams
       const teams = await this.teamsService.findAll();
       const userTeams = [];
 
-      // Filter to user's teams
+      // Filter to user's teams (as member or leader)
       for (const team of teams) {
         const members = await this.teamMembersService.listMembers(team.id);
-        if (members.some((member) => member.userId === userId)) {
-          userTeams.push(team);
+
+        // Include team if user is a member OR a leader
+        if (
+          members.some((member) => member.userId === userId) ||
+          team.leaderId === userId
+        ) {
+          // Add members to the team object, excluding the current user
+          userTeams.push({
+            ...team,
+            members: members
+              .map((member) => member.user)
+              .filter((user) => user.id !== userId),
+          });
         }
       }
 
-      if (userTeams.length === 0) return [];
-
-      // Track unique users across teams
-      const uniqueUserMap = new Map();
-
-      // Process each team's members
-      for (const team of userTeams) {
-        const members = await this.teamMembersService.listMembers(team.id);
-
-        for (const member of members) {
-          // Skip current user
-          if (member.userId === userId) continue;
-
-          // Add or update user in results map
-          if (!uniqueUserMap.has(member.userId)) {
-            uniqueUserMap.set(member.userId, {
-              ...member.user,
-              teams: [{ id: team.id, name: team.name }],
-            });
-          } else {
-            // Add team to existing user if not already there
-            const user = uniqueUserMap.get(member.userId);
-            if (!user.teams.some((t) => t.id === team.id)) {
-              user.teams.push({ id: team.id, name: team.name });
-            }
-          }
-        }
-      }
-
-      return Array.from(uniqueUserMap.values());
+      return userTeams;
     } catch (error) {
       console.error('Error fetching team members:', error);
       return [];

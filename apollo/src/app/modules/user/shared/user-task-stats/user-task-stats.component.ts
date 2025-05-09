@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-user-stats',
-  templateUrl: './user-stats.component.html'
+  selector: 'app-user-task-stats',
+  templateUrl: './user-task-stats.component.html'
 })
-export class UserStatsComponent {
+export class UserTaskStatsComponent {
   @Input() taskStats = {
     todo: 0,
     inProgress: 0,

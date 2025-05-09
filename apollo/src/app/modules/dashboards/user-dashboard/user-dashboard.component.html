@@ -2,14 +2,9 @@
     <div class="col-12">
         <!-- Main content area -->
         <div class="col-12">
-            <!-- Task Statistics Cards -->
-            <app-user-stats [taskStats]="taskStats"></app-user-stats>
-
-            <!-- Worked on section -->
-            <app-user-activity styleClass="mt-3"></app-user-activity>
-
-            <!-- Works with section -->
-            <app-user-colleagues [teamMembers]="teamMembers" styleClass="mt-3"></app-user-colleagues>
+            <app-user-task-stats [taskStats]="taskStats"></app-user-task-stats>
+            <app-user-working-on [projects]="workingOn" styleClass="mt-3"></app-user-working-on>
+            <app-user-working-with [teams]="userTeams" styleClass="mt-3"></app-user-working-with>
         </div>
     </div>
 </div>
