@@ -2,9 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from '@backend/typeorm';
-import { Repository, getRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthService } from '../auth/auth.service';
 import * as argon2 from 'argon2';
 import { QueryOptionInterface } from '@backend/shared/decorators/query-option.decorator';
 
@@ -24,7 +23,7 @@ export class UsersService {
     if (await this.findByUsername(username)) {
       throw new BadRequestException('user already exists');
     }
-    if (await this.findByEmail(email)) {
+    if (email && (await this.findByEmail(email))) {
       throw new BadRequestException('email already used');
     }
     const hashedPassword = await argon2.hash(createUserDto.password);

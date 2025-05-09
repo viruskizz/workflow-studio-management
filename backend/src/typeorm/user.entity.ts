@@ -15,7 +15,7 @@ import { Task } from './task.entity';
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column({ unique: true })
   username: string;
@@ -29,8 +29,8 @@ export class User extends BaseEntity {
   @Column({ name: 'last_name' })
   lastName: string;
 
-  @Column({ unique: true })
-  email: string;
+  @Column({ nullable: true, unique: true })
+  email?: string;
 
   @Column({ name: 'image_url', nullable: true })
   imageUrl?: string;

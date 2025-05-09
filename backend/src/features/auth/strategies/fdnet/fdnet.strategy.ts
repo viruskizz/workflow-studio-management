@@ -1,12 +1,21 @@
 import { PassportStrategy } from '@nestjs/passport';
 import {
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Strategy } from 'passport-local';
 import { FdnetService } from '../../fdnet/fdnet.service';
-import { catchError, from, lastValueFrom, map, of, switchMap } from 'rxjs';
+import {
+  catchError,
+  from,
+  lastValueFrom,
+  map,
+  Observable,
+  of,
+  switchMap,
+} from 'rxjs';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import { Auth } from '@backend/typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -34,45 +43,50 @@ export class FdnetStrategy extends PassportStrategy(Strategy, 'fdnet') {
     return this.validateUser(username, password);
   }
 
-  private async validateUser(username: string, pass: string): Promise<any> {
-    return lastValueFrom(
-      this.fdnetService.loginAD(username, pass).pipe(
-        map((jwt) => {
-          const decoded = jwtDecode(jwt.data.Token);
-          const authPayload: FdnetAuthPayload = {
-            token: jwt.data.Token,
-            refreshToken: jwt.data.RefreshToken,
-            decoded,
-          };
-          return authPayload;
-        }),
-        switchMap((authPayload) => this.updateAuthToken(authPayload)),
-        catchError((e) => {
-          console.log('Error:', e);
-          if (e.response && e.response.status === 401) {
-            throw new UnauthorizedException('User or Password not correct');
-          }
-          throw new InternalServerErrorException(e.message);
-        }),
-      ),
+  private validateUser(username: string, pass: string): Observable<Auth> {
+    return this.fdnetService.loginAD(username, pass).pipe(
+      map((jwt) => {
+        const decoded = jwtDecode(jwt.data.Token);
+        const authPayload: FdnetAuthPayload = {
+          token: jwt.data.Token,
+          refreshToken: jwt.data.RefreshToken,
+          decoded,
+        };
+        return authPayload;
+      }),
+      switchMap((authPayload) => this.updateAuthToken(authPayload)),
+      catchError((e) => {
+        console.log('Error:', e);
+        if (e.response && e.response.status === 403) {
+          throw new ForbiddenException('User not created');
+        }
+        if (e.response && e.response.status === 401) {
+          throw new UnauthorizedException('User or Password not correct');
+        }
+        throw new InternalServerErrorException(e.message);
+      }),
     );
   }
 
-  private async updateAuthToken(payload: FdnetAuthPayload) {
-    const authUser = await this.authService.getAuthUser(payload.decoded.sub);
-    if (authUser && DateTime.fromJSDate(authUser.expiredAt) > DateTime.now()) {
-      console.log('Token is valid');
-      return of(authUser);
-    } else {
-      const data = {
-        username: payload.decoded.sub,
-        provider: AuthProvider.FDNET,
-        token: payload.token,
-        refeshtoken: payload.refreshToken,
-        expiredAt: DateTime.fromSeconds(payload.decoded.exp).toJSDate(),
-        issueAt: DateTime.fromSeconds(payload.decoded.iat).toJSDate(),
-      };
-      return from(this.authService.saveAuth(data));
-    }
+  private updateAuthToken(payload: FdnetAuthPayload): Observable<Auth> {
+    // const authUser = await this.authService.getAuthUser(payload.decoded.sub);
+    console.log('Update AuthToken');
+    return from(this.authService.getAuthUser(payload.decoded.sub)).pipe(
+      switchMap((authUser) => {
+        if (!authUser) {
+          throw new ForbiddenException('User not created');
+        }
+        if (DateTime.fromJSDate(authUser.expiredAt) > DateTime.now()) {
+          return of(authUser);
+        } else {
+          const { exp, iat } = payload.decoded;
+          authUser.token = payload.token;
+          authUser.refeshtoken = payload.refreshToken;
+          authUser.expiredAt = DateTime.fromSeconds(exp).toJSDate();
+          authUser.issueAt = DateTime.fromSeconds(iat).toJSDate();
+          return from(this.authService.saveAuth(authUser));
+        }
+      }),
+    );
   }
 }

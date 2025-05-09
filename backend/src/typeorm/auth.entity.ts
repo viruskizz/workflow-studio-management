@@ -5,7 +5,9 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { User } from './user.entity';
 
 export enum AuthProvider {
   FDNET = 'FDNET',
@@ -40,4 +42,11 @@ export class Auth extends BaseEntity {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  // Related to user
+  @Column({ name: 'user_id', nullable: true })
+  userId: number;
+
+  @OneToMany(() => User, (user) => user.id)
+  user: User;
 }
