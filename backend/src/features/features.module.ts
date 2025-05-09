@@ -5,7 +5,6 @@ import { ProjectsModule } from './projects/projects.module';
 import { FilesModule } from './files/files.module';
 import { TasksModule } from './tasks/tasks.module';
 import { TeamsModule } from './teams/teams.module';
-import { FdnetModule } from './fdnet/fdnet.module';
 
 @Module({
   imports: [
@@ -15,7 +14,6 @@ import { FdnetModule } from './fdnet/fdnet.module';
     FilesModule,
     TasksModule,
     TeamsModule,
-    FdnetModule,
   ],
   exports: [UsersModule, AuthModule, ProjectsModule, FilesModule, TasksModule],
 })

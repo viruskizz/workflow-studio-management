@@ -5,12 +5,13 @@ import * as argon2 from 'argon2';
 import { UsersService } from '@backend/features/users/users.service';
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
+export class FdnetStrategy extends PassportStrategy(Strategy, 'fdnet') {
   constructor(private userService: UsersService) {
     super();
   }
   async validate(username: string, password: string): Promise<any> {
-    throw new UnauthorizedException('Local Testing Error');
+    console.log('ddd')
+    throw new UnauthorizedException('FDet Testing Error');
     const user = await this.validateUser(username, password);
     if (!user) {
       throw new UnauthorizedException('User or Password not correct');
@@ -19,6 +20,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
   }
 
   private async validateUser(username: string, pass: string): Promise<any> {
+    // throw new UnauthorizedException('Testing Error');
     const user = await this.userService.getRepository().findOne({
       where: { username },
       select: {

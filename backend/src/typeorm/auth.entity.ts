@@ -19,12 +19,6 @@ export class Auth extends BaseEntity {
   @Column({ unique: true })
   username: string;
 
-  @Column({ select: false })
-  password: string;
-
-  @Column({ select: false })
-  appname: string;
-
   @Column()
   provider: AuthProvider;
 
