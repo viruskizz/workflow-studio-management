@@ -11,7 +11,8 @@ import { TasksService } from '@backend/features/tasks/tasks.service';
 import { ProjectsService } from '@backend/features/projects/projects.service';
 import { TeamsService } from '@backend/features/teams/teams.service';
 import { TeamMembersService } from '@backend/features/teams/members/team-members.service';
-
+import { TaskStatus } from '@backend/typeorm/task.entity';
+import { UpdateTaskDto } from '@backend/features/tasks/dto/update-task.dto';
 @Injectable()
 export class UserDashboardService {
   constructor(
@@ -145,5 +146,27 @@ export class UserDashboardService {
       default:
         throw new NotFoundException(`Feature "${feature}" not found`);
     }
+  }
+
+  async updateTaskStatus(
+    userId: number,
+    taskId: number,
+    status: TaskStatus,
+  ): Promise<any> {
+    // Verify the user has access to this task
+    const task = await this.taskService.findOne(taskId);
+
+    if (!task) {
+      throw new NotFoundException(`Task with ID ${taskId} not found`);
+    }
+
+    // Check if task belongs to the user
+    if (task.assigneeId !== userId) {
+      throw new NotFoundException(`Task does not belong to user ${userId}`);
+    }
+
+    // Update the task directly
+    task.status = status;
+    return task.save();
   }
 }
