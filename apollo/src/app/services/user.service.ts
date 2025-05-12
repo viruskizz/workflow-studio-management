@@ -35,4 +35,9 @@ export class UserService {
     const url = this.baseUrl + id;
     return this.httpClient.delete(url)
   }
+
+  getAuthUser(id: number) {
+    const url = this.baseUrl + id;
+    return this.httpClient.get<User>(`${url}/auth`);
+  }
 }
