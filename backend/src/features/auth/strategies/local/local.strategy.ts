@@ -10,7 +10,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
     super();
   }
   async validate(username: string, password: string): Promise<any> {
-    throw new UnauthorizedException('Local Testing Error');
+    // throw new UnauthorizedException('Local Testing Error');
     const user = await this.validateUser(username, password);
     if (!user) {
       throw new UnauthorizedException('User or Password not correct');
