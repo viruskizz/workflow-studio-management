@@ -1,5 +1,5 @@
 import { UserService } from 'src/app/services/user.service';
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from 'src/app/models/user.model';
 import { Team } from 'src/app/models/team.model';
 import { getDefaultAvatar } from 'src/app/utils';
@@ -8,26 +8,20 @@ import { getDefaultAvatar } from 'src/app/utils';
   selector: 'app-user-info-sidebar',
   templateUrl: './user-info-sidebar.component.html'
 })
-export class UserInfoSidebarComponent implements OnInit {
+export class UserInfoSidebarComponent {
   @Input({ required: true }) user!: User;
-  @Input() authUser: any = null;
+  @Input({ required: true }) fdnetUsername?: string;
   @Input() userTeams: Team[] = [];
   @Input() styleClass = '';
   @Output() editUserEvent = new EventEmitter<void>();
-
-  constructor(private userService: UserService) {}
-
-  ngOnInit() {
-    if (this.user.id) {
-      this.userService.getAuthUser(this.user.id!).subscribe((authUser) => {
-        console.log('authUser', authUser);
-        this.authUser = authUser;
-      });
-    }
-  }
+  @Output() linkAuthEvent = new EventEmitter<void>();
 
   editUser() {
     this.editUserEvent.emit();
+  }
+
+  linkAuth() {
+    this.linkAuthEvent.emit();
   }
 
   getImage(url: string | undefined) {
