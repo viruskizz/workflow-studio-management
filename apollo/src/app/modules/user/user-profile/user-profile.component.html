@@ -12,7 +12,9 @@
                 <app-user-info-sidebar 
                     [user]="user" 
                     [userTeams]="userTeams"
-                    (editUserEvent)="editUser()">
+                    [fdnetUsername]="fdnetUsername"
+                    (editUserEvent)="editUser()"
+                    (linkAuthEvent)="editAuth()">
                 </app-user-info-sidebar>
             </div>
 
@@ -41,3 +43,7 @@
 </div>
 
 <app-user-form [(visible)]="userDialog" [user]="user || undefined" (closeEvent)="hideDialog($event)"></app-user-form>
+<app-user-auth-form
+    [userId]="user?.id"
+    [(username)]="fdnetUsername"
+    [(visible)]="authDialog"></app-user-auth-form>

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from '@backend/typeorm';
@@ -6,12 +6,18 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as argon2 from 'argon2';
 import { QueryOptionInterface } from '@backend/shared/decorators/query-option.decorator';
+import { AuthService } from '../auth/auth.service';
+import { FdnetService } from '../auth/fdnet/fdnet.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @Inject(forwardRef(() => AuthService))
+    private authService: AuthService,
+    @Inject(forwardRef(() => FdnetService))
+    private fdnetService: FdnetService,
   ) {}
 
   getRepository() {
@@ -57,5 +63,13 @@ export class UsersService {
 
   remove(id: number) {
     return this.usersRepository.delete(id);
+  }
+
+  getAuth(id: number) {
+    return this.authService.getAuthUserById(id);
+  }
+
+  linkAuth(id: number, username: string) {
+    return this.fdnetService.linkUser(username, id);
   }
 }

@@ -8,13 +8,15 @@ import { TeamsModule } from '../teams/teams.module';
 import { ProjectsModule } from '../projects/projects.module';
 
 import { UsersController } from './users.controller';
-import { User } from '@backend/typeorm';
+import { Auth, User } from '@backend/typeorm';
+import { AuthModule } from '../auth/auth.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     forwardRef(() => TasksModule),
     forwardRef(() => TeamsModule),
     forwardRef(() => ProjectsModule),
+    forwardRef(() => AuthModule),
   ],
   controllers: [UsersController, UserDashboardController],
   providers: [UsersService, UserDashboardService],

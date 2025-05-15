@@ -7,12 +7,16 @@ import {
   UseGuards,
   Request,
   Body,
+  Query,
+  BadRequestException,
+  Param,
 } from '@nestjs/common';
 import { FdnetService } from './fdnet.service';
 import { ApiOperation } from '@nestjs/swagger';
 import { FdnetAuthGuard } from '../strategies/fdnet/fdnet-auth.guard';
 import { AuthService } from '../auth.service';
 import { JwtAuthGuard } from '../strategies/jwt/jwt-auth.guard';
+import { query } from 'express';
 
 @Controller('auth/fdnet')
 export class FdnetController {
@@ -36,10 +40,18 @@ export class FdnetController {
   }
 
   @HttpCode(HttpStatus.OK)
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('signup')
   @ApiOperation({ summary: 'Singin user to backend' })
   async signUp(@Body() body) {
     return this.service.signUp(body.username);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  // @UseGuards(JwtAuthGuard)
+  @Get('users/:username')
+  @ApiOperation({ summary: 'get single user' })
+  async getUser(@Param('username') username: string) {
+    return this.service.getUser(username);
   }
 }

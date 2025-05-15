@@ -1,3 +1,4 @@
+import { UserService } from 'src/app/services/user.service';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from 'src/app/models/user.model';
 import { Team } from 'src/app/models/team.model';
@@ -8,13 +9,19 @@ import { getDefaultAvatar } from 'src/app/utils';
   templateUrl: './user-info-sidebar.component.html'
 })
 export class UserInfoSidebarComponent {
-  @Input() user: User | null = null;
+  @Input({ required: true }) user!: User;
+  @Input({ required: true }) fdnetUsername?: string;
   @Input() userTeams: Team[] = [];
   @Input() styleClass = '';
   @Output() editUserEvent = new EventEmitter<void>();
+  @Output() linkAuthEvent = new EventEmitter<void>();
 
   editUser() {
     this.editUserEvent.emit();
+  }
+
+  linkAuth() {
+    this.linkAuthEvent.emit();
   }
 
   getImage(url: string | undefined) {

@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Post,
   UseGuards,
+  Param,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up.dto';
@@ -41,5 +42,21 @@ export class AuthController {
   @ApiOperation({ summary: 'Retrieve user profile by token' })
   getProfile(@Request() req) {
     return req.user;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('users')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Retrieve 3rd party authenticated user' })
+  getAuthUsers(@Request() req) {
+    return this.authService.getAuthUsers();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('users/:id')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Retrieve 3rd party authenticated user' })
+  getAuthUser(@Param('id') id: string) {
+    return this.authService.getAuthUserById(+id);
   }
 }

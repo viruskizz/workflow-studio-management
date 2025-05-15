@@ -31,6 +31,7 @@ import { UserFormComponent } from './user-form/user-form.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { UserInfoSidebarComponent } from './user-profile/user-info-sidebar/user-info-sidebar.component';
+import { UserAuthFormComponent } from './user-auth-form/user-auth-form.component';
 
 @NgModule({
   imports: [
@@ -64,7 +65,8 @@ import { UserInfoSidebarComponent } from './user-profile/user-info-sidebar/user-
     UserComponent,
     UserFormComponent,
     UserProfileComponent,
-    UserInfoSidebarComponent
+    UserInfoSidebarComponent,
+    UserAuthFormComponent,
   ]
 })
 export class UserModule { }

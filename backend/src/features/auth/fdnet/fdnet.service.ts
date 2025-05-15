@@ -1,15 +1,31 @@
-import { AuthProvider } from '@backend/typeorm/auth.entity';
+import { Auth, AuthProvider } from '@backend/typeorm/auth.entity';
 import { HttpService } from '@nestjs/axios';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from '../auth.service';
-import { firstValueFrom, from, map, Observable, of, switchMap } from 'rxjs';
+import {
+  catchError,
+  combineLatest,
+  firstValueFrom,
+  from,
+  map,
+  Observable,
+  of,
+  switchMap,
+} from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { DateTime } from 'luxon';
 import { UsersService } from '@backend/features/users/users.service';
 import { CreateUserDto } from '@backend/features/users/dto/create-user.dto';
 import { FDNetUser } from './fdnet.model';
 import { User } from '@backend/typeorm';
+import { In } from 'typeorm';
 
 @Injectable()
 export class FdnetService {
@@ -18,6 +34,7 @@ export class FdnetService {
   constructor(
     private authService: AuthService,
     private configService: ConfigService,
+    @Inject(forwardRef(() => UsersService))
     private userService: UsersService,
     private httpService: HttpService,
   ) {}
@@ -26,10 +43,46 @@ export class FdnetService {
     return this.getServerToken();
   }
 
+  getUser(username: string) {
+    return this.getUserAD(username);
+  }
+
   signIn(fdnetUser: any) {
-    // console.log('signin-fdnetUser:', fdnetUser);
     return fdnetUser;
-    // return this.authService.signin(user)
+  }
+
+  linkUser(username: string, userId: number) {
+    return combineLatest([
+      this.getUserAD(username),
+      from(this.authService.getAuthUserByUsername(username)),
+      from(this.userService.findOne(userId)),
+    ]).pipe(
+      switchMap(([fdnetUser, authUser, user]) => {
+        if (!fdnetUser) {
+          throw new BadRequestException('FDNet User does not existed');
+        }
+        if (!user) {
+          throw new BadRequestException('Local User does not existed');
+        }
+        if (authUser) {
+          // Check if the user is already linked
+          if (username !== authUser.username) {
+            throw new BadRequestException(
+              'Username is already linked to another user',
+            );
+          } else {
+            return of(authUser);
+          }
+        }
+        console.log('Linking user', authUser);
+        const data: Partial<Auth> = {
+          username: fdnetUser.Aduser,
+          provider: AuthProvider.FDNET,
+          userId: user.id!,
+        };
+        return from(this.authService.saveAuth(data));
+      }),
+    );
   }
 
   async signUp(username: string) {
@@ -82,17 +135,21 @@ export class FdnetService {
   getUserAD(username: string): Observable<FDNetUser> {
     const url = `${this.baseUrl}/Person/GetPersonAD`;
     return this.getServerToken().pipe(
-      switchMap((payload) => {
+      switchMap((authServer) => {
         return this.httpService.get(url, {
           params: {
             AdUser: username,
           },
           headers: {
-            Authorization: `Bearer ${payload.token}`,
+            Authorization: `Bearer ${authServer.token}`,
           },
         });
       }),
       map((res) => (res.data.Data.length > 0 ? res.data.Data[0] : undefined)),
+      catchError((err) => {
+        console.log('getUserAD error', err);
+        throw new InternalServerErrorException(err);
+      }),
     );
   }
 
@@ -112,22 +169,24 @@ export class FdnetService {
               refreshToken: jwt.RefreshToken,
               decoded: jwtDecode(jwt.Token),
             })),
-            switchMap((payload) => this.saveServerToken(payload)),
+            switchMap((payload) => {
+              const { token, refreshToken, decoded } = payload;
+              if (!authServer) {
+                authServer = new Auth();
+                authServer.username = this.configService.get('FDNET_USERNAME');
+                authServer.provider = AuthProvider.FDNET_SERVER;
+              }
+              authServer.token = token;
+              authServer.refeshtoken = refreshToken;
+              authServer.expiredAt = DateTime.fromSeconds(
+                decoded.exp,
+              ).toJSDate();
+              authServer.issueAt = DateTime.fromSeconds(decoded.iat).toJSDate();
+              return from(this.authService.saveAuth(authServer));
+            }),
           );
         }
       }),
     );
-  }
-
-  private saveServerToken(payload) {
-    const data = {
-      username: this.configService.get('FDNET_USERNAME'),
-      provider: AuthProvider.FDNET_SERVER,
-      token: payload.token,
-      refeshtoken: payload.refreshToken,
-      expiredAt: DateTime.fromSeconds(payload.decoded.exp).toJSDate(),
-      issueAt: DateTime.fromSeconds(payload.decoded.iat).toJSDate(),
-    };
-    return from(this.authService.saveAuth(data));
   }
 }

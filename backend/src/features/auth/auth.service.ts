@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable } from '@nestjs/common';
 import { UsersService } from '@backend/features/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { Auth, User } from '@backend/typeorm';
@@ -12,6 +12,7 @@ export class AuthService {
   constructor(
     @InjectRepository(Auth)
     private repository: Repository<Auth>,
+    @Inject(forwardRef(() => UsersService))
     private userService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
@@ -44,6 +45,24 @@ export class AuthService {
   getAuthUsers() {
     return this.repository.find({
       where: {
+        provider: AuthProvider.FDNET,
+      },
+    });
+  }
+
+  getAuthUserById(id: number): Promise<Auth> {
+    return this.repository.findOne({
+      where: {
+        id: id,
+        provider: AuthProvider.FDNET,
+      },
+    });
+  }
+
+  getAuthUserByUsername(username: string): Promise<Auth> {
+    return this.repository.findOne({
+      where: {
+        username,
         provider: AuthProvider.FDNET,
       },
     });

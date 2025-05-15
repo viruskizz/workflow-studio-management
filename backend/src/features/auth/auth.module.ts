@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UsersModule } from '@backend/features/users/users.module';
@@ -12,11 +12,13 @@ import { Auth } from '@backend/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FdnetStrategy } from './strategies/fdnet/fdnet.strategy';
 import { HttpModule } from '@nestjs/axios';
+import { JwtStrategy } from './strategies/jwt/jwt.strategy';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Auth]),
-    UsersModule,
+    forwardRef(() => UsersModule),
+    // UsersModule,
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
@@ -25,7 +27,13 @@ import { HttpModule } from '@nestjs/axios';
     HttpModule,
   ],
   controllers: [AuthController, FdnetController],
-  providers: [AuthService, LocalStrategy, FdnetService, FdnetStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    FdnetStrategy,
+    FdnetService,
+  ],
   exports: [AuthService, FdnetService],
 })
 export class AuthModule {}

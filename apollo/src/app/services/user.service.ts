@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user.model';
+import { Observable } from 'rxjs';
+import { Auth } from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root',
@@ -34,5 +36,15 @@ export class UserService {
   deleteUser(id: number) {
     const url = this.baseUrl + id;
     return this.httpClient.delete(url)
+  }
+
+  getAuthUser(id: number) {
+    const url = this.baseUrl + id;
+    return this.httpClient.get<Auth[]>(`${url}/auth`);
+  }
+
+  putAuthUser(id: number, username: string) {
+    const url = `${this.baseUrl}${id}/auth`;
+    return this.httpClient.put<Auth>(url, { username });
   }
 }

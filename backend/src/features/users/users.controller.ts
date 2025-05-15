@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -32,6 +33,21 @@ export class UsersController {
   findAll(@QueryOption() options: QueryOptionInterface) {
     console.log('Options:', options);
     return this.usersService.findAll(options);
+  }
+
+  @Get(':id/auth')
+  @ApiOperation({ summary: 'Retrieve user auth profile' })
+  getAuth(@Param('id') id: string) {
+    return this.usersService.getAuth(+id);
+  }
+
+  @Put(':id/auth')
+  @ApiOperation({ summary: 'Link local user and fdnet user' })
+  linkAuth(@Param('id') id: string, @Body() body: any) {
+    if (!body.username) {
+      throw new Error('Username is required');
+    }
+    return this.usersService.linkAuth(+id, body.username);
   }
 
   @Get(':id')

@@ -1,0 +1,17 @@
+<p-dialog header="Link FDNet Account" [modal]="true" [(visible)]="visible" (onHide)="onHide()"
+  [style]="{ width: '25rem' }">
+  <form [formGroup]="form">
+    <div class="flex flex-column gap-2 p-fluid">
+      <div class="field">
+        <label htmlFor="username">Username</label>
+        <input pInputText id="username" formControlName="username" />
+        <small class="ng-dirty ng-invalid" *ngIf="usernameControl.errors?.['required'] && usernameControl.touched">username is required.</small>
+        <small class="ng-dirty ng-invalid" *ngIf="usernameControl.errors?.['username']">{{usernameControl.errors?.['username']}}</small>
+      </div>
+
+      <div class="flex justify-content-center w-full">
+        <p-button [disabled]="form.invalid" class="w-max" label="Link" (onClick)="onSubmit()" />
+      </div>
+    </div>
+  </form>
+</p-dialog>

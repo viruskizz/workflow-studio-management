@@ -7,13 +7,14 @@ import { Team } from 'src/app/models/team.model';
 import { Project } from 'src/app/models/project.model';
 import { TaskStats } from 'src/app/models/task.model';
 import { DashboardService } from 'src/app/services/dashboard.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
 })
 export class UserProfileComponent implements OnInit {
-  user: User | null = null;
+  user?: User | null = null;
   userTeams: Team[] = [];
   workingOn: Project[] = [];
   taskStats: TaskStats = {
@@ -24,16 +25,22 @@ export class UserProfileComponent implements OnInit {
   };
   loading = true;
   userDialog = false;
+
+  // AuthUser
+  authDialog = true;
+  fdnetUsername?: string;
   
   constructor(
     private route: ActivatedRoute,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private userService: UserService,
   ) {}
 
   ngOnInit(): void {
     const userId = this.route.snapshot.paramMap.get('id');
     if (userId) {
       this.loadUserDashboard(+userId);
+      this.loadAuthUser(+userId);
     }
   }
 
@@ -65,22 +72,24 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  getStatusSeverity(status: string): string {
-    switch (status) {
-    case 'TODO':
-      return 'warning';
-    case 'IN_PROGRESS':
-      return 'info';
-    case 'DONE':
-      return 'success';
-    default:
-      return 'secondary';
-    }
+  loadAuthUser(userId: number): void {
+    this.userService.getAuthUser(userId).subscribe((authUser) => {
+      const fdnetUser = authUser.find((auth) => auth.provider === 'FDNET');
+      if (fdnetUser) {
+        this.fdnetUsername = fdnetUser.username;
+      }
+    });
   }
 
   editUser() {
     if (this.user) {
       this.userDialog = true;
+    }
+  }
+
+  editAuth() {
+    if (this.user) {
+      this.authDialog = true;
     }
   }
   
