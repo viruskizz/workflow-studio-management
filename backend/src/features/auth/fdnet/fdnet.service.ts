@@ -48,7 +48,14 @@ export class FdnetService {
   }
 
   signIn(fdnetUser: any) {
-    return fdnetUser;
+    return from(this.userService.findOne(fdnetUser.userId)).pipe(
+      switchMap((user) => {
+        if (!user) {
+          throw new BadRequestException('User does not existed');
+        }
+        return this.authService.signin(user);
+      }),
+    );
   }
 
   linkUser(username: string, userId: number) {
