@@ -20,8 +20,16 @@ export class AuthService {
     private router: Router,
     private userService: UserService) { }
 
-  signIn(username: string, password: string) {
+  localSignIn(username: string, password: string) {
     const url = this.backendUrl + '/signin';
+    return this.httpClient.post<SignInResponse>(url, {
+      username,
+      password
+    })
+  }
+
+  fdnetSignIn(username: string, password: string) {
+    const url = this.backendUrl + '/fdnet/signin';
     return this.httpClient.post<SignInResponse>(url, {
       username,
       password

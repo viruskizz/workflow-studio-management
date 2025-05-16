@@ -12,7 +12,8 @@ export class LoginComponent {
   loginForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
-    isRememberMe: new FormControl(true)
+    isRememberMe: new FormControl(true),
+    isFdnetSignIn: new FormControl(true)
   })
 
   constructor(private layoutService: LayoutService, private authService: AuthService, private router: Router) { }
@@ -24,9 +25,14 @@ export class LoginComponent {
     if (this.loginForm.invalid) {
       return;
     }
-    const username = this.loginForm.value.username!;
-    const password = this.loginForm.value.password!;
-    this.authService.signIn(username, password).subscribe({
+    const { username, password, isFdnetSignIn } = this.loginForm.value;
+    let signInMethod;
+    if (isFdnetSignIn) {
+      signInMethod = this.authService.fdnetSignIn(username!, password!);
+    } else {
+      signInMethod = this.authService.localSignIn(username!, password!);
+    }
+    signInMethod.subscribe({
       next: (v) => {
         this.authService.saveLogin(v.access_token).subscribe(() => {
           this.router.navigate([''])

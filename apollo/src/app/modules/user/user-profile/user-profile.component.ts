@@ -27,7 +27,7 @@ export class UserProfileComponent implements OnInit {
   userDialog = false;
 
   // AuthUser
-  authDialog = true;
+  authDialog = false;
   fdnetUsername?: string;
   
   constructor(
