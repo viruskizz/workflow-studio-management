@@ -64,17 +64,20 @@ export class FdnetService {
         if (!user) {
           throw new BadRequestException('Local User does not existed');
         }
-        if (authUser) {
+        const fdAuthUser = authUser.find(
+          (auth) => auth.provider === AuthProvider.FDNET,
+        );
+        if (fdAuthUser) {
           // Check if the user is already linked
-          if (username !== authUser.username) {
+          if (username !== fdAuthUser.username) {
             throw new BadRequestException(
               'Username is already linked to another user',
             );
           } else {
-            return of(authUser);
+            return of(fdAuthUser);
           }
         }
-        console.log('Linking user', authUser);
+        console.log('Linking user', fdAuthUser);
         const data: Partial<Auth> = {
           username: fdnetUser.Aduser,
           provider: AuthProvider.FDNET,

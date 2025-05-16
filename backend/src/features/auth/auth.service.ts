@@ -42,7 +42,7 @@ export class AuthService {
     };
   }
 
-  getAuthUsers() {
+  getAuthUsers(): Promise<Auth[]> {
     return this.repository.find({
       where: {
         provider: AuthProvider.FDNET,
@@ -50,20 +50,23 @@ export class AuthService {
     });
   }
 
-  getAuthUserById(id: number): Promise<Auth> {
-    return this.repository.findOne({
+  getAuthUserById(userId: number, provider?: AuthProvider): Promise<Auth[]> {
+    return this.repository.find({
       where: {
-        id: id,
-        provider: AuthProvider.FDNET,
+        userId,
+        provider,
       },
     });
   }
 
-  getAuthUserByUsername(username: string): Promise<Auth> {
-    return this.repository.findOne({
+  getAuthUserByUsername(
+    username: string,
+    provider?: AuthProvider,
+  ): Promise<Auth[]> {
+    return this.repository.find({
       where: {
         username,
-        provider: AuthProvider.FDNET,
+        provider,
       },
     });
   }
