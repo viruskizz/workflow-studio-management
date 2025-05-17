@@ -25,7 +25,19 @@ import { ChipsModule } from 'primeng/chips';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CalendarModule } from 'primeng/calendar';
+import { UserAuthFormComponent } from './user-auth-form/user-auth-form.component';
+import { UserFormComponent } from './user-form/user-form.component';
+import { FileUpload, FileUploadModule } from 'primeng/fileupload';
+import { DropdownModule } from 'primeng/dropdown';
 
+const components = [
+  UserWorkingOnComponent,
+  UserTaskStatsComponent,
+  UserWorkingWithComponent,
+  TaskDetailDialogComponent,
+  UserAuthFormComponent,
+  UserFormComponent
+];
 @NgModule({
   imports: [
     CommonModule,
@@ -47,20 +59,15 @@ import { CalendarModule } from 'primeng/calendar';
     ChipsModule,
     SelectButtonModule,
     CalendarModule,
+    FileUploadModule,
+    DropdownModule,
 
     ProgressSpinnerModule,
     SharedModule,
   ],
-  declarations: [
-    UserWorkingWithComponent,
-    UserWorkingOnComponent,
-    UserTaskStatsComponent,
-    TaskDetailDialogComponent
-  ],
+  declarations: components,
   exports: [
-    UserWorkingWithComponent,
-    UserWorkingOnComponent,
-    UserTaskStatsComponent,
+    ...components,
     
     CardModule,
     ButtonModule,

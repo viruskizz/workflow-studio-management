@@ -1,13 +1,14 @@
 import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from '@backend/typeorm';
+import { Auth, User } from '@backend/typeorm';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as argon2 from 'argon2';
 import { QueryOptionInterface } from '@backend/shared/decorators/query-option.decorator';
 import { AuthService } from '../auth/auth.service';
 import { FdnetService } from '../auth/fdnet/fdnet.service';
+import { AuthProvider } from '@backend/typeorm/auth.entity';
 
 @Injectable()
 export class UsersService {
@@ -71,5 +72,9 @@ export class UsersService {
 
   linkAuth(id: number, username: string) {
     return this.fdnetService.linkUser(username, id);
+  }
+
+  removeAuth(id: number) {
+    return this.authService.removeAuthUser(id, AuthProvider.FDNET);
   }
 }

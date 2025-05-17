@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { FdnetService } from 'src/app/services/fdnet.service';
 
 @Component({
   templateUrl: './login.component.html',
@@ -16,7 +17,11 @@ export class LoginComponent {
     isFdnetSignIn: new FormControl(true)
   })
 
-  constructor(private layoutService: LayoutService, private authService: AuthService, private router: Router) { }
+  constructor(
+    private layoutService: LayoutService,
+    private authService: AuthService,
+    private fdnetService: FdnetService,
+    private router: Router) { }
 
   onSubmit() {
     this.loginForm.setErrors(null)
@@ -28,7 +33,7 @@ export class LoginComponent {
     const { username, password, isFdnetSignIn } = this.loginForm.value;
     let signInMethod;
     if (isFdnetSignIn) {
-      signInMethod = this.authService.fdnetSignIn(username!, password!);
+      signInMethod = this.fdnetService.signin(username!, password!);
     } else {
       signInMethod = this.authService.localSignIn(username!, password!);
     }

@@ -84,6 +84,14 @@ export class AuthService {
     return this.repository.save(data);
   }
 
+  removeAuthUser(userId: number, provider: AuthProvider) {
+    return this.repository.delete({ userId, provider });
+  }
+
+  removeAuth(id: number) {
+    return this.repository.delete(id);
+  }
+
   getAuthServer(): Promise<Auth> {
     return this.repository.findOne({
       where: {

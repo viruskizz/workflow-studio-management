@@ -1,0 +1,61 @@
+<p-table
+  #dt
+  [value]="users"
+  [columns]="cols"
+  responsiveLayout="scroll"
+  [rows]="10"
+  [globalFilterFields]="['name','country.name','representative.name','status']"
+  [rows]="10"
+  [paginator]="true"
+  [rowsPerPageOptions]="[10,20,30]"
+  [showCurrentPageReport]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [rowHover]="true"
+  dataKey="id">
+  <ng-template pTemplate="caption">
+    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+      <h5 class="m-0">Manage Users</h5>
+      <span class="block mt-2 md:mt-0 p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." class="w-full sm:w-auto" />
+      </span>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+      <th>Avatar</th>
+      <th pSortableColumn="username">Username <p-sortIcon field="username"></p-sortIcon></th>
+      <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+      <th pSortableColumn="role">Role <p-sortIcon field="role"></p-sortIcon></th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-user let-idx="rowIndex">
+    <tr>
+      <td style="min-width:5rem;"><span class="p-column-title">ID</span>
+        {{ user?.id }}
+      </td>
+      <td><span class="p-column-title">Avatar</span>
+        <p-image [src]="user?.imageUrl" [alt]="user?.username" width="100" (onImageError)="onImageError(idx)" />
+      </td>
+
+      <td style=" min-width:10rem;">
+        <span class="p-column-title">Username</span>
+        {{user?.username}}
+      </td>
+      <td style=" min-width:10rem;">
+        <span class="p-column-title">Name</span>
+        {{user?.firstName + ' ' + user?.lastName}}
+      </td>
+      <td style="min-width: 7rem;"><span class="p-column-title">Role</span>
+        <span>{{user?.role || 'Role Not Assigned'}}</span>
+      </td>
+      <td>
+        <div class="flex" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" tabindex="0">
+          <p-button pRipple icon="pi pi-eye" class="p-button-rounded p-button-info mr-2" (click)="navigateToUserProfile(user)" />
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
