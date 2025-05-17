@@ -27,11 +27,9 @@ import { UserSharedModule } from './shared/user-shared.module';
 
 // Components
 import { UserComponent } from './user.component';
-import { UserFormComponent } from './shared/user-form/user-form.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { UserInfoSidebarComponent } from './user-profile/user-info-sidebar/user-info-sidebar.component';
-import { UserAuthFormComponent } from './shared/user-auth-form/user-auth-form.component';
 import { UserListComponent } from './user-list/user-list.component';
 
 @NgModule({

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { User } from 'src/app/models/user.model';
@@ -12,7 +12,7 @@ import { UserService } from 'src/app/services/user.service';
   selector: 'app-team-detail-member',
   templateUrl: './team-detail-member.component.html',
 })
-export class TeamDetailMemberComponent implements OnInit, OnChanges {
+export class TeamDetailMemberComponent implements OnChanges {
   @Input({ required: true }) teamId!: number;
   teamForm: FormGroup;
   isSubmitted = false;
@@ -45,8 +45,6 @@ export class TeamDetailMemberComponent implements OnInit, OnChanges {
       newMember: [null]
     });
   }
-
-  ngOnInit() { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['teamId'] && changes['teamId'].currentValue) {

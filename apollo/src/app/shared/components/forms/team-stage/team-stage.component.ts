@@ -2,10 +2,6 @@ import { Component, EventEmitter, Input, Output, SimpleChanges, OnChanges, OnIni
 import { FormGroup } from '@angular/forms';
 import { TeamStage } from 'src/app/models/team.model';
 import { TeamService } from 'src/app/services/team.service';
-interface DropdownItem {
-  value: number;
-  label: string;
-}
 
 @Component({
   selector: 'app-team-stage',

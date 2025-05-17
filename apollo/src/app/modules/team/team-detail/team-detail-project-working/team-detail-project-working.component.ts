@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Project } from 'src/app/models/project.model';
 import { Team } from 'src/app/models/team.model';
 import { ProjectService } from 'src/app/services/project.service';

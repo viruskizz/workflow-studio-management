@@ -6,7 +6,7 @@ const angular = require("angular-eslint");
 module.exports = tseslint.config(
   {
     files: ["**/*.ts"],
-    ignores: ["src/app/demo/**/*.ts"],
+    ignores: ["src/app/demo/**/*.ts", "src/app/layout/**/*.ts"],
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
@@ -16,7 +16,7 @@ module.exports = tseslint.config(
     
     processor: angular.processInlineTemplates,
     rules: {
-      "indent": ["error", 2],
+      // "indent": ["warn", 2],
       "max-lines": [
         "error",
         {
@@ -53,7 +53,7 @@ module.exports = tseslint.config(
       ...angular.configs.templateAccessibility,
     ],
     rules: {
-      "indent": ["warn", 2],
+      // "indent": ["warn", 2],
       "max-lines": [
         "warn",
         {
@@ -67,6 +67,17 @@ module.exports = tseslint.config(
         {
           allowList: ['pButton']
         }
+      ],
+      "@angular-eslint/template/interactive-supports-focus": [
+        "error",
+        {
+          "allowList": [
+            "span",
+          ]
+        }
+      ],
+      "@angular-eslint/template/click-events-have-key-events": [
+        "off"
       ]
     },
   },

@@ -1,4 +1,3 @@
-import { UserService } from 'src/app/services/user.service';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { User } from 'src/app/models/user.model';
 import { Team } from 'src/app/models/team.model';

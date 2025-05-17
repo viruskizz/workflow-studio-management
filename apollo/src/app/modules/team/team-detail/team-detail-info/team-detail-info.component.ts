@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { FileSelectEvent, FileUpload } from 'primeng/fileupload';
 import { Team } from 'src/app/models/team.model';
@@ -12,7 +12,7 @@ import { TeamService } from 'src/app/services/team.service';
   selector: 'app-team-detail-info',
   templateUrl: './team-detail-info.component.html',
 })
-export class TeamDetailInfoComponent implements OnInit, OnChanges {
+export class TeamDetailInfoComponent implements  OnChanges {
   @ViewChild('fileUpload') fileUpload!: FileUpload;
   @Input({ required: true }) teamId!: number;
 
@@ -36,8 +36,6 @@ export class TeamDetailInfoComponent implements OnInit, OnChanges {
   ) {
     this.teamForm = this.createForm();
   }
-
-  ngOnInit() { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['teamId'] && changes['teamId'].currentValue) {

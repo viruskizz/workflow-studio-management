@@ -7,7 +7,9 @@
     "build": "ng build  --base-href /",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint",
+    "lint": "ng lint --quiet",
+    "lint:full": "ng lint",
+    "lint:fix": "ng lint --fix",
     "build:prod": "ng build --base-href / --configuration production"
   },
   "private": true,
