@@ -1,11 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProjectWithTasks } from 'src/app/models/project.model';
-import { TaskStatus } from 'src/app/models/task.model';
+import { Task, TaskStatus } from 'src/app/models/task.model';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { AppStyleUtil } from 'src/app/utils/app-style.util';
 import { getDefaultAvatar } from 'src/app/utils';
 import { MessageService } from 'primeng/api';
+import { TaskDetailDialogComponent } from '../task-detail-dialog/task-detail-dialog.component';
 
 @Component({
   selector: 'app-user-working-on',
@@ -17,6 +18,14 @@ export class UserWorkingOnComponent implements OnInit {
   @Input() userId?: number;
   @Input() projects: ProjectWithTasks[] = [];
 
+  visible = false;
+  task?: Task;
+
+  @Output() save = new EventEmitter<Task>();
+
+  selectedProjectId!: number;
+
+  @ViewChild('taskDetail') taskDetail!: TaskDetailDialogComponent;
 
   constructor(
     private dashboardService: DashboardService,
@@ -148,4 +157,28 @@ export class UserWorkingOnComponent implements OnInit {
       }
     ];
   }
+
+  openDetail(projectId: number, task: Task) {
+    this.selectedProjectId = projectId;
+    const project = this.projects.find(p => p.id === projectId);
+    if (project) {
+      this.taskDetail.open(task, project, (project.tasks ?? []).filter(t => t.parentId === task.id));
+    }
+  }
+
+  onDetailSave(updated: Task) {
+    const proj = this.projects.find(p => p.id === this.selectedProjectId);
+    if (proj && proj.tasks) {
+      const i = proj.tasks.findIndex(t => t.id === updated.id);
+      if (i >= 0) {
+        proj.tasks[i] = { ...updated };
+      }
+    }
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Task Updated',
+      detail: `Task "${updated.summary}" has been updated.`
+    });
+  }
+
 }

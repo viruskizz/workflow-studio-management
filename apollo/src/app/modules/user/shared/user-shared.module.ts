@@ -16,14 +16,22 @@ import { MessageModule } from 'primeng/message';
 import { ChipModule } from 'primeng/chip';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MenuModule } from 'primeng/menu';
+import { TaskDetailDialogComponent } from './task-detail-dialog/task-detail-dialog.component';
+import { DialogModule } from 'primeng/dialog';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { ChipsModule } from 'primeng/chips';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
     FormsModule,
+    ReactiveFormsModule,
     CardModule,
     ButtonModule,
     AvatarModule,
@@ -34,12 +42,20 @@ import { MenuModule } from 'primeng/menu';
     TableModule,
     TagModule,
     MenuModule,
+    DialogModule,
+    ProgressBarModule,
+    ChipsModule,
+    SelectButtonModule,
+    CalendarModule,
+
     ProgressSpinnerModule,
+    SharedModule,
   ],
   declarations: [
     UserWorkingWithComponent,
     UserWorkingOnComponent,
-    UserTaskStatsComponent
+    UserTaskStatsComponent,
+    TaskDetailDialogComponent
   ],
   exports: [
     UserWorkingWithComponent,

@@ -1,0 +1,167 @@
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '90%', maxWidth: '1400px' }"
+  [draggable]="false"
+  [resizable]="false"
+  [closeOnEscape]="true"
+  [header]="task?.code + ' ' + task?.summary"
+  styleClass="task-detail-dialog"
+>
+  <div class="grid p-4" *ngIf="task">
+    <!-- Left side: Description, Children, Activity -->
+    <div class="col-12 md:col-7 space-y-6">
+      <!-- Description -->
+      <div class="description-section mb-6">
+        <h3>Description</h3>
+        <div class="p-2 surface-card border-round">
+          <p>{{ task.description || 'No description provided' }}</p>
+        </div>
+      </div>
+
+      <!-- Child Items -->
+      <div class="child-items-section mb-6">
+        <div class="flex justify-content-between align-items-center mb-2">
+          <h3>Child Work Items</h3>
+          <div class="flex align-items-center gap-2">
+            <button pButton icon="pi pi-ellipsis-h" class="p-button-text p-button-rounded"></button>
+            <button pButton icon="pi pi-plus" class="p-button-text p-button-rounded"></button>
+          </div>
+        </div>
+        <p-progressBar [value]="computedProgress" [showValue]="true" styleClass="mb-2"></p-progressBar>
+        <span>{{ computedProgress }}% Done</span>
+        <p-table [value]="childTasks" styleClass="p-datatable-sm mt-3" [scrollable]="true">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Type</th>
+              <th>Key</th>
+              <th>Summary</th>
+              <th>Priority</th>
+              <th>Assignee</th>
+              <th>Status</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-child>
+            <tr>
+              <td><i class="pi pi-check-square text-primary"></i></td>
+              <td>{{ child.code }}</td>
+              <td>{{ child.summary }}</td>
+              <td>{{ child.priority || 'Medium' }}</td>
+              <td>
+                <p-chip *ngIf="child.assignee" [label]="child.assignee.firstName + ' ' + child.assignee.lastName" [image]="getImage(child.assignee.imageUrl)"></p-chip>
+              </td>
+              <td>
+                <p-tag [severity]="getTagSeverity(child.status)" [value]="getTaskStatusLabel(child.status)" [icon]="getTaskStatusIcon(child.status).icon"></p-tag>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr><td colspan="6" class="text-center p-4">No child tasks found</td></tr>
+          </ng-template>
+        </p-table>
+      </div>
+
+      <!-- Activity Section -->
+      <div class="activity-section">
+        <div class="flex justify-content-between align-items-center mb-3">
+          <h3>Activity</h3>
+          <p-selectButton [options]="activityViewOptions" [(ngModel)]="selectedActivityView" optionLabel="label" optionValue="value"></p-selectButton>
+        </div>
+        <div [ngSwitch]="selectedActivityView">
+          <div *ngSwitchCase="'all'" class="activity-list">
+            <p-message severity="info" text="No activity recorded yet."></p-message>
+          </div>
+          <div *ngSwitchCase="'comments'" class="comments-list">
+            <p-message *ngIf="!comments.length" severity="info" text="No comments yet."></p-message>
+            <div *ngFor="let c of comments" class="comment-item mb-3 p-2 surface-hover border-round">
+              <div class="flex align-items-center mb-2">
+                <p-avatar [image]="getImage(c.author.imageUrl)" size="normal" shape="circle" class="mr-2"></p-avatar>
+                <span class="font-medium">{{ c.author.firstName }} {{ c.author.lastName }}</span>
+                <span class="ml-2 text-color-secondary text-sm">{{ c.date | date:'medium' }}</span>
+              </div>
+              <div class="ml-5">{{ c.text }}</div>
+            </div>
+          </div>
+          <!-- History & Worklog similar -->
+          <div *ngSwitchDefault>
+            <p-message severity="info" text="No records to display."></p-message>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right side: Edit Form -->
+    <div class="col-12 md:col-5 space-y-4">
+      <h4>Properties</h4>
+      <div class="p-fluid">
+        <div class="field grid">
+          <label htmlFor="status" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+            <i class="pi pi-hourglass"></i>
+            <span>Status</span>
+          </label>
+          <div class="col-12 md:col-8">
+            <app-task-status
+              [form]="projectTaskForm"
+              controlName="status"
+              (statusChange)="onStatusChange($event)"
+              [ngClass]="{'ng-dirty ng-invalid': submitted && status?.invalid}">
+            </app-task-status>
+            <small class="p-error" *ngIf="submitted && status?.invalid">Task Status is required.</small>
+          </div>
+        </div>
+        <div class="field grid">
+          <label htmlFor="start" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+            <i class="pi pi-calendar"></i>
+            <span>Due Date</span>
+          </label>
+          <div class="col-12 md:col-8">
+            <p-calendar formControlName="date" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" placeholder="Select Date"></p-calendar>
+          </div>
+        </div>
+        <div class="field grid">
+          <label htmlFor="team" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+            <i class="pi pi-users"></i>
+            <span>Team</span>
+          </label>
+          <div class="col-12 md:col-8">
+            <app-team-dropdown [form]="projectTaskForm" controlName="team" [isShowLabel]="false"></app-team-dropdown>
+          </div>
+        </div>
+        <div class="field grid">
+          <label htmlFor="assignee" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+            <i class="pi pi-user"></i>
+            <span>Assignee</span>
+          </label>
+          <div class="col-12 md:col-8">
+            <app-user-autocomplete [form]="projectTaskForm" controlName="assignee" [isShowLabel]="false" [multiple]="true" [dropdown]="true" [limit]="1"></app-user-autocomplete>
+          </div>
+        </div>
+        <div class="field grid">
+          <label htmlFor="state" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+            <i class="pi pi-compass"></i>
+            <span>Stage</span>
+          </label>
+          <div class="col-12 md:col-8">
+            <app-team-stage [form]="projectTaskForm" controlName="stage" [teamId]="team?.value?.id"></app-team-stage>
+          </div>
+        </div>
+        <div class="field grid">
+          <label htmlFor="parent" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+            <i class="pi pi-folder"></i>
+            <span>Change Parent</span>
+          </label>
+          <div class="col-12 md:col-8">
+            <app-task-dropdown [projectId]="project?.id!" [form]="projectTaskForm" controlName="parentId"></app-task-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end gap-2 p-2">
+      <button pButton label="Cancel" class="p-button-text" (click)="onHide()"></button>
+      <button pButton label="Save" class="p-button-primary" (click)="onSave()"></button>
+    </div>
+  </ng-template>
+</p-dialog>

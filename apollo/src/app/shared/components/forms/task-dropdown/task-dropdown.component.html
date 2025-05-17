@@ -5,7 +5,9 @@
     (onChange)="onChange($event)"
     [ngClass]="ngClass"
     [loading]="loading"
-    placeholder="Select Task">
+    placeholder="Select Task"
+    [panelStyle]="{ 'max-height': '200px', 'overflow-y': 'auto' }"
+    >
     <ng-template pTemplate="selectedItem">
       <div class="flex align-items-center gap-2" *ngIf="selectedTask">
         <div class="flex align-items-center gap-2">

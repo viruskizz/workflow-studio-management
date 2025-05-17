@@ -28,9 +28,15 @@
                         <ng-template pTemplate="body" let-task let-taskIndex="rowIndex">
                             <tr>
                                 <td>
-                                    <div class="flex align-items-center cursor-pointer" (click)="navigateToTask(project.id, task.id)">
-                                        <span class="font-medium mr-2">{{task.code}}:</span>
-                                        <span class="text-primary hover:text-primary-600">{{task.summary}}</span>
+                                    <div class="flex align-items-center cursor-pointer" >
+                                         <span class="font-medium mr-2 cursor-pointer"
+                                                (click)="openDetail(project.id, task)">
+                                            {{task.code}}:
+                                         </span>
+                                         <span class="text-primary hover:text-primary-600 cursor-pointer"
+                                                (click)="openDetail(project.id, task)">
+                                            {{task.summary}}
+                                        </span>
                                     </div>
                                     <div class="flex align-items-center mt-2 justify-content-between flex-wrap gap-2">
                                         <div class="flex align-items-center flex-wrap gap-2">
@@ -65,3 +71,10 @@
         </div>
     </div>
 </p-card>
+
+<app-task-detail-dialog
+  #taskDetail
+  [projectId]="selectedProjectId"
+  (save)="onDetailSave($event)"
+  (close)="taskDetail.onHide()"
+></app-task-detail-dialog>
