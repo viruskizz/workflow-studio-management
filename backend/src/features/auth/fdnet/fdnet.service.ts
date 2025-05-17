@@ -113,7 +113,7 @@ export class FdnetService {
       provider: AuthProvider.FDNET,
       userId: user.id!,
     });
-    return { authUser };
+    return { user, authUser };
   }
 
   /**

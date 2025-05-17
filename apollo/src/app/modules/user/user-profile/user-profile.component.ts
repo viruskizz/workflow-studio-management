@@ -93,7 +93,7 @@ export class UserProfileComponent implements OnInit {
     }
   }
   
-  hideDialog(event: User | null) {
+  hideDialog(event?: User) {
     this.userDialog = false;
     if (event) {
       // Update the user data if changes were made

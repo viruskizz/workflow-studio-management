@@ -11,7 +11,7 @@ export class UserFormComponent implements OnChanges {
   @Input() user?: User;
   @Output() userChange = new EventEmitter<User>();
 
-  @Output() closeEvent = new EventEmitter<User | null>()
+  @Output() closeEvent = new EventEmitter<User | undefined>()
 
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
@@ -92,7 +92,7 @@ export class UserFormComponent implements OnChanges {
 
   onHide() {
     if (!this.isSubmited) {
-      this.closeEvent.emit(null)
+      this.closeEvent.emit()
     }
     // Reset Everything
     this.visible = false;

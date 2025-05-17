@@ -1,5 +1,12 @@
+import { User } from "./user.model";
+
 export interface SignInResponse {
   access_token: string;
+}
+
+export interface AuthSignUpResponse {
+  user: User;
+  authUser: Auth;
 }
 
 export interface AuthUser {

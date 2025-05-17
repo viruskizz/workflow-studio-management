@@ -50,6 +50,12 @@ export class UsersController {
     return this.usersService.linkAuth(+id, body.username);
   }
 
+  @Delete(':id/auth')
+  @ApiOperation({ summary: 'Remove local user and fdnet user' })
+  removeAuth(@Param('id') id: string) {
+    return this.usersService.removeAuth(+id);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve user profile' })
   findOne(@Param('id') id: string) {

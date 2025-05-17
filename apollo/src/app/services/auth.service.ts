@@ -28,13 +28,13 @@ export class AuthService {
     })
   }
 
-  fdnetSignIn(username: string, password: string) {
-    const url = this.backendUrl + '/fdnet/signin';
-    return this.httpClient.post<SignInResponse>(url, {
-      username,
-      password
-    })
-  }
+  // fdnetSignIn(username: string, password: string) {
+  //   const url = this.backendUrl + '/fdnet/signin';
+  //   return this.httpClient.post<SignInResponse>(url, {
+  //     username,
+  //     password
+  //   })
+  // }
 
   public isAuthenticated(): boolean {
     const token = AuthService.tokenGetter();

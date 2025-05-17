@@ -44,6 +44,7 @@
 
 <app-user-form [(visible)]="userDialog" [user]="user || undefined" (closeEvent)="hideDialog($event)"></app-user-form>
 <app-user-auth-form
+    mode="LINK"
     [userId]="user?.id"
     [(username)]="fdnetUsername"
     [(visible)]="authDialog"></app-user-auth-form>

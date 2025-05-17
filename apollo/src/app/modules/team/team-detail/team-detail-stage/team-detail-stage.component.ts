@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { delay, Observable, tap } from 'rxjs';
@@ -11,7 +11,7 @@ import { AppStyleUtil } from 'src/app/utils/app-style.util';
   selector: 'app-team-detail-stage',
   templateUrl: './team-detail-stage.component.html',
 })
-export class TeamDetailStageComponent implements OnInit, OnChanges {
+export class TeamDetailStageComponent implements OnChanges {
   @Input({ required: true }) teamId!: number;
   stages: TeamStage[] = [];
   loading?: boolean;
@@ -33,8 +33,6 @@ export class TeamDetailStageComponent implements OnInit, OnChanges {
     private confirmationService: ConfirmationService,
     private messageService: MessageService
   ) { }
-
-  ngOnInit() { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['teamId'] && changes['teamId'].currentValue) {
