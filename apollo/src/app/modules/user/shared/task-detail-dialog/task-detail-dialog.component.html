@@ -6,162 +6,210 @@
   [resizable]="false"
   [closeOnEscape]="true"
   [header]="task?.code + ' ' + task?.summary"
-  styleClass="task-detail-dialog"
->
-  <div class="grid p-4" *ngIf="task">
-    <!-- Left side: Description, Children, Activity -->
+  styleClass="task-detail-dialog">
+
+  <form [formGroup]="form" class="grid p-4" *ngIf="task">
+    <!-- Left side -->
     <div class="col-12 md:col-7 space-y-6">
+
       <!-- Description -->
-      <div class="description-section mb-6">
-        <h3>Description</h3>
+      <section class="description-section mb-6">
+      <h3>Description</h3>
         <div class="p-2 surface-card border-round">
-          <p>{{ task.description || 'No description provided' }}</p>
+          <p-editor
+              [style]="{ height: '180px' }"
+              id="description"
+              formControlName="description"
+              [placeholder]="'No description provided'"
+          >
+          </p-editor>
         </div>
-      </div>
+      </section>
 
       <!-- Child Items -->
-      <div class="child-items-section mb-6">
-        <div class="flex justify-content-between align-items-center mb-2">
+      <section class="child-items-section mb-6">
+        <header class="flex justify-content-between align-items-center mb-2">
           <h3>Child Work Items</h3>
-          <div class="flex align-items-center gap-2">
+          <div class="flex gap-2">
             <button pButton icon="pi pi-ellipsis-h" class="p-button-text p-button-rounded"></button>
-            <button pButton icon="pi pi-plus" class="p-button-text p-button-rounded"></button>
+            <button pButton icon="pi pi-plus" class="p-button-text p-button-rounded"
+                    (click)="createChildTask()" [disabled]="!project?.id || !task.id"></button>
           </div>
-        </div>
-        <p-progressBar [value]="computedProgress" [showValue]="true" styleClass="mb-2"></p-progressBar>
-        <span>{{ computedProgress }}% Done</span>
-        <p-table [value]="childTasks" styleClass="p-datatable-sm mt-3" [scrollable]="true">
+        </header>
+
+        <p-progressBar [value]="getProgress()" [showValue]="true" class="mb-2"></p-progressBar>
+        <span>{{ getProgress() }}% Done</span>
+
+        <p-table [value]="childTasks" dataKey="id" class="p-datatable-sm mt-3" [scrollable]="true">
           <ng-template pTemplate="header">
             <tr>
-              <th>Type</th>
-              <th>Key</th>
-              <th>Summary</th>
-              <th>Priority</th>
-              <th>Assignee</th>
-              <th>Status</th>
+              <th>ID</th><th>Name</th><th>Status</th><th>Stage</th><th>Actions</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-child>
             <tr>
-              <td><i class="pi pi-check-square text-primary"></i></td>
-              <td>{{ child.code }}</td>
+              <td>{{ child.id }}</td>
               <td>{{ child.summary }}</td>
-              <td>{{ child.priority || 'Medium' }}</td>
               <td>
-                <p-chip *ngIf="child.assignee" [label]="child.assignee.firstName + ' ' + child.assignee.lastName" [image]="getImage(child.assignee.imageUrl)"></p-chip>
+                <ng-container *ngIf="getMeta(child.status) as m">
+                  <p-tag [severity]="m.severity" [value]="m.label" [icon]="m.icon"></p-tag>
+                </ng-container>
               </td>
-              <td>
-                <p-tag [severity]="getTagSeverity(child.status)" [value]="getTaskStatusLabel(child.status)" [icon]="getTaskStatusIcon(child.status).icon"></p-tag>
+              <td>{{ child.stage?.name || 'Not set' }}</td>
+              <td class="flex gap-2">
+                <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                        (click)="onEditChild(child)"></button>
+                <button pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm"
+                        (click)="onDeleteChild(child.id)"></button>
               </td>
             </tr>
           </ng-template>
           <ng-template pTemplate="emptymessage">
-            <tr><td colspan="6" class="text-center p-4">No child tasks found</td></tr>
+            <tr><td colspan="5" class="text-center p-4">No child tasks found</td></tr>
           </ng-template>
         </p-table>
-      </div>
+      </section>
 
-      <!-- Activity Section -->
-      <div class="activity-section">
-        <div class="flex justify-content-between align-items-center mb-3">
+      <!-- Activity -->
+      <section class="activity-section">
+        <header class="flex justify-content-between align-items-center mb-3">
           <h3>Activity</h3>
-          <p-selectButton [options]="activityViewOptions" [(ngModel)]="selectedActivityView" optionLabel="label" optionValue="value"></p-selectButton>
-        </div>
-        <div [ngSwitch]="selectedActivityView">
+          <p-selectButton [options]="activityViewOptions"
+                          formControlName="activityView"
+                          optionLabel="label" optionValue="value">
+          </p-selectButton>
+        </header>
+
+        <ng-container [ngSwitch]="form.get('activityView')?.value">
           <div *ngSwitchCase="'all'" class="activity-list">
             <p-message severity="info" text="No activity recorded yet."></p-message>
           </div>
           <div *ngSwitchCase="'comments'" class="comments-list">
-            <p-message *ngIf="!comments.length" severity="info" text="No comments yet."></p-message>
-            <div *ngFor="let c of comments" class="comment-item mb-3 p-2 surface-hover border-round">
+            <p-message *ngIf="!(comments && comments.length)" severity="info" text="No comments yet."></p-message>
+            <div *ngFor="let c of (comments || [])" class="comment-item mb-3 p-2 surface-hover border-round">
               <div class="flex align-items-center mb-2">
-                <p-avatar [image]="getImage(c.author.imageUrl)" size="normal" shape="circle" class="mr-2"></p-avatar>
+                <p-avatar [image]="imageUrl(c.author.imageUrl)" size="normal" shape="circle" class="mr-2"></p-avatar>
                 <span class="font-medium">{{ c.author.firstName }} {{ c.author.lastName }}</span>
                 <span class="ml-2 text-color-secondary text-sm">{{ c.date | date:'medium' }}</span>
               </div>
               <div class="ml-5">{{ c.text }}</div>
             </div>
           </div>
-          <!-- History & Worklog similar -->
           <div *ngSwitchDefault>
             <p-message severity="info" text="No records to display."></p-message>
           </div>
-        </div>
-      </div>
+        </ng-container>
+      </section>
     </div>
 
-    <!-- Right side: Edit Form -->
+    <!-- Right side -->
     <div class="col-12 md:col-5 space-y-4">
       <h4>Properties</h4>
-      <div class="p-fluid">
+      <div class="p-fluid space-y-4">
+
+        <!-- Assignee Field -->
         <div class="field grid">
-          <label htmlFor="status" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+          <label for="assignee" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+            <i class="pi pi-user"></i>
+            <span>Assignee</span>
+          </label>
+          <div class="col-12 md:col-8">
+            <app-user-autocomplete
+              id="assignee"
+              [form]="form"
+              controlName="assignee"
+              [multiple]="false"
+              [isShowLabel]="false"
+              [dropdown]="true">
+            </app-user-autocomplete>
+          </div>
+        </div>
+
+        <!-- Status Field -->
+        <div class="field grid">
+          <label for="status" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
             <i class="pi pi-hourglass"></i>
             <span>Status</span>
           </label>
           <div class="col-12 md:col-8">
             <app-task-status
-              [form]="projectTaskForm"
+              id="status"
+              [form]="form"
               controlName="status"
               (statusChange)="onStatusChange($event)"
-              [ngClass]="{'ng-dirty ng-invalid': submitted && status?.invalid}">
+              [ngClass]="{'ng-dirty ng-invalid': submitted && statusCtrl?.invalid}">
             </app-task-status>
-            <small class="p-error" *ngIf="submitted && status?.invalid">Task Status is required.</small>
+            <small *ngIf="submitted && statusCtrl?.invalid" class="p-error">
+              Status is required.
+            </small>
           </div>
         </div>
+
+        <!-- Team Field -->
         <div class="field grid">
-          <label htmlFor="start" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
-            <i class="pi pi-calendar"></i>
-            <span>Due Date</span>
-          </label>
-          <div class="col-12 md:col-8">
-            <p-calendar formControlName="date" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" placeholder="Select Date"></p-calendar>
-          </div>
-        </div>
-        <div class="field grid">
-          <label htmlFor="team" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+          <label for="team" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
             <i class="pi pi-users"></i>
             <span>Team</span>
           </label>
           <div class="col-12 md:col-8">
-            <app-team-dropdown [form]="projectTaskForm" controlName="team" [isShowLabel]="false"></app-team-dropdown>
+            <app-team-dropdown
+              id="team"
+              [form]="form"
+              controlName="team"
+              [isShowLabel]="false">
+            </app-team-dropdown>
           </div>
         </div>
+
+
+        <!-- Stage Field -->
         <div class="field grid">
-          <label htmlFor="assignee" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
-            <i class="pi pi-user"></i>
-            <span>Assignee</span>
-          </label>
-          <div class="col-12 md:col-8">
-            <app-user-autocomplete [form]="projectTaskForm" controlName="assignee" [isShowLabel]="false" [multiple]="true" [dropdown]="true" [limit]="1"></app-user-autocomplete>
-          </div>
-        </div>
-        <div class="field grid">
-          <label htmlFor="state" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+          <label for="stage" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
             <i class="pi pi-compass"></i>
             <span>Stage</span>
           </label>
           <div class="col-12 md:col-8">
-            <app-team-stage [form]="projectTaskForm" controlName="stage" [teamId]="team?.value?.id"></app-team-stage>
+            <app-team-stage
+              id="stage"
+              [form]="form"
+              controlName="stage"
+              [teamId]="teamCtrl?.value?.id">
+            </app-team-stage>
           </div>
         </div>
+
+        <!-- Parent Field -->
         <div class="field grid">
-          <label htmlFor="parent" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
+          <label for="parentId" class="col-12 mb-2 md:col-4 md:mb-0 gap-2">
             <i class="pi pi-folder"></i>
             <span>Change Parent</span>
           </label>
           <div class="col-12 md:col-8">
-            <app-task-dropdown [projectId]="project?.id!" [form]="projectTaskForm" controlName="parentId"></app-task-dropdown>
+            <app-task-dropdown
+              id="parentId"
+              [projectId]="project?.id!"
+              [form]="form"
+              controlName="parentId">
+            </app-task-dropdown>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </form>
 
   <ng-template pTemplate="footer">
     <div class="flex justify-content-end gap-2 p-2">
       <button pButton label="Cancel" class="p-button-text" (click)="onHide()"></button>
-      <button pButton label="Save" class="p-button-primary" (click)="onSave()"></button>
+      <button pButton label="Save" class="p-button-primary" (click)="onSave()"
+              [disabled]="form.invalid"></button>
     </div>
   </ng-template>
 </p-dialog>
+
+<app-child-task-form
+  #childDialog 
+  *ngIf="task"
+  [parentTask]="task"
+  [projectId]="project?.id || 0"
+  (save)="onChildTaskSave($event)">
+</app-child-task-form>

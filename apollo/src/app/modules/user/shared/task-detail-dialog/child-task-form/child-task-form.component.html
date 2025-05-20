@@ -1,0 +1,76 @@
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{width: '50vw'}"
+  [draggable]="false"
+  [resizable]="false"
+  [header]="task ? 'Edit Task' : 'Create Child Task'"
+  (onHide)="onHide()">
+
+  <form [formGroup]="form" class="p-fluid">
+    <div class="field">
+      <label for="summary">Name</label>
+      <input id="summary" type="text" pInputText formControlName="summary">
+      <small class="p-error" *ngIf="form.get('summary')?.invalid && form.get('summary')?.touched">
+        Summary is required
+      </small>
+    </div>
+
+    <div class="field">
+      <label for="description">Description</label>
+        <p-editor [style]="{'height':'180px'}" id="description" formControlName="description"></p-editor>
+    </div>
+
+    <div class="field">
+    <label for="status">Status</label>
+        <app-task-status
+            id="status"
+            [form]="form"
+            controlName="status"
+            (statusChange)="onStatusChange($event)"
+            [ngClass]="{'ng-dirty ng-invalid': submitted && form.get('status')?.invalid}">
+        </app-task-status>
+    <small *ngIf="submitted && form.get('status')?.invalid" class="p-error">
+        Status is required
+    </small>
+    </div>
+
+    <div class="field">
+      <label for="assignee">Assignee</label>
+      <app-user-autocomplete
+        id="assignee"
+        [form]="form"
+        controlName="assignee"
+        [multiple]="false"
+        [isShowLabel]="false"
+        [dropdown]="true">
+      </app-user-autocomplete>
+    </div>
+
+    <div class="field">
+      <label for="team">Team</label>
+      <app-team-dropdown
+        id="team"
+        [form]="form"
+        controlName="team"
+        [isShowLabel]="false">
+      </app-team-dropdown>
+    </div>
+
+    <div class="field">
+      <label for="stage">Stage</label>
+      <app-team-stage
+        id="stage"
+        [form]="form"
+        controlName="stage"
+        [teamId]="form.get('team')?.value?.id">
+      </app-team-stage>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <button pButton label="Cancel" class="p-button-text" (click)="onHide()"></button>
+    <button pButton label="Save" class="p-button-primary" (click)="onSave()"
+            [disabled]="form.invalid"></button>
+  </ng-template>
+</p-dialog>
