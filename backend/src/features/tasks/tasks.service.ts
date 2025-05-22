@@ -3,6 +3,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  NotFoundException,
   Param,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -52,10 +53,20 @@ export class TasksService {
 
   async update(id: number, data: UpdateTaskDto) {
     const task = await this.repo.findOneBy({ id });
+    if (!task) {
+      throw new NotFoundException('Task not found');
+    }
+
+    task.summary = data.summary || task.summary;
+    task.description = data.description || task.description;
+    task.status = data.status || task.status;
+    task.type = data.type || task.type;
+
     if (data.assigneeId) {
       task.assignee = User.create({ id: data.assigneeId });
     }
-    return task.save();
+
+    return this.repo.save(task);
   }
 
   async create(body: CreateTaskDto) {
@@ -107,5 +118,21 @@ export class TasksService {
       where: { assignee: { id: userId } },
       relations: ['assignee', 'project'],
     });
+  }
+
+  async delete(id: number) {
+    const task = await this.repo.findOneBy({ id });
+    if (!task) {
+      throw new NotFoundException('Task not found');
+    }
+
+    // Check if task has children
+    const children = await this.repo.find({ where: { parentId: id } });
+    if (children.length > 0) {
+      throw new BadRequestException('Cannot delete task with child tasks');
+    }
+
+    await this.repo.remove(task);
+    return { success: true };
   }
 }

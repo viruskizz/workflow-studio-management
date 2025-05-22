@@ -74,4 +74,10 @@ export class TaskService {
     const params = new HttpParams().set('projectIds', projectIds.join(','));
     return this.httpClient.get<Task[]>(`${this.baseUrl}`, { params });
   }
+
+  findChildTasks(parentId: number): Observable<Task[]> {
+    return this.httpClient.get<Task[]>(`${this.baseUrl}`, {
+      params: { parentId: parentId.toString() }
+    });
+  }
 }

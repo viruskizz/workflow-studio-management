@@ -4,7 +4,6 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Task, TaskStatus, TaskType } from 'src/app/models/task.model';
 import { Project } from 'src/app/models/project.model';
-import { DashboardService } from 'src/app/services/dashboard.service';
 import { TaskService } from 'src/app/services/task.service';
 import { ChildTaskFormComponent } from './child-task-form/child-task-form.component';
 
@@ -50,19 +49,18 @@ export class TaskDetailDialogComponent implements OnInit {
     fb: FormBuilder,
     private msg: MessageService,
     private confirm: ConfirmationService,
-    private dash: DashboardService,
     private tasks: TaskService,
   ) {
     this.form = fb.group({
-      summary:     ['', Validators.required],
+      summary: ['', Validators.required],
       description: [''],
-      type:        [null as TaskType|null, Validators.required],
-      status:      [null as TaskStatus|null, Validators.required],
-      team:        [null],
-      assignee:    [null],
-      stage:       [null],
-      parentId:    [null],
-      activityView:['all']
+      type: [null as TaskType | null, Validators.required],
+      status: [null as TaskStatus | null, Validators.required],
+      team: [null],
+      assignee: [null],
+      stage: [null],
+      parentId: [null],
+      activityView: ['all']
     });
   }
 
@@ -79,15 +77,15 @@ export class TaskDetailDialogComponent implements OnInit {
     this.visible = true;
     this.taskSubject.next(this.task);
     this.form.patchValue({
-      summary:     task.summary,
+      summary: task.summary,
       description: task.description,
-      type:        task.type,
-      status:      task.status,
-      team:        task.team,
-      assignee:    task.assignee,
-      stage:       task.stage,
-      parentId:    task.parentId,
-      activityView:'all'
+      type: task.type,
+      status: task.status,
+      team: task.team,
+      assignee: task.assignee,
+      stage: task.stage,
+      parentId: task.parentId,
+      activityView: 'all'
     });
   }
 
@@ -119,14 +117,14 @@ export class TaskDetailDialogComponent implements OnInit {
 
     const fv = this.form.value;
     const dto = {
-      summary:    fv.summary,
-      description:fv.description,
-      type:       fv.type as TaskType,
-      status:     fv.status as TaskStatus,
+      summary: fv.summary,
+      description: fv.description,
+      type: fv.type as TaskType,
+      status: fv.status as TaskStatus,
       assigneeId: fv.assignee?.id ?? null,
-      teamId:     fv.team?.id ?? null,
-      stageId:    fv.stage?.id ?? null,
-      parentId:   fv.parentId ?? this.task.parentId!
+      teamId: fv.team?.id ?? null,
+      stageId: fv.stage?.id ?? null,
+      parentId: fv.parentId ?? this.task.parentId!
     };
 
     this.tasks.updateTask(this.task.id, dto).subscribe({
@@ -144,21 +142,28 @@ export class TaskDetailDialogComponent implements OnInit {
   }
 
   onStatusChange(newStatus: TaskStatus) {
-    if (!this.task?.id || !this.task.assigneeId) return;
+    if (!this.task?.id) return;
 
-    this.dash.updateTaskStatus(this.task.assigneeId, this.task.id, newStatus)
-      .subscribe({
-        next: () => {
-          this.task!.status = newStatus;
-          this.form.patchValue({ status: newStatus });
-          this.save.emit(this.task!);
-          this.taskSubject.next(this.task!);
-          this.msg.add({ severity: 'success', summary: 'Success', detail: `Status updated to ${newStatus}` });
-        },
-        error: () => {
-          this.msg.add({ severity: 'error', summary: 'Error', detail: 'Failed to update status' });
-        }
-      });
+    this.tasks.updateTask(this.task.id, { status: newStatus }).subscribe({
+      next: (updatedTask) => {
+        this.task = updatedTask;
+        this.form.patchValue({ status: newStatus });
+        this.save.emit(this.task);
+        this.taskSubject.next(this.task);
+        this.msg.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: `Status updated to ${newStatus}`
+        });
+      },
+      error: (err) => {
+        this.msg.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: err.message || 'Failed to update status'
+        });
+      }
+    });
   }
 
   createChildTask() {
@@ -175,33 +180,92 @@ export class TaskDetailDialogComponent implements OnInit {
       this.childTasks[idx] = saved;
     } else {
       this.childTasks.push(saved);
-    }    
-    
+    }
+
     this.childTasks = [...this.childTasks];
 
     this.msg.add({ severity: 'success', summary: 'Success', detail: `Child task ${saved.id ? 'updated' : 'created'}` });
   }
 
-  onDeleteChild(id: number) {
-    this.confirm.confirm({
-      message: 'Are you sure you want to delete this task?',
-      accept: () => {
-        this.tasks.deleteTask(id).subscribe({
-          next: () => {
-            this.childTasks = this.childTasks.filter(t => t.id !== id);
-            this.msg.add({ severity: 'success', summary: 'Deleted', detail: 'Child task removed' });
-          },
-          error: e => this.msg.add({ severity: 'error', summary: 'Error', detail: e.message })
-        });
-      }
-    });
+private handleDeleteSuccess(taskId: number) {
+  this.childTasks = this.childTasks.filter(t => t.id !== taskId);
+  
+  this.msg.add({ 
+    severity: 'success', 
+    summary: 'Success', 
+    detail: 'Task deleted successfully' 
+  });
+  
+  if (this.task) {
+    this.save.emit(this.task);
   }
+}
+
+private handleDeleteError(error: Error, taskIndex: number, taskToDelete: Task) {
+  this.childTasks = [
+    ...this.childTasks.slice(0, taskIndex),
+    taskToDelete,
+    ...this.childTasks.slice(taskIndex)
+  ];
+  
+  console.error('Error deleting task:', error);
+  this.msg.add({ 
+    severity: 'error', 
+    summary: 'Error', 
+    detail: error.message || 'Failed to delete task' 
+  });
+}
+
+onDeleteChild(id: number) {
+  this.confirm.confirm({
+    message: 'Are you sure you want to delete this task?',
+    header: 'Delete Confirmation',
+    icon: 'pi pi-exclamation-triangle',
+    accept: () => {
+      // Store task index and task before deletion for potential rollback
+      const taskIndex = this.childTasks.findIndex(t => t.id === id);
+      const taskToDelete = this.childTasks[taskIndex];
+
+      // Optimistic update
+      this.childTasks = this.childTasks.filter(t => t.id !== id);
+
+      this.tasks.deleteTask(id).subscribe({
+        next: () => {
+          this.msg.add({ 
+            severity: 'success', 
+            summary: 'Success', 
+            detail: 'Task deleted successfully' 
+          });
+          // Emit update to parent
+          if (this.task) {
+            this.save.emit(this.task);
+          }
+        },
+        error: (err) => {
+          // Rollback on error
+          this.childTasks = [
+            ...this.childTasks.slice(0, taskIndex),
+            taskToDelete,
+            ...this.childTasks.slice(taskIndex)
+          ];
+          
+          this.msg.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: err.message || 'Failed to delete task' 
+          });
+          console.error('Delete task error:', err);
+        }
+      });
+    }
+  });
+}
 
   onEditChild(child: Task) {
     this.childDialog?.open(child);
   }
 
   get statusCtrl() { return this.form.get('status'); }
-  get teamCtrl()   { return this.form.get('team'); }
-  get stageCtrl()  { return this.form.get('stage'); }
+  get teamCtrl() { return this.form.get('team'); }
+  get stageCtrl() { return this.form.get('stage'); }
 }

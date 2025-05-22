@@ -31,6 +31,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { DropdownModule } from 'primeng/dropdown';
 import { ChildTaskFormComponent } from './task-detail-dialog/child-task-form/child-task-form.component';
 import { EditorModule } from 'primeng/editor';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 const components = [
   UserWorkingOnComponent,
@@ -65,6 +66,7 @@ const components = [
     FileUploadModule,
     DropdownModule,
     EditorModule,
+    ConfirmDialogModule,
 
     ProgressSpinnerModule,
     SharedModule,

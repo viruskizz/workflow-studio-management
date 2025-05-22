@@ -29,11 +29,16 @@
       <!-- Child Items -->
       <section class="child-items-section mb-6">
         <header class="flex justify-content-between align-items-center mb-2">
-          <h3>Child Work Items</h3>
+          <h3>Child Work</h3>
           <div class="flex gap-2">
-            <button pButton icon="pi pi-ellipsis-h" class="p-button-text p-button-rounded"></button>
-            <button pButton icon="pi pi-plus" class="p-button-text p-button-rounded"
-                    (click)="createChildTask()" [disabled]="!project?.id || !task.id"></button>
+            <!-- <button pButton icon="pi pi-ellipsis-h" class="p-button-text p-button-rounded"></button> -->
+            <button pButton 
+              label="Add Child Task" 
+              icon="pi pi-plus" 
+              class="p-button-primary"
+              (click)="createChildTask()" 
+              [disabled]="!project?.id || !task.id">
+            </button>
           </div>
         </header>
 
@@ -213,3 +218,11 @@
   [projectId]="project?.id || 0"
   (save)="onChildTaskSave($event)">
 </app-child-task-form>
+
+<p-confirmDialog 
+    [style]="{width: '450px'}"
+    acceptButtonStyleClass="p-button-danger" 
+    rejectButtonStyleClass="p-button-text"
+    acceptIcon="pi pi-trash"
+    rejectIcon="pi pi-times">
+</p-confirmDialog>
