@@ -57,17 +57,4 @@ export class UserDashboardController {
   ) {
     return this.dashboardService.getDashboardFeature(id, feature);
   }
-
-  @Patch('tasks/:taskId/status')
-  async updateTaskStatus(
-    @Param('id', ParseIntPipe) userId: number,
-    @Param('taskId', ParseIntPipe) taskId: number,
-    @Body() updateDto: { status: TaskStatus },
-  ) {
-    return this.dashboardService.updateTaskStatus(
-      userId,
-      taskId,
-      updateDto.status,
-    );
-  }
 }

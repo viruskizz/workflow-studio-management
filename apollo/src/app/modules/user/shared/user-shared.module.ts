@@ -29,6 +29,9 @@ import { UserAuthFormComponent } from './user-auth-form/user-auth-form.component
 import { UserFormComponent } from './user-form/user-form.component';
 import { FileUploadModule } from 'primeng/fileupload';
 import { DropdownModule } from 'primeng/dropdown';
+import { ChildTaskFormComponent } from './task-detail-dialog/child-task-form/child-task-form.component';
+import { EditorModule } from 'primeng/editor';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 const components = [
   UserWorkingOnComponent,
@@ -36,7 +39,8 @@ const components = [
   UserWorkingWithComponent,
   TaskDetailDialogComponent,
   UserAuthFormComponent,
-  UserFormComponent
+  UserFormComponent,
+  ChildTaskFormComponent
 ];
 @NgModule({
   imports: [
@@ -61,6 +65,8 @@ const components = [
     CalendarModule,
     FileUploadModule,
     DropdownModule,
+    EditorModule,
+    ConfirmDialogModule,
 
     ProgressSpinnerModule,
     SharedModule,
@@ -71,7 +77,8 @@ const components = [
     
     CardModule,
     ButtonModule,
-    AvatarModule
+    AvatarModule,
+    ReactiveFormsModule,
   ]
 })
 export class UserSharedModule { }

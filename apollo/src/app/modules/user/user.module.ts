@@ -31,15 +31,16 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { UserInfoSidebarComponent } from './user-profile/user-info-sidebar/user-info-sidebar.component';
 import { UserListComponent } from './user-list/user-list.component';
-
+import { SharedModule } from 'src/app/shared/shared.module';
 @NgModule({
   imports: [
     CommonModule,
     UserRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    
+
     UserSharedModule,
+    SharedModule,
 
     TableModule,
     FileUploadModule,

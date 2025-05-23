@@ -8,9 +8,9 @@ import {
   Inject,
   NotFoundException,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { TasksService } from './tasks.service';
@@ -60,6 +60,11 @@ export class TasksController {
   async create(@Body() body: CreateTaskDto) {
     await this.validateProjectId(body);
     return this.tasksService.create(body);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return this.tasksService.delete(id);
   }
 
   private async validateProjectId(body: any) {

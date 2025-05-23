@@ -24,7 +24,7 @@
                 </ng-template>
                 
                 <ng-container *ngIf="project.tasks?.length; else noTasks">
-                    <p-table [value]="project.tasks || []" styleClass="p-datatable-sm" responsiveLayout="scroll">
+                    <p-table [value]="filterMainTasks(project.tasks!)" styleClass="p-datatable-sm" responsiveLayout="scroll">
                         <ng-template pTemplate="body" let-task let-taskIndex="rowIndex">
                             <tr>
                                 <td>
@@ -54,8 +54,11 @@
                                         </div>
                                         
                                         <div class="ml-auto">
-                                            <p-menu #menu [popup]="true" [model]="getStatusMenuItems(task.id, i, taskIndex)" [appendTo]="'body'"></p-menu>
-                                            <button pButton type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text p-button-sm" (click)="menu.toggle($event)"></button>
+                                            <p-menu #menu [popup]="true" [appendTo]="'body'"></p-menu>
+                                            <button pButton type="button" icon="pi pi-ellipsis-v" 
+                                                class="p-button-rounded p-button-text p-button-sm" 
+                                                (click)="showStatusMenu($event, menu, task.id, i, taskIndex)">
+                                            </button>
                                         </div>
                                     </div>
                                 </td>
