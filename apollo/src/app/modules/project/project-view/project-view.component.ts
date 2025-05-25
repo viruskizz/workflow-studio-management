@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { Project } from 'src/app/models/project.model';
@@ -19,7 +19,7 @@ export class ProjectViewComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private projectService: ProjectService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.items = [
@@ -34,7 +34,7 @@ export class ProjectViewComponent implements OnInit {
       this.project = v;
     });
   }
-  
+
   onActivePageChange(menuItem: MenuItem) {
     this.activeItem = menuItem;
   }

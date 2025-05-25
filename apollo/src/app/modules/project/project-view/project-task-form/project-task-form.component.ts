@@ -14,7 +14,7 @@ import { TaskService } from 'src/app/services/task.service';
 export class ProjectTaskFormComponent implements OnChanges {
   @Input({ required: true }) project?: Partial<Project>;
   @Input() task?: Partial<Task>;
-  @Output() taskChange = new EventEmitter<Task>();
+  @Output() taskChange = new EventEmitter<Task | undefined>();
   @Output() closeEvent = new EventEmitter<Task | null>();
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
@@ -107,39 +107,40 @@ export class ProjectTaskFormComponent implements OnChanges {
       teamId: value.team?.id,
       stageId: value.stage?.id,
     }
-    console.log('body:', body);
-    this.saveService(body);
+    this.taskService.create(body).subscribe({
+      next: (v) => this.onSaveSuccess(v),
+      error: (e) => this.onSaveError(e),
+    })
   }
 
-  saveService(body: Partial<Task>) {
-    this.taskService.create(body).subscribe({
-      next: (v) => {
-        console.log(v);
-        this.visible = false;
-      },
-      error: (e) => {
-        console.error(e);
-        const err = e.error;
-        const msgTemplate = {
-          key: 'projectTaskForm',
-          severity: 'error',
-          summary: err.error || 'Error',
-          life: 6 * 1000,
-          sticky: true,
-        };
-        if (Array.isArray(err.message)) {
-          this.messageService.addAll(err.message.map((msg: string) => ({
-            ...msgTemplate,
-            detail: msg
-          })))
-        } else {
-          this.messageService.add({
-            ...msgTemplate,
-            detail: err.message
-          })
-        }
-      }
-    })
+  private onSaveSuccess(task: Task) {
+    this.visible = false;
+    this.task = task;
+    this.taskChange.emit(task);
+    this.visibleChange.emit(false);
+  }
+
+  private onSaveError(e: any) {
+    console.error(e);
+    const err = e.error;
+    const msgTemplate = {
+      key: 'projectTaskForm',
+      severity: 'error',
+      summary: err.error || 'Error',
+      life: 6 * 1000,
+      sticky: true,
+    };
+    if (Array.isArray(err.message)) {
+      this.messageService.addAll(err.message.map((msg: string) => ({
+        ...msgTemplate,
+        detail: msg
+      })))
+    } else {
+      this.messageService.add({
+        ...msgTemplate,
+        detail: err.message
+      })
+    }
   }
 
   get type() { return this.projectTaskForm.controls.type; }

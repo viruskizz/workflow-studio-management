@@ -27,7 +27,7 @@ export class TaskService {
   }
 
   create(body: Partial<Task>) {
-    return this.httpClient.post(this.baseUrl, body)
+    return this.httpClient.post<Task>(this.baseUrl, body)
   }
 
   update(body: Partial<Task>) {
@@ -38,7 +38,7 @@ export class TaskService {
 
   private _setParamsFromObject(param: HttpParams, params: object, name: string) {
     for (const [key, value] of Object.entries(params)) {
-      param.set(`${name}[${key}]`,value);
+      param.set(`${name}[${key}]`, value);
     }
     return param;
   }

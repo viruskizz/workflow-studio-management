@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TreeNode } from 'primeng/api';
 import { TreeTable } from 'primeng/treetable';
@@ -10,7 +10,7 @@ import { AppStyleUtil } from 'src/app/utils/app-style.util';
   selector: 'app-project-tree-table-view',
   templateUrl: './project-tree-table-view.component.html'
 })
-export class ProjectTreeTableViewComponent implements OnInit {
+export class ProjectTreeTableViewComponent implements OnInit, OnChanges {
 
   files2: TreeNode<any> | TreeNode<any>[] | any[] | any;
   tasks: TreeNode<Task> | TreeNode<Task>[] | Task[] | any = [];
@@ -23,7 +23,7 @@ export class ProjectTreeTableViewComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private projectService: ProjectService
-  ){}
+  ) { }
 
   ngOnInit() {
     const params = this.route.snapshot.params;
@@ -42,8 +42,15 @@ export class ProjectTreeTableViewComponent implements OnInit {
     )
   }
 
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['tasking']?.currentValue) {
+      this.tasking = changes['tasking']?.currentValue;
+    }
+  }
+
   onGlobalFilter(table: TreeTable, event: Event) {
-      table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 
   private mapTreesToNodes(tasks: TaskTree[]): TreeNode<Task>[] {
