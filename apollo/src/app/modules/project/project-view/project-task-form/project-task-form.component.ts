@@ -13,7 +13,7 @@ import { TaskTypeDropdownItem } from 'src/app/shared/components/forms/task-type/
   templateUrl: './project-task-form.component.html',
 })
 export class ProjectTaskFormComponent implements OnChanges {
-  @Input({required: true}) project?: Partial<Project>;
+  @Input({ required: true }) project?: Partial<Project>;
   @Input() task?: Partial<Task>;
   @Output() taskChange = new EventEmitter<Task>();
   @Output() closeEvent = new EventEmitter<Task | null>();
@@ -44,7 +44,7 @@ export class ProjectTaskFormComponent implements OnChanges {
   constructor(
     private taskService: TaskService,
     private messageService: MessageService
-  ) {}
+  ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['task']?.currentValue) {
@@ -102,14 +102,13 @@ export class ProjectTaskFormComponent implements OnChanges {
       projectId: this.project!.id,
       code: '1',
       summary: value.summary as string,
-      description: value.description as  | undefined,
+      description: value.description as | undefined,
       type: value.type!.value,
       status: value.status as TaskStatus,
       teamId: value.team?.id,
       stageId: value.stage?.id,
     }
     console.log('body:', body);
-    return;
     this.saveService(body);
   }
 
@@ -145,7 +144,7 @@ export class ProjectTaskFormComponent implements OnChanges {
   }
 
   get type() { return this.projectTaskForm.controls.type; }
-  get description() {  return this.projectTaskForm.controls.description; }
+  get description() { return this.projectTaskForm.controls.description; }
   get status() { return this.projectTaskForm.controls.status; }
   get team() { return this.projectTaskForm.controls.team; }
 }
