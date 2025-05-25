@@ -3,10 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { FileSelectEvent } from 'primeng/fileupload';
 import { Project } from 'src/app/models/project.model';
-import { Task, TaskStatus } from 'src/app/models/task.model';
+import { Task, TaskStatus, TaskType } from 'src/app/models/task.model';
 import { Team, TeamStage } from 'src/app/models/team.model';
 import { TaskService } from 'src/app/services/task.service';
-import { TaskTypeDropdownItem } from 'src/app/shared/components/forms/task-type/task-type.component';
 
 @Component({
   selector: 'app-project-task-form',
@@ -29,13 +28,13 @@ export class ProjectTaskFormComponent implements OnChanges {
 
   projectTaskForm = new FormGroup({
     summary: new FormControl('', [Validators.required]),
-    type: new FormControl<TaskTypeDropdownItem | null>(null, [Validators.required]),
-    status: new FormControl<TaskStatus | null>(null, [Validators.required]),
+    type: new FormControl<TaskType | undefined>(undefined, [Validators.required]),
+    status: new FormControl<TaskStatus | undefined>(undefined, [Validators.required]),
     description: new FormControl('', []),
     date: new FormControl('', []),
-    team: new FormControl<Team | null>(null, []),
+    team: new FormControl<Team | undefined>(undefined, []),
     assignee: new FormControl('', []),
-    stage: new FormControl<TeamStage | null>(null, []),
+    stage: new FormControl<TeamStage | undefined>(undefined, []),
     flow: new FormControl('', []),
     parentId: new FormControl('', []),
     files: new FormControl([], []),
@@ -103,7 +102,7 @@ export class ProjectTaskFormComponent implements OnChanges {
       code: '1',
       summary: value.summary as string,
       description: value.description as | undefined,
-      type: value.type!.value,
+      type: value.type!,
       status: value.status as TaskStatus,
       teamId: value.team?.id,
       stageId: value.stage?.id,
