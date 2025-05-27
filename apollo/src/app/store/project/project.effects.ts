@@ -1,10 +1,10 @@
-import { loadTasks, setTasks, setTasksTree } from './project.actions';
+import { loadTasks, loadTasksTree, setTasks, setTasksTree } from './project.actions';
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { Store } from '@ngrx/store';
 import { exhaustMap, map, withLatestFrom } from 'rxjs';
 import { ProjectService } from 'src/app/services/project.service';
-import { AppState, ProjectSelectors } from '..';
+import { AppState, ProjectActions, ProjectSelectors } from '..';
 
 @Injectable()
 export class ProjectEffects {
@@ -25,13 +25,10 @@ export class ProjectEffects {
 
   loadTaskTrees$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(loadTasks),
+      ofType(loadTasksTree),
       withLatestFrom(this.store.select(ProjectSelectors.selectProjectId)),
       exhaustMap(([action, projectId]) => {
-        if (!projectId) {
-          return [];
-        }
-        return this.projectService.listTaskTrees(projectId).pipe(
+        return !projectId ? [] : this.projectService.listTaskTrees(projectId).pipe(
           map((taskTree) => setTasksTree({ taskTree }))
         )
       }

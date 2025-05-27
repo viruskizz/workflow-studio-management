@@ -37,23 +37,11 @@ export class ProjectTreeTableViewComponent implements OnInit, OnChanges {
       { field: 'assignee', header: 'Assignee' },
       { field: 'actions', header: '' },
     ];
-    this.projectService.listTaskTrees(this.projectId!).subscribe(
-      res => {
-        this.tasks = this.mapTreesToNodes(res);
-        console.log('TreeNodes:', this.tasks);
-      }
-    )
-    this.store.dispatch(ProjectActions.loadTasks({ projectId: this.projectId! }));
     this.store.dispatch(ProjectActions.loadTasksTree({ projectId: this.projectId! }));
-    this.store.select(ProjectSelectors.selectProjectId).subscribe((projectId) => {
-      if (projectId) {
-        this.projectId = +projectId;
-      }
-    });
-    this.store.select(ProjectSelectors.selectProjectTaskTreeState).subscribe((taskTree) => {
-      console.log('Select Task Tree:', taskTree);
+    this.store.select(ProjectSelectors.selectProjectTaskTreeNodeState).subscribe((taskTree) => {
+      // console.log('Select Task Tree:', taskTree);
       if (taskTree) {
-        this.tasks = this.mapTreesToNodes(taskTree);
+        this.tasks = taskTree;
       }
     });
   }
@@ -67,18 +55,6 @@ export class ProjectTreeTableViewComponent implements OnInit, OnChanges {
 
   onGlobalFilter(table: TreeTable, event: Event) {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-  }
-
-  private mapTreesToNodes(tasks: TaskTree[]): TreeNode<Task>[] {
-    const nodes: TreeNode<Task>[] = [];
-    tasks.forEach(task => {
-      nodes.push({
-        data: task,
-        key: task.id.toString(),
-        children: this.mapTreesToNodes(task.children)
-      });
-    });
-    return nodes;
   }
 
   onAddTask(task?: Partial<Task>) {
