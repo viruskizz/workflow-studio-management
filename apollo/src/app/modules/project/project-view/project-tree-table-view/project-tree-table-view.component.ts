@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { TreeNode } from 'primeng/api';
 import { TreeTable } from 'primeng/treetable';
 import { Task, TaskStatus, TaskTree, TaskType } from 'src/app/models/task.model';
 import { ProjectService } from 'src/app/services/project.service';
+import { AppState, ProjectSelectors, ProjectActions } from 'src/app/store';
 import { AppStyleUtil } from 'src/app/utils/app-style.util';
 
 @Component({
@@ -22,7 +24,8 @@ export class ProjectTreeTableViewComponent implements OnInit, OnChanges {
 
   constructor(
     private route: ActivatedRoute,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private store: Store<AppState>,
   ) { }
 
   ngOnInit() {
@@ -40,6 +43,19 @@ export class ProjectTreeTableViewComponent implements OnInit, OnChanges {
         console.log('TreeNodes:', this.tasks);
       }
     )
+    this.store.dispatch(ProjectActions.loadTasks({ projectId: this.projectId! }));
+    this.store.dispatch(ProjectActions.loadTasksTree({ projectId: this.projectId! }));
+    this.store.select(ProjectSelectors.selectProjectId).subscribe((projectId) => {
+      if (projectId) {
+        this.projectId = +projectId;
+      }
+    });
+    this.store.select(ProjectSelectors.selectProjectTaskTreeState).subscribe((taskTree) => {
+      console.log('Select Task Tree:', taskTree);
+      if (taskTree) {
+        this.tasks = this.mapTreesToNodes(taskTree);
+      }
+    });
   }
 
 

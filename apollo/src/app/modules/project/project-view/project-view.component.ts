@@ -1,9 +1,11 @@
+import { Store } from '@ngrx/store';
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { Project } from 'src/app/models/project.model';
 import { Task } from 'src/app/models/task.model';
 import { ProjectService } from 'src/app/services/project.service';
+import { ProjectActions } from 'src/app/store';
 
 @Component({
   selector: 'app-project-view',
@@ -18,7 +20,8 @@ export class ProjectViewComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private store: Store,
   ) { }
 
   ngOnInit(): void {
@@ -33,6 +36,7 @@ export class ProjectViewComponent implements OnInit {
     this.projectService.getProject(projectId).subscribe((v) => {
       this.project = v;
     });
+    this.store.dispatch(ProjectActions.setId({ projectId }));
   }
 
   onActivePageChange(menuItem: MenuItem) {
