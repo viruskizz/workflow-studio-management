@@ -38,7 +38,7 @@ function mapTreesToNodes(tasks: TaskTree[]): TreeNode<Task>[] {
   tasks.forEach(task => {
     nodes.push({
       data: task,
-      key: task.id.toString(),
+      key: task.id!.toString(),
       children: mapTreesToNodes(task.children)
     });
   });

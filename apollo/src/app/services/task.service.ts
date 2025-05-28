@@ -31,7 +31,7 @@ export class TaskService {
   }
 
   update(body: Partial<Task>) {
-    return this.httpClient.patch(this.baseUrl, {
+    return this.httpClient.patch<Task>(this.baseUrl, {
       body,
     })
   }

@@ -39,7 +39,6 @@ export class ProjectTreeTableViewComponent implements OnInit, OnChanges {
     ];
     this.store.dispatch(ProjectActions.loadTasksTree({ projectId: this.projectId! }));
     this.store.select(ProjectSelectors.selectProjectTaskTreeNodeState).subscribe((taskTree) => {
-      // console.log('Select Task Tree:', taskTree);
       if (taskTree) {
         this.tasks = taskTree;
       }

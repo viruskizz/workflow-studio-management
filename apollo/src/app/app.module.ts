@@ -11,6 +11,7 @@ import { LoadingBarModule } from '@ngx-loading-bar/core';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects, AppReducer } from './store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,10 @@ import { AppEffects, AppReducer } from './store';
     LoadingBarRouterModule,
     LoadingBarModule,
     StoreModule.forRoot(AppReducer, {}),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Optional: Limit the number of actions in the history
+      logOnly: false, // Optional: Disable in production
+    }),
     EffectsModule.forRoot(AppEffects),
   ],
   providers: [

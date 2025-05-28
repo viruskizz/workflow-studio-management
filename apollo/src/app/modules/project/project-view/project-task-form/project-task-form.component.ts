@@ -1,11 +1,14 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { MessageService } from 'primeng/api';
 import { FileSelectEvent } from 'primeng/fileupload';
+import { Observable } from 'rxjs';
 import { Project } from 'src/app/models/project.model';
 import { Task, TaskStatus, TaskType } from 'src/app/models/task.model';
 import { Team, TeamStage } from 'src/app/models/team.model';
 import { TaskService } from 'src/app/services/task.service';
+import { AppState, ProjectActions } from 'src/app/store';
 
 @Component({
   selector: 'app-project-task-form',
@@ -25,6 +28,7 @@ export class ProjectTaskFormComponent implements OnChanges {
   coverFile?: File;
 
   submitted = false;
+  taskId?: number;
 
   projectTaskForm = new FormGroup({
     summary: new FormControl('', [Validators.required]),
@@ -42,12 +46,14 @@ export class ProjectTaskFormComponent implements OnChanges {
 
   constructor(
     private taskService: TaskService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private store: Store<AppState>,
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['task']?.currentValue) {
       this.visible = true;
+      this.taskId = changes['task']?.currentValue.id;
       this.projectTaskForm.reset()
       this.projectTaskForm.patchValue(changes['task']?.currentValue)
     }
@@ -107,7 +113,16 @@ export class ProjectTaskFormComponent implements OnChanges {
       teamId: value.team?.id,
       stageId: value.stage?.id,
     }
-    this.taskService.create(body).subscribe({
+    if (this.taskId) {
+      body.id = this.taskId;
+    }
+    let event: Observable<Task>;
+    if (this.taskId) {
+      event = this.taskService.update(body);
+    } else {
+      event = this.taskService.create(body);
+    }
+    event.subscribe({
       next: (v) => this.onSaveSuccess(v),
       error: (e) => this.onSaveError(e),
     })
@@ -118,6 +133,7 @@ export class ProjectTaskFormComponent implements OnChanges {
     this.task = task;
     this.taskChange.emit(task);
     this.visibleChange.emit(false);
+    this.store.dispatch(ProjectActions.loadTasksTree({ projectId: this.task.projectId! }));
   }
 
   private onSaveError(e: any) {

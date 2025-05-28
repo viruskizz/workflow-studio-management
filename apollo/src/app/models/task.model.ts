@@ -7,7 +7,7 @@ export type TaskStatus = 'BACKLOG' | 'TODO' | 'IN_PROGRESS' | 'DONE' | 'CANCELLE
 export type TaskType = 'EPIC' | 'STORY' | 'TASK' | 'SUBTASK';
 
 export interface Task {
-  id: number;
+  id?: number;
   summary: string;
   description?: string;
   code: string;

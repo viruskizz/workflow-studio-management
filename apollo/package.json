@@ -31,6 +31,7 @@
     "@fullcalendar/timegrid": "^6.0.3",
     "@ngrx/effects": "^17.2.0",
     "@ngrx/store": "^17.2.0",
+    "@ngrx/store-devtools": "^17.2.0",
     "@ngx-loading-bar/core": "^7.0.0",
     "@ngx-loading-bar/http-client": "^7.0.0",
     "@ngx-loading-bar/router": "^7.0.0",
