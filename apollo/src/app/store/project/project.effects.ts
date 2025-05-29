@@ -2,7 +2,7 @@ import { loadTasks, loadTasksTree, setTasks, setTasksTree, addTask, updateTask, 
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { Store } from '@ngrx/store';
-import { catchError, exhaustMap, map, of, tap, withLatestFrom } from 'rxjs';
+import { catchError, exhaustMap, map, of, withLatestFrom } from 'rxjs';
 import { ProjectService } from 'src/app/services/project.service';
 import { AppState, ProjectActions, ProjectSelectors } from '..';
 import { TaskService } from 'src/app/services/task.service';
@@ -28,7 +28,7 @@ export class ProjectEffects {
   loadTaskTrees$ = createEffect(() => this.actions$.pipe(
     ofType(loadTasksTree),
     withLatestFrom(this.store.select(ProjectSelectors.selectProjectId)),
-    exhaustMap(([action, projectId]) => !projectId ? [] : this.projectService.listTaskTrees(projectId).pipe(
+    exhaustMap(([, projectId]) => !projectId ? [] : this.projectService.listTaskTrees(projectId).pipe(
       map((taskTree) => setTasksTree({ taskTree }))
     ))
   ));
@@ -39,7 +39,7 @@ export class ProjectEffects {
     exhaustMap(([action, projectId]) => {
       if (!projectId) return [];
       return this.taskService.create({ ...action.task, projectId }).pipe(
-        map((task) => ProjectActions.loadTasks({ projectId })),
+        map(() => ProjectActions.loadTasks({ projectId })),
         catchError((e) => of(displayErrorMessage({ message: e.error?.message || 'Failed to add task' })))
       );
     })
@@ -51,7 +51,7 @@ export class ProjectEffects {
     exhaustMap(([action, projectId]) => {
       if (!projectId) return [];
       return this.taskService.update({ ...action.task, projectId }).pipe(
-        map((task) => ProjectActions.loadTasks({ projectId })),
+        map(() => ProjectActions.loadTasks({ projectId })),
       );
     })
   ));

@@ -1,4 +1,3 @@
-import { ex } from "@fullcalendar/core/internal-common";
 import { createAction, props } from "@ngrx/store";
 import { Task } from "src/app/models/task.model";
 

@@ -1,10 +1,9 @@
-import { on } from '@ngrx/store';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TreeNode } from 'primeng/api';
 import { TreeTable } from 'primeng/treetable';
-import { Task, TaskStatus, TaskTree, TaskType } from 'src/app/models/task.model';
+import { Task, TaskStatus, TaskType } from 'src/app/models/task.model';
 import { ProjectService } from 'src/app/services/project.service';
 import { AppState, ProjectSelectors, ProjectActions } from 'src/app/store';
 import { AppStyleUtil } from 'src/app/utils/app-style.util';

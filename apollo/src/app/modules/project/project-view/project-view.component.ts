@@ -1,6 +1,5 @@
-import { on } from '@ngrx/store';
 import { Store } from '@ngrx/store';
-import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { Project } from 'src/app/models/project.model';

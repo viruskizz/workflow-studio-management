@@ -2,7 +2,6 @@ import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { ProjectState } from "./project.reducer";
 import { Task, TaskTree } from "src/app/models/task.model";
 import { TreeNode } from "primeng/api";
-import { map } from "rxjs";
 
 export const selectProjectFeature = createFeatureSelector<ProjectState>('project'); // 'project' should match your StoreModule key
 
