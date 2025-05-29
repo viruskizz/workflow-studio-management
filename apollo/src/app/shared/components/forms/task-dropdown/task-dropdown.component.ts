@@ -10,7 +10,7 @@ import { TaskService } from 'src/app/services/task.service';
 })
 export class TaskDropdownComponent implements OnInit {
   @Input() label = 'id'
-  @Input() selectedTask?: number;
+  @Input() selectedTask?: Task;
   @Input() ngClass?: string | any[] | object;
   @Output() selectedTaskChange = new EventEmitter<number>()
   @Input({ required: true }) form!: FormGroup;
@@ -18,23 +18,22 @@ export class TaskDropdownComponent implements OnInit {
   @Input({ required: true }) projectId!: number;
 
   loading?: boolean;
-  task?: Task;
   tasks: Task[] = [];
 
   constructor(private projectService: ProjectService, private taskService: TaskService) { }
 
   ngOnInit() {
     this.loading = true;
-    this.selectedTask = this.form.controls[this.controlName].value;
+    const selectedId = this.form.controls[this.controlName].value;
     this.projectService.listTasks(this.projectId).subscribe({
       next: (v) => {
         this.tasks = v;
       }
     })
-    if (this.selectedTask) {
-      this.taskService.get(this.selectedTask).subscribe({
+    if (selectedId) {
+      this.taskService.get(selectedId).subscribe({
         next: (v: any) => {
-          this.task = v;
+          this.selectedTask = v;
           this.loading = false;
         }
       });
@@ -42,10 +41,9 @@ export class TaskDropdownComponent implements OnInit {
   }
 
   onChange(event: any) {
+    this.selectedTask = event.value;
     this.form.controls[this.controlName].patchValue(event.value.id)
   }
-
-
 
   getTypeIcon(type?: TaskType) {
     if (!type) { return '' }

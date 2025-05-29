@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { Project } from 'src/app/models/project.model';
 import { Task, TaskStatus, TaskType } from 'src/app/models/task.model';
 import { Team, TeamStage } from 'src/app/models/team.model';
+import { User } from 'src/app/models/user.model';
 import { TaskService } from 'src/app/services/task.service';
 import { AppState, ProjectActions } from 'src/app/store';
 
@@ -38,10 +39,10 @@ export class ProjectTaskFormComponent implements OnChanges {
     description: new FormControl('', []),
     date: new FormControl('', []),
     team: new FormControl<Team | undefined>(undefined, []),
-    assignee: new FormControl('', []),
+    assignee: new FormControl<User | null>(null, []),
     stage: new FormControl<TeamStage | undefined>(undefined, []),
     flow: new FormControl('', []),
-    parentId: new FormControl('', []),
+    parentId: new FormControl<number | undefined>(undefined, []),
     files: new FormControl([], []),
   });
 
@@ -115,6 +116,8 @@ export class ProjectTaskFormComponent implements OnChanges {
       status: value.status as TaskStatus,
       teamId: value.team?.id,
       stageId: value.stage?.id,
+      parentId: value.parentId as number | undefined,
+      assigneeId: value.assignee ? value.assignee.id : undefined,
     }
     let event: Observable<Task>;
     if (this.mode === 'EDIT' && this.taskId) {
@@ -125,6 +128,8 @@ export class ProjectTaskFormComponent implements OnChanges {
     } else {
       event = this.taskService.create(body);
     }
+    console.log('Saving task:', body);
+    // return;
     event.subscribe({
       next: (v) => this.onSaveSuccess(v),
       error: (e) => this.onSaveError(e),

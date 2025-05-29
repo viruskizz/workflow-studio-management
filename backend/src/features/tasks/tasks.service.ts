@@ -22,7 +22,7 @@ export class TasksService {
     @InjectRepository(Task)
     private repo: Repository<Task>,
     private projectService: ProjectsService,
-  ) {}
+  ) { }
 
   getTreeRepository() {
     return this.repo.manager.getTreeRepository(Task);
@@ -61,7 +61,8 @@ export class TasksService {
     task.description = data.description || task.description;
     task.status = data.status || task.status;
     task.type = data.type || task.type;
-
+    const parent = await this.getValidParentTask(data);
+    task.parent = parent;
     if (data.assigneeId) {
       task.assignee = User.create({ id: data.assigneeId });
     }
