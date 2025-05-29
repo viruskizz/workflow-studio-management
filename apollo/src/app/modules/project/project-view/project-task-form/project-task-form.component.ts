@@ -53,7 +53,6 @@ export class ProjectTaskFormComponent implements OnChanges {
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('mode:', changes['mode']?.currentValue);
     if (changes['task']?.currentValue) {
       this.taskId = changes['task']?.currentValue.id;
       this.projectTaskForm.reset()
@@ -65,13 +64,6 @@ export class ProjectTaskFormComponent implements OnChanges {
     if (field === 'inputTitle') {
       setTimeout(() => this.inputTitle.nativeElement.focus(), 1);
     }
-  }
-
-  close() {
-    this.task = undefined;
-    this.taskChange.emit(undefined);
-    this.visible = false;
-    this.visibleChange.emit(false);
   }
 
   onHide() {
@@ -98,7 +90,6 @@ export class ProjectTaskFormComponent implements OnChanges {
   }
 
   onSave() {
-    console.log('onSave:', this.projectTaskForm.value)
     this.submitted = true;
     if (!this.projectTaskForm.controls.summary.value) {
       this.projectTaskForm.controls.summary.patchValue('Untitled')
@@ -111,7 +102,7 @@ export class ProjectTaskFormComponent implements OnChanges {
       projectId: this.project!.id,
       code: '1',
       summary: value.summary as string,
-      description: value.description as | undefined,
+      description: value.description as string | undefined,
       type: value.type!,
       status: value.status as TaskStatus,
       teamId: value.team?.id,
@@ -128,8 +119,6 @@ export class ProjectTaskFormComponent implements OnChanges {
     } else {
       event = this.taskService.create(body);
     }
-    console.log('Saving task:', body);
-    // return;
     event.subscribe({
       next: (v) => this.onSaveSuccess(v),
       error: (e) => this.onSaveError(e),

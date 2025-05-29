@@ -19,7 +19,7 @@
         </p-inplace>
         <div class="flex">
           <button pButton pRipple type="button" icon="pi pi-cog" class="p-button-rounded p-button-text p-button-secondary" pTooltip="card actions" tooltipPosition="left" (click)="op.toggle($event)"></button>
-          <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-text p-button-secondary" (click)="close()"></button>
+          <button pButton pRipple type="button" icon="pi pi-times" class="p-button-rounded p-button-text p-button-secondary" (click)="onHide()"></button>
           <p-overlayPanel #op>
               <ng-template pTemplate>
                   <div class="grid grid-nogutter flex-column gap-5 w-15rem">

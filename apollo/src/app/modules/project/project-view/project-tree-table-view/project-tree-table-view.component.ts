@@ -72,7 +72,6 @@ export class ProjectTreeTableViewComponent implements OnInit, OnChanges {
       parentId: task.id,
       type: task.type === 'EPIC' ? 'STORY' : task.type === 'STORY' ? 'TASK' : 'SUBTASK',
     }
-    // this.taskingChange.emit(this.tasking)
     this.tasking = undefined;
     this.addTask.emit(body);
   }
@@ -95,5 +94,16 @@ export class ProjectTreeTableViewComponent implements OnInit, OnChanges {
 
   getStatusIconLabel(status: TaskStatus) {
     return AppStyleUtil.getTaskStatusIcon(status);
+  }
+
+  getAddTaskLabel(task: Partial<Task>): string {
+    if (task.type === 'EPIC') {
+      return 'Add Story';
+    } else if (task.type === 'STORY') {
+      return 'Add Task';
+    } else if (task.type === 'TASK') {
+      return 'Add Subtask';
+    }
+    return '';
   }
 }
