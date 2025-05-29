@@ -11,10 +11,10 @@
     <ng-template pTemplate="selectedItem">
       <div class="flex align-items-center gap-2" *ngIf="selectedTask">
         <div class="flex align-items-center gap-2">
-          <img alt="dropdown icon" [src]="getTypeIcon(task?.type)" class="w-1rem" />
+          <img alt="dropdown icon" [src]="getTypeIcon(selectedTask.type)" class="w-1rem" />
           <div>
-            <span class="mr-2">{{ task?.code }}</span>
-            <span class="text-color-secondary mr-2">{{task?.summary}}</span>
+            <span class="mr-2">{{ selectedTask.code }}</span>
+            <span class="text-color-secondary mr-2">{{selectedTask.summary}}</span>
           </div>
       </div>
       </div>

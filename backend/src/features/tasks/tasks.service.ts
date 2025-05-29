@@ -61,11 +61,11 @@ export class TasksService {
     task.description = data.description || task.description;
     task.status = data.status || task.status;
     task.type = data.type || task.type;
-
+    const parent = await this.getValidParentTask(data);
+    task.parent = parent;
     if (data.assigneeId) {
       task.assignee = User.create({ id: data.assigneeId });
     }
-
     return this.repo.save(task);
   }
 

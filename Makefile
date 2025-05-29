@@ -7,7 +7,7 @@ all: dev
 up: dev
 
 dev:
-	npm install --prefix apollo
+	npm install --prefix apollo --legacy-peer-deps
 	npm install --prefix backend
 	docker compose up --build --detach
 

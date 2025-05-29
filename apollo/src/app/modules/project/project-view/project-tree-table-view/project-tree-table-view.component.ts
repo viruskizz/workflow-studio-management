@@ -1,16 +1,18 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { TreeNode } from 'primeng/api';
 import { TreeTable } from 'primeng/treetable';
-import { Task, TaskStatus, TaskTree, TaskType } from 'src/app/models/task.model';
+import { Task, TaskStatus, TaskType } from 'src/app/models/task.model';
 import { ProjectService } from 'src/app/services/project.service';
+import { AppState, ProjectSelectors, ProjectActions } from 'src/app/store';
 import { AppStyleUtil } from 'src/app/utils/app-style.util';
 
 @Component({
   selector: 'app-project-tree-table-view',
   templateUrl: './project-tree-table-view.component.html'
 })
-export class ProjectTreeTableViewComponent implements OnInit {
+export class ProjectTreeTableViewComponent implements OnInit, OnChanges {
 
   files2: TreeNode<any> | TreeNode<any>[] | any[] | any;
   tasks: TreeNode<Task> | TreeNode<Task>[] | Task[] | any = [];
@@ -19,11 +21,15 @@ export class ProjectTreeTableViewComponent implements OnInit {
 
   @Input() tasking: Partial<Task> | undefined;
   @Output() taskingChange = new EventEmitter<Partial<Task>>();
+  @Output() viewTask = new EventEmitter<Partial<Task>>();
+  @Output() createTask = new EventEmitter<Partial<Task>>();
+  @Output() addTask = new EventEmitter<Partial<Task>>();
 
   constructor(
     private route: ActivatedRoute,
-    private projectService: ProjectService
-  ){}
+    private projectService: ProjectService,
+    private store: Store<AppState>,
+  ) { }
 
   ngOnInit() {
     const params = this.route.snapshot.params;
@@ -34,47 +40,45 @@ export class ProjectTreeTableViewComponent implements OnInit {
       { field: 'assignee', header: 'Assignee' },
       { field: 'actions', header: '' },
     ];
-    this.projectService.listTaskTrees(this.projectId!).subscribe(
-      res => {
-        this.tasks = this.mapTreesToNodes(res);
-        console.log('TreeNodes:', this.tasks);
+    this.store.dispatch(ProjectActions.loadTasksTree({ projectId: this.projectId! }));
+    this.store.select(ProjectSelectors.selectProjectTaskTreeNodeState).subscribe((taskTree) => {
+      if (taskTree) {
+        this.tasks = taskTree;
       }
-    )
+    });
+  }
+
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['tasking']?.currentValue) {
+      this.tasking = changes['tasking']?.currentValue;
+    }
   }
 
   onGlobalFilter(table: TreeTable, event: Event) {
-      table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 
-  private mapTreesToNodes(tasks: TaskTree[]): TreeNode<Task>[] {
-    const nodes: TreeNode<Task>[] = [];
-    tasks.forEach(task => {
-      nodes.push({
-        data: task,
-        key: task.id.toString(),
-        children: this.mapTreesToNodes(task.children)
-      });
-    });
-    return nodes;
+  onCreateTask() {
+    this.tasking = {
+      type: 'EPIC'
+    };
+    this.createTask.emit(this.tasking);
   }
 
-  onAddTask(task?: Partial<Task>) {
-    if (task) {
-      this.tasking = {
-        parentId: task.id,
-        type: task.type === 'EPIC' ? 'STORY' : task.type === 'STORY' ? 'TASK' : 'SUBTASK',
-      }
-    } else {
-      this.tasking = {
-        type: 'EPIC'
-      };
+  onAddTask(task: Partial<Task>) {
+    const body: Partial<Task> = {
+      parentId: task.id,
+      type: task.type === 'EPIC' ? 'STORY' : task.type === 'STORY' ? 'TASK' : 'SUBTASK',
     }
-    this.taskingChange.emit(this.tasking)
+    this.tasking = undefined;
+    this.addTask.emit(body);
   }
 
   onViewTask(task: Partial<Task>) {
     this.tasking = task;
     this.taskingChange.emit(this.tasking)
+    this.viewTask.emit(this.tasking);
   }
 
   getTypeIcon(type: TaskType): string {
@@ -89,5 +93,16 @@ export class ProjectTreeTableViewComponent implements OnInit {
 
   getStatusIconLabel(status: TaskStatus) {
     return AppStyleUtil.getTaskStatusIcon(status);
+  }
+
+  getAddTaskLabel(task: Partial<Task>): string {
+    if (task.type === 'EPIC') {
+      return 'Add Story';
+    } else if (task.type === 'STORY') {
+      return 'Add Task';
+    } else if (task.type === 'TASK') {
+      return 'Add Subtask';
+    }
+    return '';
   }
 }

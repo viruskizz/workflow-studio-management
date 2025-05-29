@@ -10,7 +10,7 @@ import { TaskService } from 'src/app/services/task.service';
 })
 export class TaskDropdownComponent implements OnInit {
   @Input() label = 'id'
-  @Input() selectedTask?: number;
+  @Input() selectedTask?: Task;
   @Input() ngClass?: string | any[] | object;
   @Output() selectedTaskChange = new EventEmitter<number>()
   @Input({ required: true }) form!: FormGroup;
@@ -18,41 +18,35 @@ export class TaskDropdownComponent implements OnInit {
   @Input({ required: true }) projectId!: number;
 
   loading?: boolean;
-  task?: Task;
   tasks: Task[] = [];
 
-  constructor(private projectService: ProjectService, private taskService: TaskService) {}
+  constructor(private projectService: ProjectService, private taskService: TaskService) { }
 
   ngOnInit() {
-    console.log('Init projectId:', this.projectId);
-    console.log('Init:', this.form.controls[this.controlName].value);
     this.loading = true;
-    this.selectedTask = this.form.controls[this.controlName].value;
+    const selectedId = this.form.controls[this.controlName].value;
     this.projectService.listTasks(this.projectId).subscribe({
       next: (v) => {
-        console.log(v);
         this.tasks = v;
       }
     })
-    if (this.selectedTask) {
-      this.taskService.get(this.selectedTask).subscribe({
+    if (selectedId) {
+      this.taskService.get(selectedId).subscribe({
         next: (v: any) => {
-          console.log(v);
-          this.task = v;
-        this.loading = false;
+          this.selectedTask = v;
+          this.loading = false;
         }
       });
     }
   }
 
   onChange(event: any) {
+    this.selectedTask = event.value;
     this.form.controls[this.controlName].patchValue(event.value.id)
   }
 
-
-
   getTypeIcon(type?: TaskType) {
-    if (!type) { return ''}
+    if (!type) { return '' }
     const icons = {
       'EPIC': 'assets/icons/jira-issue/epic.png',
       'STORY': 'assets/icons/jira-issue/story.png',

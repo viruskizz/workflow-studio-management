@@ -51,5 +51,22 @@ services:
     volumes:
       - ./database/data:/var/lib/mysql
     restart: always
+  mysql_workbench:
+    image: lscr.io/linuxserver/mysql-workbench:latest
+    container_name: mysql_workbench
+    cap_add:
+      - IPC_LOCK
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    # volumes:
+    #   - /path/to/config:/config
+    ports:
+      - 8000:3000
+      - 8001:3001
+    restart: unless-stopped
+    networks:
+      - main
 networks:
   main:

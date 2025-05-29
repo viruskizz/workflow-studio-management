@@ -9,7 +9,14 @@
   <app-project-tree-table-view
     *ngIf="activeItem?.id === 'table'"
     [(tasking)]="tasking"
+    (createTask)="onCreateTask()"
+    (viewTask)="onViewTask($event)"
+    (addTask)="onAddTask($event)"
   />
 </div>
-<app-project-task-form [(task)]="tasking" [project]="project" />
+<app-project-task-form
+  [mode]="formMode"
+  [(visible)]="formVisible"
+  [(task)]="tasking"
+  [project]="project" />
 <p-toast key="projectView"></p-toast>
