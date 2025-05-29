@@ -78,7 +78,6 @@ export class UserFormComponent implements OnChanges {
       body.password = this.userForm.value.password || undefined;
       this.userService.createUser(body).subscribe({
         next: (v) => {
-          console.log('Created', v);
           this.closeEvent.emit(v);
           // this.visible = false;
         }

@@ -18,13 +18,12 @@ export class TeamDropdownComponent implements OnInit {
   @Input() labelFor = 'Team'
   loading = false
 
-  constructor(private teamService: TeamService) {}
+  constructor(private teamService: TeamService) { }
 
   ngOnInit(): void {
     this.loading = true;
     this.teamService.listTeams().subscribe({
       next: (teams) => {
-        // console.log(teams)
         this.options = teams;
         this.loading = false
       }

@@ -9,7 +9,7 @@
         </span>
       </div>
       <div class="flex gap-3">
-        <p-button (click)="onAddTask()" label="Add Epic" class="p-button-outlined mb-2" icon="pi pi-plus" />
+        <p-button (click)="onCreateTask()" label="Add Epic" class="p-button-outlined mb-2" icon="pi pi-plus" />
       </div>
     </div>
   </ng-template>
@@ -21,11 +21,13 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns" let-last="last">
-    <tr [ttRow]="rowNode" (click)="onViewTask(rowData)">
+    <tr [ttRow]="rowNode">
       <td style="min-width: 5rem;" class="px-1">
         <p-treeTableToggler [rowNode]="rowNode" />
-        <img alt="icon" [src]="getTypeIcon(rowData.type)" class="w-1rem mr-2 vertical-align-middle" />
-        <span>{{ rowData.code }}</span>
+        <span class="cursor-pointer" (click)="onViewTask(rowData)">
+          <img alt="icon" [src]="getTypeIcon(rowData.type)" class="w-1rem mr-2 vertical-align-middle" />
+          <span>{{ rowData.code }}</span>
+        </span>
       </td>
       <td style="width: 20px;">
         <p-button [icon]="getStatusIconLabel(rowData.status).icon" [label]="getStatusIconLabel(rowData.status).label" severity="secondary" size="small"/>

@@ -15,12 +15,13 @@ import { AppState, ProjectActions } from 'src/app/store';
   templateUrl: './project-task-form.component.html',
 })
 export class ProjectTaskFormComponent implements OnChanges {
+  @Input({ required: true }) mode?: string | 'CREATE' | 'EDIT';
   @Input({ required: true }) project?: Partial<Project>;
   @Input() task?: Partial<Task>;
   @Output() taskChange = new EventEmitter<Task | undefined>();
-  @Output() closeEvent = new EventEmitter<Task | null>();
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
+  @Output() closeEvent = new EventEmitter<Task | null>();
 
   @ViewChild('inputTitle') inputTitle!: ElementRef;
 
@@ -51,8 +52,8 @@ export class ProjectTaskFormComponent implements OnChanges {
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('mode:', changes['mode']?.currentValue);
     if (changes['task']?.currentValue) {
-      this.visible = true;
       this.taskId = changes['task']?.currentValue.id;
       this.projectTaskForm.reset()
       this.projectTaskForm.patchValue(changes['task']?.currentValue)
@@ -69,12 +70,14 @@ export class ProjectTaskFormComponent implements OnChanges {
     this.task = undefined;
     this.taskChange.emit(undefined);
     this.visible = false;
+    this.visibleChange.emit(false);
   }
 
   onHide() {
     this.task = undefined;
     this.taskChange.emit(undefined);
     this.visible = false;
+    this.visibleChange.emit(false);
   }
 
   onUpload() {
@@ -94,7 +97,7 @@ export class ProjectTaskFormComponent implements OnChanges {
   }
 
   onSave() {
-    console.log(this.projectTaskForm.value)
+    console.log('onSave:', this.projectTaskForm.value)
     this.submitted = true;
     if (!this.projectTaskForm.controls.summary.value) {
       this.projectTaskForm.controls.summary.patchValue('Untitled')
@@ -113,12 +116,12 @@ export class ProjectTaskFormComponent implements OnChanges {
       teamId: value.team?.id,
       stageId: value.stage?.id,
     }
-    if (this.taskId) {
-      body.id = this.taskId;
-    }
     let event: Observable<Task>;
-    if (this.taskId) {
-      event = this.taskService.update(body);
+    if (this.mode === 'EDIT' && this.taskId) {
+      body.id = this.taskId;
+      body.code = undefined;
+      body.projectId = undefined;
+      event = this.taskService.updateTask(this.taskId, body);
     } else {
       event = this.taskService.create(body);
     }

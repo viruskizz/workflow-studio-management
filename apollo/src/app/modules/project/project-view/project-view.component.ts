@@ -1,3 +1,4 @@
+import { on } from '@ngrx/store';
 import { Store } from '@ngrx/store';
 import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -17,6 +18,8 @@ export class ProjectViewComponent implements OnInit {
   items: MenuItem[] | undefined;
   activeItem: MenuItem | undefined;
   project?: Project;
+  formVisible = false;
+  formMode = 'CREATE';
 
   constructor(
     private route: ActivatedRoute,
@@ -41,5 +44,22 @@ export class ProjectViewComponent implements OnInit {
 
   onActivePageChange(menuItem: MenuItem) {
     this.activeItem = menuItem;
+  }
+
+  onViewTask(task: Partial<Task>) {
+    this.formMode = 'EDIT';
+    this.tasking = task;
+    this.formVisible = true;
+  }
+
+  onCreateTask() {
+    this.formMode = 'CREATE';
+    this.formVisible = true;
+  }
+
+  onAddTask(task: Partial<Task>) {
+    this.formMode = 'CREATE';
+    this.tasking = task;
+    this.formVisible = true;
   }
 }

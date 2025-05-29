@@ -1,3 +1,4 @@
+import { on } from '@ngrx/store';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -21,6 +22,9 @@ export class ProjectTreeTableViewComponent implements OnInit, OnChanges {
 
   @Input() tasking: Partial<Task> | undefined;
   @Output() taskingChange = new EventEmitter<Partial<Task>>();
+  @Output() viewTask = new EventEmitter<Partial<Task>>();
+  @Output() createTask = new EventEmitter<Partial<Task>>();
+  @Output() addTask = new EventEmitter<Partial<Task>>();
 
   constructor(
     private route: ActivatedRoute,
@@ -56,23 +60,27 @@ export class ProjectTreeTableViewComponent implements OnInit, OnChanges {
     table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
   }
 
-  onAddTask(task?: Partial<Task>) {
-    if (task) {
-      this.tasking = {
-        parentId: task.id,
-        type: task.type === 'EPIC' ? 'STORY' : task.type === 'STORY' ? 'TASK' : 'SUBTASK',
-      }
-    } else {
-      this.tasking = {
-        type: 'EPIC'
-      };
+  onCreateTask() {
+    this.tasking = {
+      type: 'EPIC'
+    };
+    this.createTask.emit(this.tasking);
+  }
+
+  onAddTask(task: Partial<Task>) {
+    const body: Partial<Task> = {
+      parentId: task.id,
+      type: task.type === 'EPIC' ? 'STORY' : task.type === 'STORY' ? 'TASK' : 'SUBTASK',
     }
-    this.taskingChange.emit(this.tasking)
+    // this.taskingChange.emit(this.tasking)
+    this.tasking = undefined;
+    this.addTask.emit(body);
   }
 
   onViewTask(task: Partial<Task>) {
     this.tasking = task;
     this.taskingChange.emit(this.tasking)
+    this.viewTask.emit(this.tasking);
   }
 
   getTypeIcon(type: TaskType): string {
