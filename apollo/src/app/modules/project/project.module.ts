@@ -38,6 +38,7 @@ import { InplaceModule } from 'primeng/inplace';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { MessagesModule } from 'primeng/messages';
 import { MessageService } from 'primeng/api';
+import { UserSharedModule } from '../user/shared/user-shared.module';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { MessageService } from 'primeng/api';
     CommonModule,
     ProjectRoutingModule,
     ReactiveFormsModule,
+    UserSharedModule,
 
     TableModule,
     FileUploadModule,

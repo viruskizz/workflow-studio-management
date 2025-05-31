@@ -25,6 +25,8 @@ export class TaskDetailDialogComponent implements OnInit {
   @Input() task?: Task;
   @Input() project?: Project;
   @Input() childTasks: Task[] = [];
+  @Input() visible = false;
+  @Output() visibleChange = new EventEmitter<boolean>();
 
   @Output() save = new EventEmitter<Task>();
   @Output() dialogClose = new EventEmitter<void>();
@@ -32,7 +34,6 @@ export class TaskDetailDialogComponent implements OnInit {
   @ViewChild('childDialog') childDialog?: ChildTaskFormComponent;
 
   form: FormGroup;
-  visible = false;
   submitted = false;
   comments: any[] = [];
   private taskSubject = new BehaviorSubject<Task | null>(null);
@@ -187,79 +188,79 @@ export class TaskDetailDialogComponent implements OnInit {
     this.msg.add({ severity: 'success', summary: 'Success', detail: `Child task ${saved.id ? 'updated' : 'created'}` });
   }
 
-private handleDeleteSuccess(taskId: number) {
-  this.childTasks = this.childTasks.filter(t => t.id !== taskId);
-  
-  this.msg.add({ 
-    severity: 'success', 
-    summary: 'Success', 
-    detail: 'Task deleted successfully' 
-  });
-  
-  if (this.task) {
-    this.save.emit(this.task);
-  }
-}
+  private handleDeleteSuccess(taskId: number) {
+    this.childTasks = this.childTasks.filter(t => t.id !== taskId);
 
-private handleDeleteError(error: Error, taskIndex: number, taskToDelete: Task) {
-  this.childTasks = [
-    ...this.childTasks.slice(0, taskIndex),
-    taskToDelete,
-    ...this.childTasks.slice(taskIndex)
-  ];
-  
-  console.error('Error deleting task:', error);
-  this.msg.add({ 
-    severity: 'error', 
-    summary: 'Error', 
-    detail: error.message || 'Failed to delete task' 
-  });
-}
+    this.msg.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Task deleted successfully'
+    });
 
-onDeleteChild(id: number) {
-  this.confirm.confirm({
-    message: 'Are you sure you want to delete this task?',
-    header: 'Delete Confirmation',
-    icon: 'pi pi-exclamation-triangle',
-    accept: () => {
-      // Store task index and task before deletion for potential rollback
-      const taskIndex = this.childTasks.findIndex(t => t.id === id);
-      const taskToDelete = this.childTasks[taskIndex];
-
-      // Optimistic update
-      this.childTasks = this.childTasks.filter(t => t.id !== id);
-
-      this.tasks.deleteTask(id).subscribe({
-        next: () => {
-          this.msg.add({ 
-            severity: 'success', 
-            summary: 'Success', 
-            detail: 'Task deleted successfully' 
-          });
-          // Emit update to parent
-          if (this.task) {
-            this.save.emit(this.task);
-          }
-        },
-        error: (err) => {
-          // Rollback on error
-          this.childTasks = [
-            ...this.childTasks.slice(0, taskIndex),
-            taskToDelete,
-            ...this.childTasks.slice(taskIndex)
-          ];
-          
-          this.msg.add({ 
-            severity: 'error', 
-            summary: 'Error', 
-            detail: err.message || 'Failed to delete task' 
-          });
-          console.error('Delete task error:', err);
-        }
-      });
+    if (this.task) {
+      this.save.emit(this.task);
     }
-  });
-}
+  }
+
+  private handleDeleteError(error: Error, taskIndex: number, taskToDelete: Task) {
+    this.childTasks = [
+      ...this.childTasks.slice(0, taskIndex),
+      taskToDelete,
+      ...this.childTasks.slice(taskIndex)
+    ];
+
+    console.error('Error deleting task:', error);
+    this.msg.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: error.message || 'Failed to delete task'
+    });
+  }
+
+  onDeleteChild(id: number) {
+    this.confirm.confirm({
+      message: 'Are you sure you want to delete this task?',
+      header: 'Delete Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        // Store task index and task before deletion for potential rollback
+        const taskIndex = this.childTasks.findIndex(t => t.id === id);
+        const taskToDelete = this.childTasks[taskIndex];
+
+        // Optimistic update
+        this.childTasks = this.childTasks.filter(t => t.id !== id);
+
+        this.tasks.deleteTask(id).subscribe({
+          next: () => {
+            this.msg.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Task deleted successfully'
+            });
+            // Emit update to parent
+            if (this.task) {
+              this.save.emit(this.task);
+            }
+          },
+          error: (err) => {
+            // Rollback on error
+            this.childTasks = [
+              ...this.childTasks.slice(0, taskIndex),
+              taskToDelete,
+              ...this.childTasks.slice(taskIndex)
+            ];
+
+            this.msg.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: err.message || 'Failed to delete task'
+            });
+            console.error('Delete task error:', err);
+          }
+        });
+      }
+    });
+  }
 
   onEditChild(child: Task) {
     this.childDialog?.open(child);

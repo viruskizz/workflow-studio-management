@@ -61,4 +61,6 @@ export class ProjectViewComponent implements OnInit {
     this.tasking = task;
     this.formVisible = true;
   }
+
+  onDetailSave(task: Partial<Task>) { }
 }

@@ -20,3 +20,10 @@
   [(task)]="tasking"
   [project]="project" />
 <p-toast key="projectView"></p-toast>
+
+<app-task-detail-dialog
+  #taskDetail
+  [projectId]="project?.id!"
+  (save)="onDetailSave($event)"
+  (close)="taskDetail.onHide()"
+></app-task-detail-dialog>
