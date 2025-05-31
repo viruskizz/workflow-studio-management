@@ -1,11 +1,12 @@
 import { Store } from '@ngrx/store';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { Project } from 'src/app/models/project.model';
 import { Task } from 'src/app/models/task.model';
 import { ProjectService } from 'src/app/services/project.service';
 import { ProjectActions } from 'src/app/store';
+import { TaskDetailDialogComponent } from '../../user/shared/task-detail-dialog/task-detail-dialog.component';
 
 @Component({
   selector: 'app-project-view',
@@ -19,6 +20,8 @@ export class ProjectViewComponent implements OnInit {
   project?: Project;
   formVisible = false;
   formMode = 'CREATE';
+  @ViewChild('taskDetail') taskDetailDialog?: TaskDetailDialogComponent;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -48,7 +51,8 @@ export class ProjectViewComponent implements OnInit {
   onViewTask(task: Partial<Task>) {
     this.formMode = 'EDIT';
     this.tasking = task;
-    this.formVisible = true;
+    // this.formVisible = true;
+    this.taskDetailDialog?.open(task as Task, this.project, []);
   }
 
   onCreateTask() {
@@ -60,5 +64,9 @@ export class ProjectViewComponent implements OnInit {
     this.formMode = 'CREATE';
     this.tasking = task;
     this.formVisible = true;
+  }
+
+  onDetailSave(task: Partial<Task>) {
+
   }
 }

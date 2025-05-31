@@ -39,7 +39,7 @@ export class ProjectTaskFormComponent implements OnChanges {
     description: new FormControl('', []),
     date: new FormControl('', []),
     team: new FormControl<Team | undefined>(undefined, []),
-    assignee: new FormControl<User | null>(null, []),
+    assignee: new FormControl<User[] | null>(null, []),
     stage: new FormControl<TeamStage | undefined>(undefined, []),
     flow: new FormControl('', []),
     parentId: new FormControl<number | undefined>(undefined, []),
@@ -108,14 +108,14 @@ export class ProjectTaskFormComponent implements OnChanges {
       teamId: value.team?.id,
       stageId: value.stage?.id,
       parentId: value.parentId as number | undefined,
-      assigneeId: value.assignee ? value.assignee.id : undefined,
+      assigneeId: value.assignee ? value.assignee[0].id : undefined,
     }
     let event: Observable<Task>;
     if (this.mode === 'EDIT' && this.taskId) {
       body.id = this.taskId;
       body.code = undefined;
       body.projectId = undefined;
-      event = this.taskService.updateTask(this.taskId, body);
+      event = this.taskService.updateTask(this.taskId!, body);
     } else {
       event = this.taskService.create(body);
     }

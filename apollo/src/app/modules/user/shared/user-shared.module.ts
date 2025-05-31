@@ -74,7 +74,6 @@ const components = [
   declarations: components,
   exports: [
     ...components,
-    
     CardModule,
     ButtonModule,
     AvatarModule,
