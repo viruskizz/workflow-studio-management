@@ -75,7 +75,7 @@ export class ProjectTreeTableViewComponent implements OnInit, OnChanges {
     this.addTask.emit(body);
   }
 
-  onViewTask(task: Partial<Task>) {
+  onViewTask(task: Task) {
     this.tasking = task;
     this.taskingChange.emit(this.tasking)
     this.viewTask.emit(this.tasking);
